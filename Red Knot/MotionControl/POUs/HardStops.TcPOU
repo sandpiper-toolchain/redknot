@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="HardStops" Id="{958cab0f-5a10-4cb1-a976-bc919a55d0e0}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM HardStops
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT GVL_MOTION.HomeDone THEN
+	GVL_MOTION.EXT_CTR.CMDFINDSTOPS			:= FALSE;
+ELSE
+
+	CASE GVL_MOTION.HardStopState OF
+		0:
+		GVL_MOTION.zCon.JogFw				:= TRUE;
+		GVL_MOTION.zSafeDisable				:= TRUE;
+		GVL_MOTION.HardStopState			:= 1;
+		
+		1:
+		//zLimNeg is at both ends of travel
+		IF GVL_MOTION.zCon.LimNeg THEN
+			GVL_MOTION.zCon.JogFw			:= FALSE;
+			GVL_MOTION.zCon.JogBw			:= TRUE;
+			GVL_MOTION.HardStopState		:= 2;			
+		END_IF
+		
+		2:
+		IF NOT GVL_MOTION.zCon.LimNeg THEN
+			GVL_MOTION.zCon.JogBw			:= FALSE;
+			GVL_MOTION.zSafeDisable			:= FALSE;
+			GVL_MOTION.HardStopLocations[2]	:= GVL_MOTION.zOut.PositionOut;
+			GVL_MOTION.yCon.JogMode			:= MC_JOGMODE_STANDARD_SLOW;
+			GVL_MOTION.yCon.JogFw			:= TRUE;
+			GVL_MOTION.HardStopState		:= 3;
+		END_IF
+		
+		3:
+		IF GVL_MOTION.yCon.LimPos THEN
+			GVL_MOTION.yCon.JogFw			:= FALSE;
+			GVL_MOTION.yCon.JogBw			:= TRUE;
+			GVL_MOTION.HardStopState		:= 4;
+		END_IF
+		
+		4:
+		IF NOT GVL_MOTION.yCon.LimPos THEN
+			GVL_MOTION.yCon.JogBw			:= FALSE;
+			GVL_MOTION.HardStopLocations[1]	:= GVL_MOTION.yOut.PositionOut;
+			GVL_MOTION.xCon.JogMode			:= MC_JOGMODE_STANDARD_SLOW;
+			GVL_MOTION.xCon.JogFw			:= TRUE;
+			GVL_MOTION.HardStopState		:= 5;
+		END_IF
+		
+		5:
+		IF GVL_MOTION.xCon.LimPos THEN
+			GVL_MOTION.xCon.JogFw			:= FALSE;
+			GVL_MOTION.xCon.JogBw			:= TRUE;
+			GVL_MOTION.HardStopState		:= 6;
+		END_IF
+		
+		6:
+		IF NOT GVL_MOTION.xCon.LimPos THEN
+			GVL_MOTION.xCon.JogBw			:= FALSE;
+			GVL_MOTION.HardStopLocations[0]	:= GVL_MOTION.xOut.PositionOut;
+			GVL_MOTION.HardStopLocateDone	:= TRUE;
+			GVL_MOTION.HardStopState		:= 0;
+			GVL_MOTION.EXT_CTR.CMDFINDSTOPS	:= FALSE;
+		END_IF
+	END_CASE
+
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="HardStops">
+      <LineId Id="1" Count="61" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

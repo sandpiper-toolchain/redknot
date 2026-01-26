@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="MQTTCOMM" Id="{6cc164ab-7114-46c3-9a99-d0016021e99e}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MQTTCOMM
+VAR
+    fbMqttClient    :FB_IotMqttClient;
+    bSetParameter   :BOOL 		 := TRUE;
+    bConnect        :BOOL 		 := TRUE;	
+	
+	(* published message *)
+	sTopicPub   	:STRING(255) := 'MOTION/xOUT';
+	sPayloadPub 	:STRING(1000);
+	fbTimer 		:TON 		 := (PT:=T#1S);
+	//i 				:UDINT;	
+	
+   (* received message *)
+    SubXYZ		    :BOOL;
+	SubMSettings	:BOOL;
+    sTopicSub       :STRING(255) := 'MOTION/XYZ_MOTION_CTR';
+    {attribute 'TcEncoding':='UTF-8'}
+    sTopicRcv       :STRING(255);
+    {attribute 'TcEncoding':='UTF-8'}
+    sPayloadRcv     :STRING(2000);
+    fbMessageQueue  :FB_IotMqttMessageQueue;
+    fbMessage       :FB_IotMqttMessage;	
+	
+	(* JSON *)
+	fbJson 			:FB_JsonSaxWriter;
+	fbJsonDataType 	:FB_JsonReadWriteDataType;
+	fbJsonSaxReader	:FB_JsonSaxReader;
+	pJsonParse		:JsonSaxHandler;
+	jsonDoc    		:SJsonValue;
+  	jsonProp   		:SJsonValue;
+	
+	ok				:BOOL;
+	error			:HRESULT;
+	test			:MOTION_CTR;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//external control signals are located in gvl's as struct
+//takes any INT as UDINT?
+
+IF bSetParameter THEN
+    bSetParameter               := FALSE;
+    fbMqttClient.sHostName      := '160.94.187.160';
+    fbMqttClient.nHostPort      := 1883;
+    fbMqttClient.ipMessageQueue := fbMessageQueue;
+END_IF
+fbMqttClient.Execute(bConnect);
+
+IF fbMessageQueue.nQueuedMessages > 0 THEN
+    IF fbMessageQueue.Dequeue(fbMessage:=fbMessage) THEN
+        fbMessage.GetTopic(pTopic:=ADR(sTopicRcv), nTopicSize:=SIZEOF(sTopicRcv) );
+        fbMessage.GetPayload(pPayload:=ADR(sPayloadRcv), nPayloadSize:=SIZEOF(sPayloadRcv), bSetNullTermination:=FALSE);
+		fbJsonSaxReader.Parse(sJson := sPayloadRcv, ipHdl := pJsonParse);
+		//IF sTopicRcv = 'MOTION/XYZ_MOTION_CTR' THEN
+		//ELSE
+		//;	
+		//END_IF
+    END_IF
+END_IF
+
+IF fbMqttClient.bConnected THEN
+    IF NOT SubXYZ THEN
+        SubXYZ := fbMqttClient.Subscribe(sTopic:='MOTION/XYZ_MOTION_CTR', eQoS:=TcIotMqttQos.AtMostOnceDelivery);
+    END_IF
+    IF NOT SubMSettings THEN
+        SubMSettings := fbMqttClient.Subscribe(sTopic:='MOTION/MOTION_SETTINGS', eQoS:=TcIotMqttQos.AtMostOnceDelivery);
+    END_IF	
+    fbTimer(IN:=TRUE);
+    IF fbTimer.Q THEN // publish new payload every second
+		//convert xOut to JSON
+        fbTimer(IN:=FALSE);
+		fbJson.ResetDocument();
+		fbJson.StartObject();
+		//AddJsonValueFromSymbol does not auto format in mosquitto, this one does
+		//this function doesnt work with custom data types in the struct
+		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, 'xOutput', 'OUT_SIGNALS', SIZEOF(GVL_MOTION.xOut), ADR(GVL_MOTION.xOut));
+		//fbJson.AddKeyBool('EN',GVL_MOTION.xCon.Enable);
+		fbJson.EndObject();
+		fbJson.CopyDocument(sPayloadPub, SIZEOF(sPayLoadPub));
+		//sPayLoadPub := fbJson.GetDocument(); //only for <255 characters
+	
+        fbMqttClient.Publish(sTopic:= sTopicPub, pPayload:= ADR(sPayloadPub), 
+			nPayloadSize:= LEN2(ADR(sPayloadPub)), eQoS:= TcIotMqttQos.AtMostOnceDelivery, 
+			bRetain:= TRUE, bQueue:= FALSE );
+			//nPayloadSize + 1?
+    END_IF
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="MQTTCOMM">
+      <LineId Id="114" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="1" Count="11" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="63" Count="1" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="13" Count="6" />
+      <LineId Id="112" Count="1" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="43" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="31" Count="2" />
+      <LineId Id="26" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

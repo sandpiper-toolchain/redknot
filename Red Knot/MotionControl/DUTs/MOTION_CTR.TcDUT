@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <DUT Name="MOTION_CTR" Id="{7b736c67-30bf-4989-9a85-4ad577225276}">
+    <Declaration><![CDATA[TYPE MOTION_CTR :
+STRUCT
+	CMDADD					:BOOL	:= FALSE;
+	CMDCLR					:BOOL	:= FALSE;
+	CMDDEL					:BOOL	:= FALSE;
+	CMDRUN					:BOOL	:= FALSE;
+	CMDHOME					:BOOL	:= FALSE;
+	CMDSETZLIM				:BOOL	:= FALSE;
+	CMDFINDSTOPS			:BOOL	:= FALSE;
+	CMDLOOP					:BOOL	:= FALSE;
+	AxesHalt				:BOOL	:= FALSE;
+	AxesEn					:BOOL	:= FALSE;
+	(*deactivate daq trigger, reset home and hardstop states,  *)
+	AxesReset				:BOOL	:= FALSE;
+	Write_Script			:BOOL	:= FALSE;
+	Read_Script				:BOOL	:= FALSE;
+	(*maybe make new struct for script data *)
+	Script_Iterations		:INT	:= 1;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

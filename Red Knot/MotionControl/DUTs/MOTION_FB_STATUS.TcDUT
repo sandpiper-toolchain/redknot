@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <DUT Name="MOTION_FB_STATUS" Id="{01825de9-6753-423a-90ab-ccc6055406d0}">
+    <Declaration><![CDATA[TYPE MOTION_FB_STATUS :
+STRUCT
+	Status		: BOOL;
+	Done		: BOOL;
+	Busy		: BOOL;
+	Error		: BOOL;
+	Active		: BOOL;
+	CmdAborted	: BOOL;
+	InVelocity	: BOOL;
+	ErrorID		: UDINT;
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

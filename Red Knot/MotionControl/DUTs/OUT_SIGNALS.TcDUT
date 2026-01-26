@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <DUT Name="OUT_SIGNALS" Id="{2059ecb4-8f3e-47b3-b3ee-7db75fe2e3d1}">
+    <Declaration><![CDATA[TYPE OUT_SIGNALS :
+STRUCT
+	PowerError				:BOOL;
+	MoveActive				:BOOL;
+	MoveDone				:BOOL;
+	VelocityOut				:LREAL;
+	PositionOut				:LREAL;
+	HaltDone				:BOOL;
+	AxisCoupled				:BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

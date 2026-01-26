@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <DUT Name="MotionType" Id="{6fea6617-814d-45b3-b310-af78c06a1196}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'to_string'}
+TYPE MotionType :
+(
+	Null			:= 0,
+	WaitOK			:= 1,
+	Absolute		:= 2,
+	Relative		:= 3
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

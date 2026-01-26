@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="DeleteLastInstruction" Id="{98abe00f-97f9-49d5-a61d-9227ab1e0d6f}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM DeleteLastInstruction
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//QueueEnd contains no data
+IF GVL_MOTION.ScriptEnd <> 0 THEN
+	GVL_MOTION.ScriptEnd 							 	:= GVL_MOTION.ScriptEnd - 1;
+	GVL_MOTION.Script[GVL_MOTION.ScriptEnd]				:= GVL_MOTION.EmptyInstruction;
+	GVL_MOTION.EXT_CTR.CMDDEL 							:= FALSE;
+ELSE
+	//error msg
+	GVL_MOTION.EXT_CTR.CMDDEL 							:= FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="DeleteLastInstruction">
+      <LineId Id="1" Count="8" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

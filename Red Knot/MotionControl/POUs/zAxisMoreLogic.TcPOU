@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="zAxisMoreLogic" Id="{283150e6-6ff3-4c8e-8987-17e6d955ee17}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM zAxisMoreLogic
+VAR
+	zHaltMem		:BOOL	:= FALSE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF GVL_MOTION.EXT_CTR.CMDSETZLIM THEN
+	GVL_MOTION.zSafePosition 		:= GVL_MOTION.zOut.PositionOut;
+	GVL_MOTION.zSafeLimitIsSet 		:= TRUE;
+	GVL_MOTION.EXT_CTR.CMDSETZLIM	:= FALSE;
+END_IF
+
+// IF GVL_MOTION.EXT_CTR.AxesReset THEN
+// 	GVL_MOTION.zSafePosition 		:= 0;
+// 	GVL_MOTION.zSafeLimitIsSet 		:= FALSE;
+// END_IF
+
+//stop z from slamming into frame
+IF GVL_MOTION.zCon.LimNeg AND NOT GVL_MOTION.zCon.Execute_HOME AND NOT zHaltMem AND NOT GVL_MOTION.zSafeDisable THEN
+	zHaltMem								:= TRUE;
+	GVL_MOTION.zCon.Execute_HALT			:= TRUE;
+END_IF
+
+//rearm z safety
+IF NOT GVL_MOTION.zCon.LimNeg AND zHaltMem THEN
+	GVL_MOTION.zCon.Execute_HALT			:= FALSE;
+	zHaltMem								:= FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="zAxisMoreLogic">
+      <LineId Id="1" Count="2" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="4" Count="5" />
+      <LineId Id="13" Count="10" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

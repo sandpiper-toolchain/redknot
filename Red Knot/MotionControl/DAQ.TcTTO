@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <Task Name="DAQ" Id="{b8cb6657-b0bf-4129-bc09-6b69ac229bfa}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>1000</CycleTime>
+    <Priority>5</Priority>
+    <PouCall>
+      <Name>DAQTask</Name>
+    </PouCall>
+    <TaskFBGuid>{c944bde7-a0f0-493a-bb0b-e80ecf4329b0}</TaskFBGuid>
+    <Fb_init>{2f8b3c7b-200b-4810-aa17-9bf4c72fa9fd}</Fb_init>
+    <Fb_exit>{518b68df-020e-4d33-900b-9b88450e5a2c}</Fb_exit>
+    <CycleUpdate>{e27c9bb9-f865-4e2b-81b9-626ddb9cb142}</CycleUpdate>
+    <PostCycleUpdate>{b1387fdc-e892-489b-b033-5a4a30728c7f}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>

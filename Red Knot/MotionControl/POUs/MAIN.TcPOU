@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="MAIN" Id="{87b2b848-4606-4e60-8645-04a896b6e737}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	xAxis					:AXIS_REF;
+	xAxisCoupled			:AXIS_REF;
+	yAxis					:AXIS_REF;
+	zAxis					:AXIS_REF;
+	
+	xAxisControl			:AxisControlLogic;
+	yAxisControl			:AxisControlLogic;
+	zAxisControl			:AxisControlLogic;
+	
+	xAxisFunctions			:AxisFunctionBlocks;  //xCon, xOut
+	xCoupledFunctions		:AxisCoupledFBs; //xCon, xCOut
+	yAxisFunctions			:AxisFunctionBlocks;
+	zAxisFunctions			:AxisFunctionBlocks; 
+	
+	InfoData1T5Ch1 AT %I*	:UINT; //input address, any input
+	InfoData1T5Ch2 AT %I*	:UINT;
+	InfoData1T6Ch1 AT %I*	:UINT;
+	InfoData1T6Ch2 AT %I*	:UINT;
+	
+	PositionT5Ch1 AT %I*    :UINT;
+	
+	EL3174Ch1I AT %I*		:INT; //current or voltage input
+	xPos					:LREAL;
+	eStop					:BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//external/mqtt control signals located in gvl's as struct EXT_CTR
+//100 element command queue. modify in GVL_MOTION and RunCommands()
+//200000 element data arrays. modify in GVL_DAQ
+
+//digital io assignments
+GVL_MOTION.xCon.LimPos						:= InfoData1T5Ch1.0;
+GVL_MOTION.xCon.LimNeg				 		:= InfoData1T5Ch1.1;
+eStop   							 		:= InfoData1T5Ch2.0;
+//Input										:= InfoData1T5Ch2.1; unused
+GVL_MOTION.yCon.LimNeg				 		:= InfoData1T6Ch1.0;
+GVL_MOTION.yCon.LimPos				 		:= InfoData1T6Ch1.1;
+GVL_MOTION.zCon.LimNeg 				 		:= InfoData1T6Ch2.0;
+//Input										:= InfoData1T6Ch2.1; unused
+
+//increasing jog speed may cause axis to lock up if it crashes into end stop
+//zCon speed is very slow because heavy keyence mast makes lock up more likely
+IF NOT GVL_MOTION.EXT_CTR.CMDFINDSTOPS THEN
+	GVL_MOTION.xCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
+	GVL_MOTION.yCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
+	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
+END_IF
+//alternative position read
+//xPos 										:= xAxis.NcToPlc.ActPos;
+	
+//additional logic for axisfunctionblocks
+FunctionBlockMisc(); 
+
+//mqtt communication functions for external control/gui
+MQTTCOMM();
+
+
+//coupled axis assignments, modify as needed for additional coupled axes
+//xAxis
+IF NOT GVL_MOTION.RevCouplePrep THEN
+	GVL_MOTION.xCon.AxisToCouple 			:= xAxisCoupled;
+ELSE
+	GVL_MOTION.xCon.AxisToCouple 			:= xAxis;
+END_IF
+
+IF GVL_MOTION.EXT_CTR.CMDHOME THEN
+	HomingRoutine();
+END_IF
+
+IF GVL_MOTION.EXT_CTR.CMDFINDSTOPS THEN
+	HardStops();
+END_IF
+
+//axis control signals currently tied to VISU
+xAxisControl(control:=GVL_MOTION.xCon);
+yAxisControl(control:=GVL_MOTION.yCon);
+zAxisControl(control:=GVL_MOTION.zCon);
+zAxisMoreLogic();
+
+//axis functions
+xAxisFunctions(Axis:=xAxis,
+			   Control:=GVL_MOTION.xCon,
+			   Output:=GVL_MOTION.xOut,
+			   HomeStatus:=GVL_MOTION.xHomeStatus);	
+xCoupledFunctions(Axis:=xAxisCoupled,
+				  Control:=GVL_MOTION.xCon,
+				  Output:=GVL_MOTION.xCOut,
+				  HomeStatus:=GVL_MOTION.xCHomeStatus);
+yAxisFunctions(Axis:=yAxis,
+			   Control:=GVL_MOTION.yCon,
+			   Output:=GVL_MOTION.yOut,
+			   HomeStatus:=GVL_MOTION.yHomeStatus);
+zAxisFunctions(Axis:=zAxis,
+			   Control:=GVL_MOTION.zCon,
+			   Output:=GVL_MOTION.zOut,
+			   HomeStatus:=GVL_MOTION.zHomeStatus);		
+  
+
+//command queue logic						 
+IF GVL_MOTION.EXT_CTR.CMDADD THEN
+	AddCommand(); //toggler
+END_IF
+IF GVL_MOTION.EXT_CTR.CMDCLR THEN
+	DeleteQueue(); //toggler
+END_IF
+IF GVL_MOTION.EXT_CTR.CMDDEL THEN
+	DeleteLastInstruction();
+END_IF
+//TODO check script against hard stops before running
+IF GVL_MOTION.EXT_CTR.CMDRUN THEN
+	RunCommands(); //toggler
+ELSE
+	GVL_MOTION.xCon.Execute_MABS			:= FALSE;
+	GVL_MOTION.xCon.Execute_MREL			:= FALSE;	
+	GVL_MOTION.yCon.Execute_MABS			:= FALSE;
+	GVL_MOTION.yCon.Execute_MREL			:= FALSE;	
+	GVL_MOTION.zCon.Execute_MABS			:= FALSE;	
+	GVL_MOTION.zCon.Execute_MREL			:= FALSE;
+	GVL_MOTION.CurInstruction				:= 0;
+	GVL_MOTION.InstructionState				:= 0;
+END_IF
+
+//clear all acquired data from memory
+IF GVL_DAQ.EXT_CTR.CMDDATACLR THEN
+	ClearData();
+END_IF
+
+//stop data collection
+IF eStop THEN
+	GVL_DAQ.DAQ_CTR_INT.Activate_Trigger	:= DataTrigger.none;
+END_IF
+
+//write data controls are internal, read and write script controls are external
+DEFAULT_CSV_FIELD_SEP := 16#2C;(* Comma ASCII code *)
+//DEFAULT_CSV_FIELD_SEP := 16#3B;(* Semicolon ASCII code *)
+
+	CSVWrite();
+
+
+GVL_MOTION.NextInstruction						:= GVL_MOTION.CurInstruction + 1;]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="232" Count="112" />
+      <LineId Id="219" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

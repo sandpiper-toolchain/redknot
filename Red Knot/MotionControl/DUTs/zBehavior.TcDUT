@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <DUT Name="zBehavior" Id="{dbec3720-7dbb-4abf-89de-42077bc1b5d4}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'to_string'}
+TYPE zBehavior :
+(
+	Manual				:= 0,
+	WaterSurface 		:= 1, //massa feedback
+	SedSurface 			:= 2  //sonar feedback
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="AddCommand" Id="{9bb5efea-5d4b-4d82-83e6-06192cbb2d4f}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM AddCommand
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//QueueEnd contains no data
+IF GVL_MOTION.ScriptEnd < 100 THEN
+	GVL_MOTION.Script[GVL_MOTION.ScriptEnd]	:= GVL_MOTION.InstructionBuffer;
+	GVL_MOTION.ScriptEnd 							 	:= GVL_MOTION.ScriptEnd + 1;
+	GVL_MOTION.EXT_CTR.CMDADD 							:= FALSE;
+ELSE
+	//error msg
+	GVL_MOTION.EXT_CTR.CMDADD 							:= FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="AddCommand">
+      <LineId Id="10" Count="0" />
+      <LineId Id="1" Count="7" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

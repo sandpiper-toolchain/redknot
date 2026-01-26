@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <GVL Name="GVL_MOTION" Id="{ea33deb8-8627-4a0d-a3f0-288faa3aa9d9}">
+    <Declaration><![CDATA[//variables must be referenced GVL_MOTION.etc b/c of attribute
+{attribute 'qualified_only'}
+VAR_GLOBAL PERSISTENT
+	//control signals
+	xCon					:CTR_SIGNALS_INTERNAL;
+	yCon					:CTR_SIGNALS_INTERNAL;	
+	zCon					:CTR_SIGNALS_INTERNAL;
+	
+	//external input signals
+	EXT_CTR					:MOTION_CTR; //to be set externally
+	TEST_CTR				:MOTION_CTR;
+	
+	//command queue variables
+	(*to be set externally or through HMI*)
+	InstructionBuffer		:MOTION_INSTRUCTION;
+	TestBuffer				:MOTION_INSTRUCTION;
+	EmptyInstruction		:MOTION_INSTRUCTION;
+	(*add commands from instruction buffer or load script*)
+	Script 					:ARRAY[0..99] OF MOTION_INSTRUCTION;
+	ContinuousMode			:BOOL;
+	ScriptEnd				:INT						:= 0; //empty/not executed
+	CurInstruction			:INT						:= 0; //current instruction
+	(*only for display*)
+	NextInstruction			:INT;
+	(*control case statement in RunCommands*)
+	InstructionState		:INT						:= 0;
+	TxtBxWaitOK				:BOOL						:= TRUE; //hide text box
+	HaltMem					:BOOL						:= FALSE; //part of the waitOK motion button control
+	//zMoveMem				:BOOL						:= FALSE;
+	
+	//increment after complete script run
+	//reset when all script runs end - finite number or when continuous mode is disabled
+	(*display in HMI*)
+	RUN_INDEX				:INT						:= 1;  
+
+	//output signals
+	xOut					:OUT_SIGNALS;
+	xCOut					:OUT_SIGNALS;
+	yOut					:OUT_SIGNALS;	
+	zOut					:OUT_SIGNALS;
+	xHomeStatus				:MOTION_FB_STATUS;
+	xCHomeStatus			:MOTION_FB_STATUS;
+	yHomeStatus				:MOTION_FB_STATUS;
+	zHomeStatus				:MOTION_FB_STATUS;
+	MoveActive				:BOOL;
+	
+	//for the drop down lists
+	xyzCMDSelect			:ARRAY[0..3] OF MotionType	:= [0,1,2,3];
+	zMODESelect				:ARRAY[0..2] OF zBehavior	:= [0,1,2];
+	TriggerOn				:ARRAY[0..4] OF DataTrigger	:= [0,1,2,3,4];
+	
+	//safety controls
+	(*in zAxisMoreLogic*)
+	zSafeDisable			:BOOL						:= FALSE;
+	HardStopState			:INT						:= 0;
+	HardStopLocateDone		:BOOL						:= FALSE;
+	HardStopLocations		:ARRAY[0..2] OF LREAL		:= [0,0,0];
+	
+	zSafeLimitIsSet			:BOOL						:= FALSE;
+	zSafePosition			:LREAL						:= 0;	
+	
+	Zero					:LREAL						:= 0;
+
+	//homing variables
+	HomingState				:INT						:= 0;
+	RevCouplePrep			:BOOL						:= FALSE;
+	HomeDone				:BOOL						:= FALSE;
+	
+	//maybe put in script struct
+	//motion script file name - also used for data output
+	SCRIPT_TITLE			:T_MaxString;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

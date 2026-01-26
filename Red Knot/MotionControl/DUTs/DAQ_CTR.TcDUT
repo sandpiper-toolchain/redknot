@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <DUT Name="DAQ_CTR" Id="{9bc06f9c-a6c9-47ae-966a-864e0de7397d}">
+    <Declaration><![CDATA[TYPE DAQ_CTR :
+STRUCT
+	//clears all data from data arrays
+	CMDDATACLR		:BOOL;
+	//controls whether data is appended to current file or not
+	CMDDATAAPEND	:BOOL;
+	CMDDATAWRITE	:BOOL;
+	//maybe put in script struct
+	DAQACQRES		:INT := 1; //acquire every x mm or seconds (default 1)
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

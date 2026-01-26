@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <DUT Name="CTR_SIGNALS_INTERNAL" Id="{ce9c7db3-6c6a-44c1-8a13-90802621fe81}">
+    <Declaration><![CDATA[TYPE CTR_SIGNALS_INTERNAL :
+STRUCT
+	//motion control signals
+	Enable					:BOOL;
+	Execute_SPOS			:BOOL;
+	Execute_MABS			:BOOL;
+	Execute_MREL			:BOOL;
+	Execute_RES				:BOOL;
+	Execute_VEL				:BOOL;
+	Execute_HALT			:BOOL;
+	Execute_STOP			:BOOL;
+	Execute_HOME			:BOOL;
+	Execute_REV_HOME		:BOOL;	
+	JogFw					:BOOL;
+	JogBw					:BOOL;
+	JogMode					:E_JogMode;
+	SetPosition				:LREAL;
+	SetVelocity				:LREAL;
+	SetAccel				:LREAL;
+	LimPos					:BOOL;
+	LimNeg					:BOOL;
+	
+	//axis coupling control
+	CoupleState				:INT:= 0; //axis coupling state machine
+	CouplePowerEn			:BOOL; //used in AxisCoupledControl
+	CoupleControl			:BOOL; //controls execute couple/uncouple
+	ExecuteCouple			:BOOL; //connected to GearIn
+	ExecuteUncouple			:BOOL; //connected to GearOut
+	ExecuteRevCouple		:BOOL; //GearIn AxisCoupledControl
+	ExecuteRevUncouple		:BOOL; //GearOut
+	AxisToCouple			:AXIS_REF;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
