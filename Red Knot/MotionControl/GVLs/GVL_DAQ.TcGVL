@@ -21,8 +21,9 @@ VAR_GLOBAL PERSISTENT
 END_VAR
 
 VAR_GLOBAL
-	//array to store indices of individual passes
 	//stored during state 0
+	//index of INDEX_COLLECTOR is the number of the pass that starts at the value recorded
+	(*array to store the DATA_INDEX for each instruction pass*)
 	INDEX_COLLECTOR	:ARRAY [0..999] OF UDINT;
 	//15MB - 80byte default element size
 	TIMESTAMP		:ARRAY[0..199999] OF STRING;

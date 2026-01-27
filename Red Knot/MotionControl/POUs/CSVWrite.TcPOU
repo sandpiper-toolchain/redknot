@@ -4,15 +4,17 @@
     <Declaration><![CDATA[(* Writing of CSV file in text mode. None of the field value is containing any non-printing control characters like line feed, carriage return, quotation marks, semicolon... *)
 PROGRAM CSVWrite
 VAR
+	step			:DWORD 			:= 0;(*state control*)
+
 	bWrite			:BOOL			:= FALSE;(* Rising edge starts program execution *)
 	sNetId			:T_AmsNetId		:= '';	(* TwinCAT system network address *)
 	bBusy			:BOOL;
 	bError			:BOOL;
 	nErrId			:UDINT;
+	
 	nRow	 		:UDINT 			:= 0;(* Row number (record) *)
 	nColumn			:UDINT 			:= 0;(* Column number (record field) *)
 	hFile			:UINT			:= 0;(* File handle of the source file *)
-	step			:DWORD 			:= 0;
 	
 	fbFileOpen		:FB_FileOpen;(* Opens file *)
 	fbFileClose		:FB_FileClose;(* Closes file *)
@@ -29,6 +31,7 @@ VAR
 	TOPDIR			:T_MaxString	:= 'C:\data';
 	FILEPATH		:T_MaxString; 	//path of directory for current experiment
 	FILENAME		:T_MaxString;
+	HOLDNAME		:T_MaxString;	//save file name for appending data across script runs
 	
 	fbTime			:FB_LocalSystemTime;
 	timestring		:STRING;
@@ -53,62 +56,87 @@ END_IF
 CASE step OF
 	0:	(* Wait for rising edge at bWrite variable *)
 		IF bWrite THEN
-			bWrite 		:= FALSE;
-			bBusy 		:= TRUE;
-			bError		:= FALSE;
-			nErrId		:= 0;
-			hFile		:= 0;
-			nRow		:= 0;
-			nColumn		:= 0;
-			TOPDIR		:= 'C:\data';
+			bWrite 					:= FALSE;
+			bBusy 					:= TRUE;
+			bError					:= FALSE;
+			nErrId					:= 0;
+			hFile					:= 0;
+			nRow					:= 0;
+			nColumn					:= 0;
+			TOPDIR					:= 'C:\data';
 			//make sure C:\data exists
 			fbCMD(START:= FALSE);
 			fbCMD( PATHSTR:= CMDPATH, DIRNAME:= 'C:\', COMNDLINE:= concat(COMNDLINE, 'data"'), START:= TRUE);
 			fbCMD(START:= FALSE);
-			FILEPATH	:= '';
-			step 		:= 1;
+			FILEPATH				:= '';
+			IF GVL_MOTION.RUN_INDEX = 1 THEN
+				HOLDNAME			:= '';
+			END_IF
+			
+			step 					:= 1;
 		END_IF
 		
 	1:
 		//create directory for current script to contain script file and data output
-		TEMP			:= concat(GVL_MOTION.SCRIPT_TITLE, '"');
-		fbCMD( PATHSTR	:= CMDPATH, DIRNAME:= TOPDIR, COMNDLINE:= concat(COMNDLINE, TEMP), START:= TRUE);
+		TEMP						:= concat(GVL_MOTION.SCRIPT_TITLE, '"');
+		fbCMD( PATHSTR				:= CMDPATH, DIRNAME:= TOPDIR, COMNDLINE:= concat(COMNDLINE, TEMP), START:= TRUE);
 		fbCMD(START:= FALSE);
 		//TODO exclude control characters from script name
 		timestring	:= SYSTEMTIME_TO_STRING(fbtime.systemTime);
 		//keep seconds to avoid overlapping file names
-		timestring		:= delete(timestring, 4, 20);
-		timestring		:= delete(timestring, 1, 17); 
-		timestring		:= delete(timestring, 1, 14); 
+		timestring					:= delete(timestring, 4, 20);
+		timestring					:= delete(timestring, 1, 17); 
+		timestring					:= delete(timestring, 1, 14); 
 		
-		TOPDIR			:= concat(TOPDIR, '\');
-		TOPDIR			:= concat(TOPDIR, GVL_MOTION.SCRIPT_TITLE);
-		TOPDIR			:= concat(TOPDIR, '\');
+		TOPDIR						:= concat(TOPDIR, '\');
+		TOPDIR						:= concat(TOPDIR, GVL_MOTION.SCRIPT_TITLE);
+		TOPDIR						:= concat(TOPDIR, '\');
 		
-		FILENAME		:= concat(GVL_MOTION.SCRIPT_TITLE, '_');
+		FILENAME					:= concat(GVL_MOTION.SCRIPT_TITLE, '_');
 		
 		CASE GVL_DAQ.DAQ_CTR_INT.CSVWriteMode OF
 			CSVWriteMode.keyence: 
-				FILENAME 	:= concat(FILENAME, 'Keyence');
-				IF NOT GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
-					FILENAME 	:= concat(FILENAME, '_');
-					FILENAME	:= concat(FILENAME, timestring); 
+				FILENAME 			:= concat(FILENAME, 'Keyence');
+				FILENAME 			:= concat(FILENAME, '_');
+				FILENAME			:= concat(FILENAME, timestring);
+				FILENAME			:= concat(FILENAME, '.csv');
+				IF GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
+					IF GVL_MOTION.RUN_INDEX = 1 THEN
+						HOLDNAME	:= FILENAME;
+					ELSE
+						FILENAME	:= HOLDNAME;	
+					END_IF
+			
 				END_IF	
-				FILENAME	:= concat(FILENAME, '.csv');
+				
 			CSVWriteMode.massa:
 				FILENAME 	:= concat(FILENAME, 'Massa');
-				IF NOT GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
-					FILENAME 	:= concat(FILENAME, '_');
-					FILENAME	:= concat(FILENAME, timestring); 
-				END_IF	 	
-				FILENAME	:= concat(FILENAME, '.csv');
+				FILENAME 			:= concat(FILENAME, '_');
+				FILENAME			:= concat(FILENAME, timestring);
+				FILENAME			:= concat(FILENAME, '.csv');
+				IF GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
+					IF GVL_MOTION.RUN_INDEX = 1 THEN
+						HOLDNAME	:= FILENAME;
+					ELSE
+						FILENAME	:= HOLDNAME;	
+					END_IF
+			
+				END_IF	
+				
 			CSVWriteMode.sonar:
 				FILENAME 	:= concat(FILENAME, 'Sonar');
-				IF NOT GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
-					FILENAME 	:= concat(FILENAME, '_');
-					FILENAME	:= concat(FILENAME, timestring); 
-				END_IF	 	
-				FILENAME	:= concat(FILENAME, '.csv');
+				FILENAME 			:= concat(FILENAME, '_');
+				FILENAME			:= concat(FILENAME, timestring);
+				FILENAME			:= concat(FILENAME, '.csv');
+				IF GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
+					IF GVL_MOTION.RUN_INDEX = 1 THEN
+						HOLDNAME	:= FILENAME;
+					ELSE
+						FILENAME	:= HOLDNAME;	
+					END_IF
+			
+				END_IF	
+				
 			CSVWriteMode.script:
 				FILENAME 	:= concat(FILENAME, 'Script.csv');	
 		END_CASE
@@ -127,63 +155,63 @@ CASE step OF
 		fbFileOpen( bExecute := FALSE, bError => bError, nErrID => nErrID, hFile => hFile );
 		IF NOT fbFileOpen.bBusy THEN
 			IF NOT fbFileOpen.bError THEN
-				step := 0;
-					bWrite							:= FALSE;
+				step := 4;
+				//bWrite							:= FALSE;
 		GVL_DAQ.EXT_CTR.CMDDATAWRITE:=FALSE;
 			ELSE(* Error: file not found? *)
 				step := 100;
 			END_IF
 		END_IF
 
-// 	3:(* Convert one PLC record to CSV format *)
-// 		sCSVLine := '';
-// 		fbWriter.eCmd := eEnumCmd_First;(* Write first field value *)
-// 		IF nRow <= 100 THEN
-// 
-// 			FOR nColumn := 0 TO 5 BY 1 DO
-// 
-// 				sCSVField := STRING_TO_CSVFIELD( database[ nRow, nColumn ], FALSE );(* TODO: Get field value from your application *)
-// 
-// 				(* Add new field to the record buffer *)
-// 				fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
-// 							bCRLF := ( nColumn = 5 ) );(* bCRLF == TRUE => Write CRLF after the last field value *)
-// 				IF fbWriter.bOk THEN
-// 					fbWriter.eCmd := eEnumCmd_Next;(* Write next field value *)
-// 				ELSE(* Error *)
-// 					step := 100;
-// 					RETURN;
-// 				END_IF
-// 
-// 			END_FOR(* FOR nColumn := 0... *)
-// 
-// 			(* FB_FilePuts adds allready CR (carriage return) to the written line.
-// 			We have to replace the $R$L characters with $L character to avoid double CR. *)
-// 			IF RIGHT( sCSVLine, 2 ) = '$R$L' THEN
-// 				sCSVLine := REPLACE( sCSVLine, '$L', 2, LEN( sCSVLine ) - 1 );
-// 			END_IF
-// 
-// 			nRow := nRow + 1;(* Increment number of created records (rows) *)
-// 			step := 4;(* Write record to the file *)
-// 
-// 		ELSE(* All rows written => Close file *)
-// 			step := 10;
-// 		END_IF
-// 
-// 	4:	(* Write single text line *)
-// 		fbFilePuts( bExecute := FALSE );
-// 		fbFilePuts( sNetId := sNetId, hFile := hFile, sLine := sCSVLine, bExecute := TRUE );
-// 		step := 5;
-// 
-// 	5:(* Wait until write not busy *)
-// 		fbFilePuts( bExecute := FALSE, bError => bError, nErrID => nErrID );
-// 		IF NOT fbFilePuts.bBusy THEN
-// 			IF NOT fbFilePuts.bError THEN
-// 				step := 3;(* Write next record *)
-// 			ELSE(* Error *)
-// 				step := 100;
-// 			END_IF
-// 		END_IF
-// 
+	4:(* Convert one PLC record to CSV format *)
+		sCSVLine := '';
+		fbWriter.eCmd := eEnumCmd_First;(* Write first field value *)
+		IF nRow <= 100 THEN
+
+			FOR nColumn := 0 TO 5 BY 1 DO
+
+				sCSVField := STRING_TO_CSVFIELD( database[ nRow, nColumn ], FALSE );(* TODO: Get field value from your application *)
+
+				(* Add new field to the record buffer *)
+				fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+							bCRLF := ( nColumn = 5 ) );(* bCRLF == TRUE => Write CRLF after the last field value *)
+				IF fbWriter.bOk THEN
+					fbWriter.eCmd := eEnumCmd_Next;(* Write next field value *)
+				ELSE(* Error *)
+					step := 100;
+					RETURN;
+				END_IF
+
+			END_FOR(* FOR nColumn := 0... *)
+
+			(* FB_FilePuts adds allready CR (carriage return) to the written line.
+			We have to replace the $R$L characters with $L character to avoid double CR. *)
+			IF RIGHT( sCSVLine, 2 ) = '$R$L' THEN
+				sCSVLine := REPLACE( sCSVLine, '$L', 2, LEN( sCSVLine ) - 1 );
+			END_IF
+
+			nRow := nRow + 1;(* Increment number of created records (rows) *)
+			step := 5;(* Write record to the file *)
+
+		ELSE(* All rows written => Close file *)
+			step := 10;
+		END_IF
+
+	5:	(* Write single text line *)
+		fbFilePuts( bExecute := FALSE );
+		fbFilePuts( sNetId := sNetId, hFile := hFile, sLine := sCSVLine, bExecute := TRUE );
+		step := 6;
+
+	6:(* Wait until write not busy *)
+		fbFilePuts( bExecute := FALSE, bError => bError, nErrID => nErrID );
+		IF NOT fbFilePuts.bBusy THEN
+			IF NOT fbFilePuts.bError THEN
+				step := 4;(* Write next record *)
+			ELSE(* Error *)
+				step := 100;
+			END_IF
+		END_IF
+
 // 	10:	(* Close source file *)
 // 		fbFileClose( bExecute := FALSE );
 // 		fbFileClose( sNetId := sNetId, hFile := hFile, bExecute := TRUE );
@@ -220,6 +248,7 @@ END_CASE
       <LineId Id="169" Count="0" />
       <LineId Id="185" Count="0" />
       <LineId Id="124" Count="0" />
+      <LineId Id="199" Count="3" />
       <LineId Id="18" Count="1" />
       <LineId Id="112" Count="1" />
       <LineId Id="120" Count="0" />
@@ -236,19 +265,24 @@ END_CASE
       <LineId Id="132" Count="0" />
       <LineId Id="114" Count="0" />
       <LineId Id="150" Count="3" />
+      <LineId Id="192" Count="2" />
       <LineId Id="172" Count="0" />
       <LineId Id="174" Count="0" />
-      <LineId Id="154" Count="0" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="197" Count="1" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="190" Count="0" />
       <LineId Id="173" Count="0" />
-      <LineId Id="155" Count="1" />
+      <LineId Id="203" Count="0" />
+      <LineId Id="156" Count="0" />
       <LineId Id="158" Count="0" />
-      <LineId Id="175" Count="2" />
-      <LineId Id="159" Count="0" />
+      <LineId Id="204" Count="9" />
       <LineId Id="157" Count="0" />
+      <LineId Id="214" Count="0" />
       <LineId Id="161" Count="1" />
-      <LineId Id="178" Count="2" />
-      <LineId Id="163" Count="0" />
+      <LineId Id="215" Count="9" />
       <LineId Id="160" Count="0" />
+      <LineId Id="225" Count="0" />
       <LineId Id="165" Count="1" />
       <LineId Id="149" Count="0" />
       <LineId Id="168" Count="0" />

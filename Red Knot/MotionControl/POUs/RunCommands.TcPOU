@@ -5,6 +5,7 @@
 VAR
 	timer		:TON;
 	index		:INT;
+	(*set to true during daq instruction when future daq instructions are detected. delay daq execution until last daq instruction in script*)
 	DAQ_HOLD	:BOOL := FALSE;
 END_VAR
 ]]></Declaration>
@@ -338,7 +339,7 @@ CASE GVL_MOTION.InstructionState OF
 						GVL_DAQ.PASS_INDEX									:= 0;
 						GVL_MOTION.EXT_CTR.CMDRUN 							:= FALSE;	 //command list executed
 					ELSE
-						//keep recording pass indices while more script iterations run
+						//append mode - keep incrementing PASS_INDEX until all script runs are complete
 						IF NOT GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
 							GVL_DAQ.PASS_INDEX								:= 0;
 						END_IF
@@ -380,7 +381,7 @@ CASE GVL_MOTION.InstructionState OF
 					GVL_DAQ.PASS_INDEX									:= 0;
 					GVL_MOTION.EXT_CTR.CMDRUN 							:= FALSE;	 //command list executed
 				ELSE
-					//keep recording pass indices while more script iterations run
+					//append mode - keep incrementing PASS_INDEX until all script runs are complete
 					IF NOT GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
 						GVL_DAQ.PASS_INDEX								:= 0;
 					END_IF
