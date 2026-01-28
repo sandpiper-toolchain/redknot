@@ -3,36 +3,38 @@
   <GVL Name="GVL_DAQ" Id="{1c675dcd-405a-4b00-93d2-9791cecee6ec}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL PERSISTENT
-	EXT_CTR			:DAQ_CTR;
-	TEST_CTR		:DAQ_CTR;
-	DAQ_CTR_INT		:DAQ_CTR_INTERNAL;
+	EXT_CTR				:DAQ_CTR;
+	TEST_CTR			:DAQ_CTR;
+	DAQ_CTR_INT			:DAQ_CTR_INTERNAL;
 	//indicates DATA_INDEX exceeding 199999
 	//halts motion and DAQ, requires data dump or 
 	//data clear to resume queue
-	DATA_OVERFLOW	:BOOL	:= 0;
+	DATA_OVERFLOW		:BOOL	:= 0;
 	//index for data arrays
-	DATA_INDEX		:UDINT	:= 0;
+	DATA_INDEX			:UDINT	:= 0;
 	//increment after each DAQ instruction
 	//reset after each complete script run
 	//used to populate INDEX_COLLECTOR
-	PASS_INDEX		:INT	:= 0;
-	MASSA_TEMP		:INT;
-	KEYENCE_TEMP	:INT;
+	PASS_INDEX			:INT	:= 0;
+	MASSA_TEMP			:INT;
+	KEYENCE_TEMP		:INT;
 END_VAR
 
 VAR_GLOBAL
 	//stored during state 0
 	//index of INDEX_COLLECTOR is the number of the pass that starts at the value recorded
 	(*array to store the DATA_INDEX for each instruction pass*)
-	INDEX_COLLECTOR	:ARRAY [0..999] OF UDINT;
+	INDEX_COLLECTOR		:ARRAY [0..999] OF UDINT;
+	(*elapsed time of the data pass*)
+	RUNTIME_COLLECTOR	:ARRAY[0..999] OF TIME;
 	//15MB - 80byte default element size
-	TIMESTAMP		:ARRAY[0..199999] OF STRING;
+	TIMESTAMP			:ARRAY[0..199999] OF STRING;
 	//1.5MB per array - 64bit element size
-	MASSA			:ARRAY[0..199999] OF LREAL;
-	KEYENCE			:ARRAY[0..199999] OF LREAL;
-	X				:ARRAY[0..199999] OF LREAL;
-	Y				:ARRAY[0..199999] OF LREAL;
-	Z				:ARRAY[0..199999] OF LREAL;	
+	MASSA				:ARRAY[0..199999] OF LREAL;
+	KEYENCE				:ARRAY[0..199999] OF LREAL;
+	X					:ARRAY[0..199999] OF LREAL;
+	Y					:ARRAY[0..199999] OF LREAL;
+	Z					:ARRAY[0..199999] OF LREAL;	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

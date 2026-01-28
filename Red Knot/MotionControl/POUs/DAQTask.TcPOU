@@ -152,7 +152,9 @@ END_IF
 
 IF GVL_MOTION.EXT_CTR.AxesReset THEN
 	GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= DataTrigger.none;
-END_IF]]></ST>
+END_IF
+
+DAQPassTime(); //measure time taken for DAQ pass]]></ST>
     </Implementation>
     <LineIds Name="DAQTask">
       <LineId Id="25" Count="0" />
@@ -217,6 +219,8 @@ END_IF]]></ST>
       <LineId Id="43" Count="0" />
       <LineId Id="42" Count="0" />
       <LineId Id="44" Count="1" />
+      <LineId Id="243" Count="0" />
+      <LineId Id="242" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -5,7 +5,9 @@
 PROGRAM CSVWrite
 VAR
 	step			:DWORD 			:= 0;(*state control*)
-
+	datawrite		:BOOL			:= FALSE;(*start by writing header, then set TRUE*)
+	headerstep		:INT			:= 0;(*state control for header write*)
+	
 	bWrite			:BOOL			:= FALSE;(* Rising edge starts program execution *)
 	sNetId			:T_AmsNetId		:= '';	(* TwinCAT system network address *)
 	bBusy			:BOOL;
@@ -43,6 +45,8 @@ VAR
 	'3_0', '3_1', '3_2', '3_3', '3_4', '3_5',
 	'4_0', '4_1', '4_2', '4_3', '4_4', '4_5',
 	'5_0', '5_1', '5_2', '5_3', '5_4', '5_5'];
+	
+	
 
 END_VAR]]></Declaration>
     <Implementation>
@@ -166,35 +170,62 @@ CASE step OF
 	4:(* Convert one PLC record to CSV format *)
 		sCSVLine := '';
 		fbWriter.eCmd := eEnumCmd_First;(* Write first field value *)
-		IF nRow <= 100 THEN
-
-			FOR nColumn := 0 TO 5 BY 1 DO
-
-				sCSVField := STRING_TO_CSVFIELD( database[ nRow, nColumn ], FALSE );(* TODO: Get field value from your application *)
-
-				(* Add new field to the record buffer *)
-				fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
-							bCRLF := ( nColumn = 5 ) );(* bCRLF == TRUE => Write CRLF after the last field value *)
-				IF fbWriter.bOk THEN
-					fbWriter.eCmd := eEnumCmd_Next;(* Write next field value *)
-				ELSE(* Error *)
-					step := 100;
-					RETURN;
+		IF GVL_DAQ.DAQ_CTR_INT.CSVWriteMode <> CSVWriteMode.script THEN
+			IF NOT datawrite THEN
+				CASE headerstep OF
+					0: 
+						sCSVField	:= STRING_TO_CSVFIELD('Data Capture - Begin Header', FALSE);
+						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+										bCRLF := TRUE );(* bCRLF == TRUE => Write CRLF after the last field value *)
+						headerstep	:= 1;
+					1:
+						CASE GVL_DAQ.DAQ_CTR_INT.CSVWriteMode OF
+							CSVWriteMode.keyence: sCSVField	:= STRING_TO_CSVFIELD('Keyence Data', FALSE);
+							CSVWriteMode.massa: sCSVField	:= STRING_TO_CSVFIELD('Massa Data', FALSE);
+							CSVWriteMode.sonar: sCSVField	:= STRING_TO_CSVFIELD('Sonar Data', FALSE);
+						END_CASE
+						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+										bCRLF := TRUE );(* bCRLF == TRUE => Write CRLF after the last field value *)		
+						headerstep	:= 2;		
+				END_CASE
+				IF RIGHT( sCSVLine, 2 ) = '$R$L' THEN
+						sCSVLine := REPLACE( sCSVLine, '$L', 2, LEN( sCSVLine ) - 1 );
 				END_IF
-
-			END_FOR(* FOR nColumn := 0... *)
-
-			(* FB_FilePuts adds allready CR (carriage return) to the written line.
-			We have to replace the $R$L characters with $L character to avoid double CR. *)
-			IF RIGHT( sCSVLine, 2 ) = '$R$L' THEN
-				sCSVLine := REPLACE( sCSVLine, '$L', 2, LEN( sCSVLine ) - 1 );
+				step	:= 5;
+			ELSE
+				IF nRow <= 100 THEN
+		
+					FOR nColumn := 0 TO 5 BY 1 DO
+		
+						sCSVField := STRING_TO_CSVFIELD( database[ nRow, nColumn ], FALSE );(* second parameter adds quotes to string *)
+		
+						(* Add new field to the record buffer *)
+						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+									bCRLF := ( nColumn = 5 ) );(* bCRLF == TRUE => Write CRLF after the last field value *)
+						IF fbWriter.bOk THEN
+							fbWriter.eCmd := eEnumCmd_Next;(* Write next field value *)
+						ELSE(* Error *)
+							step := 100;
+							RETURN;
+						END_IF
+		
+					END_FOR(* FOR nColumn := 0... *)
+		
+					(* FB_FilePuts adds allready CR (carriage return) to the written line.
+					We have to replace the $R$L characters with $L character to avoid double CR. *)
+					IF RIGHT( sCSVLine, 2 ) = '$R$L' THEN
+						sCSVLine := REPLACE( sCSVLine, '$L', 2, LEN( sCSVLine ) - 1 );
+					END_IF
+		
+					nRow := nRow + 1;(* Increment number of created records (rows) *)
+					step := 5;(* Write record to the file *)
+		
+				ELSE(* All rows written => Close file *)
+					step := 10;
+				END_IF
+			
 			END_IF
-
-			nRow := nRow + 1;(* Increment number of created records (rows) *)
-			step := 5;(* Write record to the file *)
-
-		ELSE(* All rows written => Close file *)
-			step := 10;
+			
 		END_IF
 
 	5:	(* Write single text line *)
@@ -232,6 +263,7 @@ CASE step OF
 // 			step := 0;	(* Ready *)
 // 		END_IF
 
+//TODO clear HOLDNAME when GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.Script_Iterations
 END_CASE
 
 
@@ -293,7 +325,34 @@ END_CASE
       <LineId Id="183" Count="0" />
       <LineId Id="27" Count="4" />
       <LineId Id="187" Count="1" />
-      <LineId Id="32" Count="78" />
+      <LineId Id="32" Count="7" />
+      <LineId Id="227" Count="0" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="236" Count="0" />
+      <LineId Id="245" Count="0" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="244" Count="0" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="248" Count="1" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="254" Count="1" />
+      <LineId Id="253" Count="0" />
+      <LineId Id="250" Count="1" />
+      <LineId Id="256" Count="0" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="242" Count="1" />
+      <LineId Id="241" Count="0" />
+      <LineId Id="247" Count="0" />
+      <LineId Id="233" Count="0" />
+      <LineId Id="40" Count="29" />
+      <LineId Id="235" Count="0" />
+      <LineId Id="231" Count="0" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="70" Count="34" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="105" Count="5" />
     </LineIds>
   </POU>
 </TcPlcObject>

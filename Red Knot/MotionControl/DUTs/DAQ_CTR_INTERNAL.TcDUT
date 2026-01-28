@@ -19,6 +19,8 @@ STRUCT
 	Clear_Keyence		:BOOL;
 	Clear_DAQ_Task		:BOOL;
 	
+	Measure_Run_Time	:BOOL		:= FALSE;
+	
 	Write_Data			:BOOL;
 	Write_Data_Append	:BOOL;
 END_STRUCT

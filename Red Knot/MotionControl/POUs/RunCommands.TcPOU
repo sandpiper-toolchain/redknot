@@ -4,17 +4,18 @@
     <Declaration><![CDATA[PROGRAM RunCommands
 VAR
 	timer		:TON;
+	starttime	:TIME;
 	index		:INT;
 	(*set to true during daq instruction when future daq instructions are detected. delay daq execution until last daq instruction in script*)
-	DAQ_HOLD	:BOOL := FALSE;
+	DAQ_HOLD	:BOOL	:= FALSE;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[//require safe z limit, home complete, x axes coupled, hard stops located
 IF (NOT GVL_MOTION.zSafeLimitIsSet) OR (NOT GVL_MOTION.HomeDone)
 OR (NOT GVL_MOTION.xOut.AxisCoupled) OR (NOT GVL_MOTION.HardStopLocateDone) THEN
-	GVL_MOTION.CurInstruction													:= 0;
-	GVL_MOTION.EXT_CTR.CMDRUN											:= FALSE;	//maybe change this to internal variable
+	GVL_MOTION.CurInstruction												:= 0;
+	GVL_MOTION.EXT_CTR.CMDRUN												:= FALSE;	//maybe change this to internal variable
 END_IF
 
 //script exits: state 0,1,3
@@ -82,35 +83,37 @@ CASE GVL_MOTION.InstructionState OF
 		IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Absolute THEN
 			IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].zType = zBehavior.Manual THEN
 				CASE GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger OF
-					DataTrigger.none: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 0;
-					DataTrigger.x: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger			:= 1;
-					DataTrigger.y: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger			:= 2;
-					DataTrigger.z: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger			:= 3;
+					DataTrigger.none: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger	:= 0;
+					DataTrigger.x: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 1;
+					DataTrigger.y: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 2;
+					DataTrigger.z: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 3;
 						
 				END_CASE
-				IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none THEN				
+				IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none THEN
+					starttime			:= TIME();				
 					IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_Keyence THEN
-						GVL_DAQ.DAQ_CTR_INT.Acquire_Keyence						:= TRUE;
+						GVL_DAQ.DAQ_CTR_INT.Acquire_Keyence					:= TRUE;
 					END_IF
 					
 					IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_Massa THEN
-						GVL_DAQ.DAQ_CTR_INT.Acquire_Massa						:= TRUE;
+						GVL_DAQ.DAQ_CTR_INT.Acquire_Massa					:= TRUE;
 					END_IF
 	
 					IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_Sonar THEN
-						GVL_DAQ.DAQ_CTR_INT.Acquire_Sonar						:= TRUE;
+						GVL_DAQ.DAQ_CTR_INT.Acquire_Sonar					:= TRUE;
 					END_IF				
 					
 				END_IF
 				
-				GVL_MOTION.xCon.Execute_MABS									:= TRUE;
-				GVL_MOTION.yCon.Execute_MABS									:= TRUE;
-				GVL_MOTION.zCon.Execute_MABS									:= TRUE;
+				GVL_MOTION.xCon.Execute_MABS								:= TRUE;
+				GVL_MOTION.yCon.Execute_MABS								:= TRUE;
+				GVL_MOTION.zCon.Execute_MABS								:= TRUE;
 				IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none THEN
-					GVL_DAQ.INDEX_COLLECTOR[GVL_DAQ.PASS_INDEX]					:= GVL_DAQ.DATA_INDEX;
-					GVL_MOTION.InstructionState 								:= 3;
+					GVL_DAQ.INDEX_COLLECTOR[GVL_DAQ.PASS_INDEX]				:= GVL_DAQ.DATA_INDEX;
+					GVL_DAQ.DAQ_CTR_INT.Measure_Run_Time					:= TRUE; //start time collection for DAQ pass
+					GVL_MOTION.InstructionState 							:= 3;
 				ELSE
-					GVL_MOTION.InstructionState 								:= 1;	
+					GVL_MOTION.InstructionState 							:= 1;	
 				END_IF
 			
 			ELSE
@@ -120,36 +123,37 @@ CASE GVL_MOTION.InstructionState OF
 		ELSIF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Relative THEN
 			IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].zType = zBehavior.Manual THEN
 				CASE GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger OF
-					DataTrigger.none: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 0;
-					DataTrigger.x: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger			:= 1;
-					DataTrigger.y: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger			:= 2;
-					DataTrigger.z: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger			:= 3;
+					DataTrigger.none: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger	:= 0;
+					DataTrigger.x: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 1;
+					DataTrigger.y: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 2;
+					DataTrigger.z: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 3;
 						
 				END_CASE
 				IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none THEN
 							
 					IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_Keyence THEN
-						GVL_DAQ.DAQ_CTR_INT.Acquire_Keyence						:= TRUE;
+						GVL_DAQ.DAQ_CTR_INT.Acquire_Keyence					:= TRUE;
 					END_IF
 					
 					IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_Massa THEN
-						GVL_DAQ.DAQ_CTR_INT.Acquire_Massa						:= TRUE;
+						GVL_DAQ.DAQ_CTR_INT.Acquire_Massa					:= TRUE;
 					END_IF
 	
 					IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_Sonar THEN
-						GVL_DAQ.DAQ_CTR_INT.Acquire_Sonar						:= TRUE;
+						GVL_DAQ.DAQ_CTR_INT.Acquire_Sonar					:= TRUE;
 					END_IF		
 					
 				END_IF
 				
-				GVL_MOTION.xCon.Execute_MREL									:= TRUE;
-				GVL_MOTION.yCon.Execute_MREL									:= TRUE;
-				GVL_MOTION.zCon.Execute_MREL									:= TRUE;
+				GVL_MOTION.xCon.Execute_MREL								:= TRUE;
+				GVL_MOTION.yCon.Execute_MREL								:= TRUE;
+				GVL_MOTION.zCon.Execute_MREL								:= TRUE;
 				IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none THEN
-					GVL_DAQ.INDEX_COLLECTOR[GVL_DAQ.PASS_INDEX]					:= GVL_DAQ.DATA_INDEX;
-					GVL_MOTION.InstructionState 								:= 3;
+					GVL_DAQ.INDEX_COLLECTOR[GVL_DAQ.PASS_INDEX]				:= GVL_DAQ.DATA_INDEX;
+					GVL_DAQ.DAQ_CTR_INT.Measure_Run_Time					:= TRUE; //start time collection for DAQ pass
+					GVL_MOTION.InstructionState 							:= 3;
 				ELSE
-					GVL_MOTION.InstructionState 								:= 1;	
+					GVL_MOTION.InstructionState 							:= 1;	
 				END_IF
 			
 			ELSE
@@ -159,24 +163,24 @@ CASE GVL_MOTION.InstructionState OF
 		END_IF	
 			
 	ELSE  
-		GVL_MOTION.CurInstruction 												:= 0;
+		GVL_MOTION.CurInstruction 											:= 0;
 		GVL_MOTION.EXT_CTR.CMDRUN 											:= FALSE; //no queued command means exit
 	END_IF
 
 	1:
 	//state 1: non DAQ motion
 	IF GVL_MOTION.EXT_CTR.AxesHalt THEN
-		GVL_MOTION.xCon.Execute_MABS 									:= FALSE;
-		GVL_MOTION.yCon.Execute_MABS 									:= FALSE;
-		GVL_MOTION.zCon.Execute_MABS 									:= FALSE;
-		GVL_MOTION.xCon.Execute_MREL 									:= FALSE;
-		GVL_MOTION.yCon.Execute_MREL 									:= FALSE;	
-		GVL_MOTION.zCon.Execute_MREL 									:= FALSE;
-		GVL_MOTION.xCon.Execute_HALT 									:= TRUE;
-		GVL_MOTION.yCon.Execute_HALT 									:= TRUE;
-		GVL_MOTION.zCon.Execute_HALT 									:= TRUE;			
+		GVL_MOTION.xCon.Execute_MABS 										:= FALSE;
+		GVL_MOTION.yCon.Execute_MABS 										:= FALSE;
+		GVL_MOTION.zCon.Execute_MABS 										:= FALSE;
+		GVL_MOTION.xCon.Execute_MREL 										:= FALSE;
+		GVL_MOTION.yCon.Execute_MREL 										:= FALSE;	
+		GVL_MOTION.zCon.Execute_MREL 										:= FALSE;
+		GVL_MOTION.xCon.Execute_HALT 										:= TRUE;
+		GVL_MOTION.yCon.Execute_HALT 										:= TRUE;
+		GVL_MOTION.zCon.Execute_HALT 										:= TRUE;			
 			
-		GVL_MOTION.InstructionState 									:= 2;
+		GVL_MOTION.InstructionState 										:= 2;
 		
 	END_IF	
 	
@@ -368,28 +372,28 @@ CASE GVL_MOTION.InstructionState OF
 		CSVWrite();	
 	ELSE
 		IF GVL_MOTION.CurInstruction < (GVL_MOTION.ScriptEnd - 1) THEN
-			GVL_MOTION.CurInstruction 									:= GVL_MOTION.CurInstruction + 1; //queue next instruction
+			GVL_MOTION.CurInstruction 										:= GVL_MOTION.CurInstruction + 1; //queue next instruction
 				
-			GVL_MOTION.InstructionState 								:= 0;
+			GVL_MOTION.InstructionState 									:= 0;
 		ELSE
-			GVL_MOTION.CurInstruction 									:= 0;
+			GVL_MOTION.CurInstruction 										:= 0;
 				
-			GVL_MOTION.InstructionState 								:= 0;
+			GVL_MOTION.InstructionState 									:= 0;
 			IF NOT GVL_MOTION.EXT_CTR.CMDLOOP THEN
 				IF GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.Script_Iterations THEN
-					GVL_MOTION.RUN_INDEX								:= 1;
-					GVL_DAQ.PASS_INDEX									:= 0;
-					GVL_MOTION.EXT_CTR.CMDRUN 							:= FALSE;	 //command list executed
+					GVL_MOTION.RUN_INDEX									:= 1;
+					GVL_DAQ.PASS_INDEX										:= 0;
+					GVL_MOTION.EXT_CTR.CMDRUN 								:= FALSE;	 //command list executed
 				ELSE
 					//append mode - keep incrementing PASS_INDEX until all script runs are complete
 					IF NOT GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
-						GVL_DAQ.PASS_INDEX								:= 0;
+						GVL_DAQ.PASS_INDEX									:= 0;
 					END_IF
 						GVL_MOTION.RUN_INDEX								:= GVL_MOTION.RUN_INDEX + 1;	
 				END_IF
 					
 			ELSE
-				GVL_MOTION.RUN_INDEX									:= GVL_MOTION.RUN_INDEX + 1;
+				GVL_MOTION.RUN_INDEX										:= GVL_MOTION.RUN_INDEX + 1;
 			END_IF
 				
 		END_IF	
@@ -457,6 +461,7 @@ END_CASE]]></ST>
       <LineId Id="660" Count="0" />
       <LineId Id="658" Count="0" />
       <LineId Id="663" Count="0" />
+      <LineId Id="847" Count="0" />
       <LineId Id="775" Count="3" />
       <LineId Id="780" Count="1" />
       <LineId Id="779" Count="0" />
@@ -468,6 +473,7 @@ END_CASE]]></ST>
       <LineId Id="216" Count="2" />
       <LineId Id="653" Count="0" />
       <LineId Id="747" Count="0" />
+      <LineId Id="848" Count="0" />
       <LineId Id="215" Count="0" />
       <LineId Id="674" Count="1" />
       <LineId Id="673" Count="0" />
@@ -482,6 +488,7 @@ END_CASE]]></ST>
       <LineId Id="787" Count="0" />
       <LineId Id="691" Count="6" />
       <LineId Id="748" Count="0" />
+      <LineId Id="849" Count="0" />
       <LineId Id="698" Count="6" />
       <LineId Id="527" Count="0" />
       <LineId Id="709" Count="0" />

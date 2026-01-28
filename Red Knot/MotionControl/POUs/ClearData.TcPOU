@@ -13,6 +13,7 @@ GVL_DAQ.PASS_INDEX					:= 0;
 GVL_MOTION.RUN_INDEX				:= 1;
 
 MEMSET(ADR(GVL_DAQ.INDEX_COLLECTOR), 0, SIZEOF(GVL_DAQ.INDEX_COLLECTOR));
+MEMSET(ADR(GVL_DAQ.RUNTIME_COLLECTOR), 0, SIZEOF(GVL_DAQ.RUNTIME_COLLECTOR));
 MEMSET(ADR(GVL_DAQ.TIMESTAMP), 0, SIZEOF(GVL_DAQ.TIMESTAMP));
 MEMSET(ADR(GVL_DAQ.MASSA), 0, SIZEOF(GVL_DAQ.MASSA));
 MEMSET(ADR(GVL_DAQ.KEYENCE), 0, SIZEOF(GVL_DAQ.KEYENCE));
@@ -28,6 +29,7 @@ MEMSET(ADR(GVL_DAQ.Z), 0, SIZEOF(GVL_DAQ.Z));]]></ST>
       <LineId Id="14" Count="0" />
       <LineId Id="12" Count="0" />
       <LineId Id="10" Count="0" />
+      <LineId Id="15" Count="0" />
       <LineId Id="3" Count="1" />
       <LineId Id="9" Count="0" />
       <LineId Id="5" Count="2" />

@@ -27,6 +27,11 @@ VAR
 	EL3174Ch1I AT %I*		:INT; //current or voltage input
 	xPos					:LREAL;
 	eStop					:BOOL;
+	
+	 tStart					:TIME; (* Time program start *)
+     tWork 					:TIME; (* Execution time *)
+	 t1						:TON;	
+	 timebool				:BOOL := FALSE;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -143,11 +148,37 @@ DEFAULT_CSV_FIELD_SEP := 16#2C;(* Comma ASCII code *)
 	CSVWrite();
 
 
-GVL_MOTION.NextInstruction						:= GVL_MOTION.CurInstruction + 1;]]></ST>
+GVL_MOTION.NextInstruction						:= GVL_MOTION.CurInstruction + 1;
+IF NOT timebool THEN
+	tStart	:= TIME();
+	timebool	:= TRUE;
+END_IF
+t1(IN := TRUE, PT := T#5S);
+
+IF t1.Q THEN
+	t1(IN:=FALSE);
+	twork := TIME() - tstart;
+	tstart := T#0S;
+	timebool	:=FALSE;
+END_IF
+]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="232" Count="112" />
       <LineId Id="219" Count="0" />
+      <LineId Id="346" Count="0" />
+      <LineId Id="345" Count="0" />
+      <LineId Id="349" Count="0" />
+      <LineId Id="348" Count="0" />
+      <LineId Id="356" Count="0" />
+      <LineId Id="352" Count="0" />
+      <LineId Id="351" Count="0" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="353" Count="0" />
+      <LineId Id="357" Count="0" />
+      <LineId Id="355" Count="0" />
+      <LineId Id="354" Count="0" />
+      <LineId Id="347" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
