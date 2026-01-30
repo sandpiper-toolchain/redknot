@@ -22,6 +22,9 @@
     <GlobalVersionStructureIncluded>false</GlobalVersionStructureIncluded>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CSVTask.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DAQ.TcTTO">
       <SubType>Code</SubType>
     </Compile>
@@ -121,6 +124,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\CSVWrite.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\ResetAxes.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\RunCommands.TcPOU">

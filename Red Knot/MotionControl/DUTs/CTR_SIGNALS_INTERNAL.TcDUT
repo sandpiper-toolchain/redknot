@@ -9,6 +9,7 @@ STRUCT
 	Execute_MABS			:BOOL;
 	Execute_MREL			:BOOL;
 	Execute_RES				:BOOL;
+	Execute_C_RES			:BOOL;
 	Execute_VEL				:BOOL;
 	Execute_HALT			:BOOL;
 	Execute_STOP			:BOOL;

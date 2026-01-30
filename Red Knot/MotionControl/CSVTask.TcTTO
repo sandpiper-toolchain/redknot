@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <Task Name="CSVTask" Id="{2ce00ce6-909e-4cd6-889a-666ac7d4dd88}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>10000</CycleTime>
+    <Priority>20</Priority>
+    <PouCall>
+      <Name>CSVWrite</Name>
+    </PouCall>
+    <TaskFBGuid>{84b3cefa-1213-46a5-b895-597ad4adddd9}</TaskFBGuid>
+    <Fb_init>{86171c13-70b8-45fe-988d-b1c9256fd7f3}</Fb_init>
+    <Fb_exit>{69c75c1a-fae9-4c3f-a9d9-5474218378dd}</Fb_exit>
+    <CycleUpdate>{55d51736-11ee-4379-afb3-b570e85c47a8}</CycleUpdate>
+    <PostCycleUpdate>{7f382127-073e-4630-aa73-14ce6db8187a}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>

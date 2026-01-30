@@ -52,15 +52,20 @@ END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[//TODO 2 modes: write data and write script
 fbtime(bEnable := TRUE, dwCycle := 1);
+
+//write data controls are internal, read and write script controls are external
+DEFAULT_CSV_FIELD_SEP := 16#2C;(* Comma ASCII code *)
+//DEFAULT_CSV_FIELD_SEP := 16#3B;(* Semicolon ASCII code *)
+
 IF GVL_DAQ.EXT_CTR.CMDDATAWRITE THEN
-	
+	GVL_DAQ.EXT_CTR.CMDDATAWRITE	:=FALSE;
 	bWrite							:= TRUE;
 END_IF
 
 CASE step OF
 	0:	(* Wait for rising edge at bWrite variable *)
 		IF bWrite THEN
-			bWrite 					:= FALSE;
+			GVL_DAQ.DAQ_CTR_INT.CSVWriteMode	:= CSVWriteMode.keyence;
 			bBusy 					:= TRUE;
 			bError					:= FALSE;
 			nErrId					:= 0;
@@ -69,85 +74,90 @@ CASE step OF
 			nColumn					:= 0;
 			TOPDIR					:= 'C:\data';
 			//make sure C:\data exists
-			fbCMD(START:= FALSE);
 			fbCMD( PATHSTR:= CMDPATH, DIRNAME:= 'C:\', COMNDLINE:= concat(COMNDLINE, 'data"'), START:= TRUE);
 			fbCMD(START:= FALSE);
-			FILEPATH				:= '';
-			IF GVL_MOTION.RUN_INDEX = 1 THEN
-				HOLDNAME			:= '';
+			IF NOT fbCMD.BUSY THEN
+				bWrite 					:= FALSE;
+				FILEPATH				:= '';
+				IF GVL_MOTION.RUN_INDEX = 1 THEN
+					HOLDNAME			:= '';
+				END_IF
+				
+				step 					:= 1;
 			END_IF
 			
-			step 					:= 1;
 		END_IF
 		
 	1:
 		//create directory for current script to contain script file and data output
 		TEMP						:= concat(GVL_MOTION.SCRIPT_TITLE, '"');
-		fbCMD( PATHSTR				:= CMDPATH, DIRNAME:= TOPDIR, COMNDLINE:= concat(COMNDLINE, TEMP), START:= TRUE);
+		fbCMD( PATHSTR:= CMDPATH, DIRNAME:= TOPDIR, COMNDLINE:= concat(COMNDLINE, TEMP), START:= TRUE);
 		fbCMD(START:= FALSE);
-		//TODO exclude control characters from script name
-		timestring	:= SYSTEMTIME_TO_STRING(fbtime.systemTime);
-		//keep seconds to avoid overlapping file names
-		timestring					:= delete(timestring, 4, 20);
-		timestring					:= delete(timestring, 1, 17); 
-		timestring					:= delete(timestring, 1, 14); 
-		
-		TOPDIR						:= concat(TOPDIR, '\');
-		TOPDIR						:= concat(TOPDIR, GVL_MOTION.SCRIPT_TITLE);
-		TOPDIR						:= concat(TOPDIR, '\');
-		
-		FILENAME					:= concat(GVL_MOTION.SCRIPT_TITLE, '_');
-		
-		CASE GVL_DAQ.DAQ_CTR_INT.CSVWriteMode OF
-			CSVWriteMode.keyence: 
-				FILENAME 			:= concat(FILENAME, 'Keyence');
-				FILENAME 			:= concat(FILENAME, '_');
-				FILENAME			:= concat(FILENAME, timestring);
-				FILENAME			:= concat(FILENAME, '.csv');
-				IF GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
-					IF GVL_MOTION.RUN_INDEX = 1 THEN
-						HOLDNAME	:= FILENAME;
-					ELSE
-						FILENAME	:= HOLDNAME;	
-					END_IF
+		IF NOT fbCMD.BUSY THEN
+			//TODO exclude control characters from script name
+			timestring	:= SYSTEMTIME_TO_STRING(fbtime.systemTime);
+			//keep seconds to avoid overlapping file names
+			timestring					:= delete(timestring, 4, 20);
+			timestring					:= delete(timestring, 1, 17); 
+			timestring					:= delete(timestring, 1, 14); 
 			
-				END_IF	
-				
-			CSVWriteMode.massa:
-				FILENAME 	:= concat(FILENAME, 'Massa');
-				FILENAME 			:= concat(FILENAME, '_');
-				FILENAME			:= concat(FILENAME, timestring);
-				FILENAME			:= concat(FILENAME, '.csv');
-				IF GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
-					IF GVL_MOTION.RUN_INDEX = 1 THEN
-						HOLDNAME	:= FILENAME;
-					ELSE
-						FILENAME	:= HOLDNAME;	
-					END_IF
+			TOPDIR						:= concat(TOPDIR, '\');
+			TOPDIR						:= concat(TOPDIR, GVL_MOTION.SCRIPT_TITLE);
+			TOPDIR						:= concat(TOPDIR, '\');
 			
-				END_IF	
-				
-			CSVWriteMode.sonar:
-				FILENAME 	:= concat(FILENAME, 'Sonar');
-				FILENAME 			:= concat(FILENAME, '_');
-				FILENAME			:= concat(FILENAME, timestring);
-				FILENAME			:= concat(FILENAME, '.csv');
-				IF GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
-					IF GVL_MOTION.RUN_INDEX = 1 THEN
-						HOLDNAME	:= FILENAME;
-					ELSE
-						FILENAME	:= HOLDNAME;	
-					END_IF
+			FILENAME					:= concat(GVL_MOTION.SCRIPT_TITLE, '_');
 			
-				END_IF	
+			CASE GVL_DAQ.DAQ_CTR_INT.CSVWriteMode OF
+				CSVWriteMode.keyence: 
+					FILENAME 			:= concat(FILENAME, 'Keyence');
+					FILENAME 			:= concat(FILENAME, '_');
+					FILENAME			:= concat(FILENAME, timestring);
+					FILENAME			:= concat(FILENAME, '.csv');
+					IF GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
+						IF GVL_MOTION.RUN_INDEX = 1 THEN
+							HOLDNAME	:= FILENAME;
+						ELSE
+							FILENAME	:= HOLDNAME;	
+						END_IF
 				
-			CSVWriteMode.script:
-				FILENAME 	:= concat(FILENAME, 'Script.csv');	
-		END_CASE
-		
-		//path to working folder
-		FILEPATH	:= concat(TOPDIR, FILENAME);	
-		step:=2;
+					END_IF	
+					
+				CSVWriteMode.massa:
+					FILENAME 	:= concat(FILENAME, 'Massa');
+					FILENAME 			:= concat(FILENAME, '_');
+					FILENAME			:= concat(FILENAME, timestring);
+					FILENAME			:= concat(FILENAME, '.csv');
+					IF GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
+						IF GVL_MOTION.RUN_INDEX = 1 THEN
+							HOLDNAME	:= FILENAME;
+						ELSE
+							FILENAME	:= HOLDNAME;	
+						END_IF
+				
+					END_IF	
+					
+				CSVWriteMode.sonar:
+					FILENAME 	:= concat(FILENAME, 'Sonar');
+					FILENAME 			:= concat(FILENAME, '_');
+					FILENAME			:= concat(FILENAME, timestring);
+					FILENAME			:= concat(FILENAME, '.csv');
+					IF GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
+						IF GVL_MOTION.RUN_INDEX = 1 THEN
+							HOLDNAME	:= FILENAME;
+						ELSE
+							FILENAME	:= HOLDNAME;	
+						END_IF
+				
+					END_IF	
+					
+				CSVWriteMode.script:
+					FILENAME 	:= concat(FILENAME, 'Script.csv');	
+			END_CASE
+			
+			//path to working folder
+			FILEPATH	:= concat(TOPDIR, FILENAME);	
+			step:=2;
+		END_IF
 		
 	2:	(* Open source file *)
 		fbFileOpen(  bExecute := FALSE  );
@@ -160,10 +170,9 @@ CASE step OF
 		IF NOT fbFileOpen.bBusy THEN
 			IF NOT fbFileOpen.bError THEN
 				step := 4;
-				//bWrite							:= FALSE;
-		GVL_DAQ.EXT_CTR.CMDDATAWRITE:=FALSE;
 			ELSE(* Error: file not found? *)
 				step := 100;
+				
 			END_IF
 		END_IF
 
@@ -185,9 +194,19 @@ CASE step OF
 							CSVWriteMode.sonar: sCSVField	:= STRING_TO_CSVFIELD('Sonar Data', FALSE);
 						END_CASE
 						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
-										bCRLF := TRUE );(* bCRLF == TRUE => Write CRLF after the last field value *)		
-						headerstep	:= 2;		
+										bCRLF := TRUE );(* bCRLF == TRUE => Write CRLF after the last field value *)
+						headerstep	:= 2;				
+						//datawrite	:= TRUE;	
+					2:
+						sCSVField	:= STRING_TO_CSVFIELD(GVL_MOTION.SCRIPT_TITLE, FALSE);
+						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+										bCRLF := TRUE );(* bCRLF == TRUE => Write CRLF after the last field value *)
+						headerstep	:= 3;
+					3:
+							
+					
 				END_CASE
+
 				IF RIGHT( sCSVLine, 2 ) = '$R$L' THEN
 						sCSVLine := REPLACE( sCSVLine, '$L', 2, LEN( sCSVLine ) - 1 );
 				END_IF
@@ -243,25 +262,26 @@ CASE step OF
 			END_IF
 		END_IF
 
-// 	10:	(* Close source file *)
-// 		fbFileClose( bExecute := FALSE );
-// 		fbFileClose( sNetId := sNetId, hFile := hFile, bExecute := TRUE );
-// 		step := 11;
-// 
-// 	11:(* Wait until close not busy *)
-// 		fbFileClose( bExecute := FALSE, bError => bError, nErrID => nErrID );
-// 		IF ( NOT fbFileClose.bBusy ) THEN
-// 			hFile := 0;
-// 			step := 100;
-// 		END_IF
-// 
-// 	100: (* Error or ready step => cleanup *)
-// 		IF ( hFile <> 0 ) THEN
-// 			step := 10; (* Close the source file *)
-// 		ELSE
-// 			bBusy := FALSE;
-// 			step := 0;	(* Ready *)
-// 		END_IF
+	10:	(* Close source file *)
+		fbFileClose( bExecute := FALSE );
+		fbFileClose( sNetId := sNetId, hFile := hFile, bExecute := TRUE );
+		step := 11;
+
+	11:(* Wait until close not busy *)
+		fbFileClose( bExecute := FALSE, bError => bError, nErrID => nErrID );
+		IF ( NOT fbFileClose.bBusy ) THEN
+			hFile := 0;
+			step := 100;
+		END_IF
+
+	100: (* Error or ready step => cleanup *)
+		IF ( hFile <> 0 ) THEN
+			step := 10; (* Close the source file *)
+		ELSE
+			bBusy := FALSE;
+			step := 0;	(* Ready *)
+			datawrite	:= FALSE;
+		END_IF
 
 //TODO clear HOLDNAME when GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.Script_Iterations
 END_CASE
@@ -271,22 +291,33 @@ END_CASE
 ]]></ST>
     </Implementation>
     <LineIds Name="CSVWrite">
-      <LineId Id="1" Count="2" />
+      <LineId Id="1" Count="1" />
+      <LineId Id="277" Count="2" />
+      <LineId Id="276" Count="0" />
+      <LineId Id="280" Count="0" />
+      <LineId Id="3" Count="0" />
       <LineId Id="125" Count="0" />
-      <LineId Id="5" Count="12" />
+      <LineId Id="5" Count="5" />
+      <LineId Id="261" Count="0" />
+      <LineId Id="12" Count="5" />
       <LineId Id="123" Count="0" />
       <LineId Id="170" Count="0" />
-      <LineId Id="189" Count="0" />
       <LineId Id="169" Count="0" />
       <LineId Id="185" Count="0" />
+      <LineId Id="269" Count="0" />
+      <LineId Id="272" Count="0" />
       <LineId Id="124" Count="0" />
       <LineId Id="199" Count="3" />
-      <LineId Id="18" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="270" Count="0" />
+      <LineId Id="275" Count="0" />
+      <LineId Id="19" Count="0" />
       <LineId Id="112" Count="1" />
       <LineId Id="120" Count="0" />
       <LineId Id="182" Count="0" />
       <LineId Id="115" Count="0" />
       <LineId Id="186" Count="0" />
+      <LineId Id="271" Count="0" />
       <LineId Id="122" Count="0" />
       <LineId Id="126" Count="0" />
       <LineId Id="171" Count="0" />
@@ -320,12 +351,13 @@ END_CASE
       <LineId Id="168" Count="0" />
       <LineId Id="138" Count="1" />
       <LineId Id="20" Count="0" />
+      <LineId Id="268" Count="0" />
       <LineId Id="181" Count="0" />
       <LineId Id="21" Count="4" />
       <LineId Id="183" Count="0" />
-      <LineId Id="27" Count="4" />
-      <LineId Id="187" Count="1" />
-      <LineId Id="32" Count="7" />
+      <LineId Id="27" Count="6" />
+      <LineId Id="267" Count="0" />
+      <LineId Id="34" Count="5" />
       <LineId Id="227" Count="0" />
       <LineId Id="229" Count="0" />
       <LineId Id="232" Count="0" />
@@ -339,8 +371,14 @@ END_CASE
       <LineId Id="254" Count="1" />
       <LineId Id="253" Count="0" />
       <LineId Id="250" Count="1" />
+      <LineId Id="281" Count="0" />
+      <LineId Id="259" Count="0" />
+      <LineId Id="282" Count="3" />
       <LineId Id="256" Count="0" />
+      <LineId Id="286" Count="1" />
+      <LineId Id="257" Count="0" />
       <LineId Id="237" Count="0" />
+      <LineId Id="264" Count="0" />
       <LineId Id="242" Count="1" />
       <LineId Id="241" Count="0" />
       <LineId Id="247" Count="0" />
@@ -350,7 +388,9 @@ END_CASE
       <LineId Id="231" Count="0" />
       <LineId Id="234" Count="0" />
       <LineId Id="228" Count="0" />
-      <LineId Id="70" Count="34" />
+      <LineId Id="70" Count="33" />
+      <LineId Id="260" Count="0" />
+      <LineId Id="104" Count="0" />
       <LineId Id="226" Count="0" />
       <LineId Id="105" Count="5" />
     </LineIds>

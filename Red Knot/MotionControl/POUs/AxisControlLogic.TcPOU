@@ -22,19 +22,6 @@ ELSE
 END_IF
 
 
-IF GVL_MOTION.EXT_CTR.AxesReset THEN
-	GVL_MOTION.HomingState				:= 0;
-	GVL_MOTION.HardStopState			:= 0;
-	control.Execute_RES 				:= TRUE;
-	//control.CoupleState					:= 0; //not needed?
-	control.Execute_HOME				:= FALSE;
-	control.Execute_HALT				:= FALSE;
-	
-ELSE
-	control.Execute_RES 				:= FALSE;
-END_IF
-
-
 //axis coupling control
 //toggle flip flop for state change on each rising edge transition
 IF control.CoupleControl THEN
@@ -61,16 +48,6 @@ END_IF
       <LineId Id="4" Count="1" />
       <LineId Id="21" Count="0" />
       <LineId Id="7" Count="0" />
-      <LineId Id="93" Count="0" />
-      <LineId Id="8" Count="1" />
-      <LineId Id="134" Count="0" />
-      <LineId Id="138" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="123" Count="0" />
-      <LineId Id="135" Count="1" />
-      <LineId Id="126" Count="0" />
-      <LineId Id="13" Count="1" />
-      <LineId Id="16" Count="0" />
       <LineId Id="94" Count="0" />
       <LineId Id="53" Count="0" />
       <LineId Id="52" Count="0" />

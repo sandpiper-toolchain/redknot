@@ -82,6 +82,8 @@ IF GVL_MOTION.EXT_CTR.CMDFINDSTOPS THEN
 	HardStops();
 END_IF
 
+ResetAxes();
+
 //axis control signals currently tied to VISU
 xAxisControl(control:=GVL_MOTION.xCon);
 yAxisControl(control:=GVL_MOTION.yCon);
@@ -141,14 +143,8 @@ IF eStop THEN
 	GVL_DAQ.DAQ_CTR_INT.Activate_Trigger	:= DataTrigger.none;
 END_IF
 
-//write data controls are internal, read and write script controls are external
-DEFAULT_CSV_FIELD_SEP := 16#2C;(* Comma ASCII code *)
-//DEFAULT_CSV_FIELD_SEP := 16#3B;(* Semicolon ASCII code *)
-
-	CSVWrite();
-
-
 GVL_MOTION.NextInstruction						:= GVL_MOTION.CurInstruction + 1;
+
 IF NOT timebool THEN
 	tStart	:= TIME();
 	timebool	:= TRUE;
@@ -164,8 +160,13 @@ END_IF
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="232" Count="112" />
+      <LineId Id="232" Count="45" />
+      <LineId Id="361" Count="0" />
+      <LineId Id="360" Count="0" />
+      <LineId Id="278" Count="58" />
+      <LineId Id="344" Count="0" />
       <LineId Id="219" Count="0" />
+      <LineId Id="359" Count="0" />
       <LineId Id="346" Count="0" />
       <LineId Id="345" Count="0" />
       <LineId Id="349" Count="0" />

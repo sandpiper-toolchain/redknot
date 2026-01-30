@@ -20,79 +20,65 @@ END_IF
 
 2:
 IF GVL_MOTION.yHomeStatus.Done THEN
+	GVL_MOTION.yCon.Execute_HOME		:= FALSE;
 	GVL_MOTION.xCon.ExecuteRevUncouple	:= FALSE;
 	GVL_MOTION.xCon.ExecuteUncouple 	:= FALSE;
 	GVL_MOTION.xCon.ExecuteRevCouple	:= FALSE;
-	GVL_MOTION.xCon.ExecuteCouple		:= FALSE;
-
+	//GVL_MOTION.xCon.ExecuteCouple		:= FALSE;
 	GVL_MOTION.HomingState				:= 3;
 END_IF
-	
+
 3:
-//need full cycle to set axis to couple
-GVL_MOTION.RevCouplePrep				:= TRUE;
+IF GVL_MOTION.xOut.AxisCoupled = TRUE THEN
+	GVL_MOTION.xCon.ExecuteUncouple 	:= TRUE;
+END_IF
 GVL_MOTION.HomingState					:= 4;
 
 4:
+GVL_MOTION.xCon.ExecuteUncouple 		:= FALSE;
+GVL_MOTION.HomingState					:= 5;
+	
+5:
+//need full cycle to set axis to couple
+GVL_MOTION.RevCouplePrep				:= TRUE;
+GVL_MOTION.HomingState					:= 6;
+
+6:
 GVL_MOTION.xCon.ExecuteRevCouple		:= TRUE;
 GVL_MOTION.xCon.Execute_REV_HOME		:= TRUE;
-GVL_MOTION.HomingState					:= 5;
+GVL_MOTION.HomingState					:= 7;
 
-5:
+7:
 IF GVL_MOTION.xCHomeStatus.Done THEN
 	GVL_MOTION.xCon.Execute_REV_HOME	:= FALSE;
 	GVL_MOTION.xCon.ExecuteRevCouple	:= FALSE;
 	GVL_MOTION.xCon.ExecuteRevUncouple	:= TRUE;		
-	GVL_MOTION.RevCouplePrep			:= FALSE;
-	GVL_MOTION.HomingState				:= 6;
+	
+	GVL_MOTION.HomingState				:= 8;
 END_IF
 
-6:
-	GVL_MOTION.xCon.ExecuteCouple		:= TRUE;
-	GVL_MOTION.xCon.Execute_HOME		:= TRUE;
-	GVL_MOTION.HomingState				:= 7;
+8:
+GVL_MOTION.RevCouplePrep				:= FALSE;
+GVL_MOTION.HomingState					:= 9;
 
-7:
+9:
+GVL_MOTION.xCon.ExecuteRevUncouple	:= FALSE;
+GVL_MOTION.xCon.ExecuteCouple		:= FALSE;
+GVL_MOTION.HomingState				:= 10;
+
+10:
+GVL_MOTION.xCon.ExecuteCouple		:= TRUE;
+GVL_MOTION.xCon.Execute_HOME		:= TRUE;
+GVL_MOTION.HomingState				:= 11;
+
+11:
 IF GVL_MOTION.xHomeStatus.Done THEN
 	GVL_MOTION.xCon.Execute_HOME		:= FALSE;
 	GVL_MOTION.HomingState				:= 0;
 	GVL_MOTION.HomeDone					:= TRUE;
 	GVL_MOTION.EXT_CTR.CMDHOME			:= FALSE;	
 END_IF
-// 3:	
-// GVL_MOTION.xCon.ExecuteCouple			:= TRUE; //this seems to be working
-// GVL_MOTION.xCon.Execute_HOME				:= TRUE; //works
-// GVL_MOTION.HomingState					:= 4;
-// 
-// 4:
-// IF GVL_MOTION.xHomeStatus.Done THEN
-// 	GVL_MOTION.xCon.Execute_HOME		:= FALSE;
-// 	GVL_MOTION.xCon.ExecuteCouple		:= FALSE;
-// 	GVL_MOTION.xCon.ExecuteUncouple 	:= TRUE;
-// 	GVL_MOTION.HomingState				:= 5;
-// END_IF
-// 
-// 5:
-//  //need full cycle to set axis to couple
-// GVL_MOTION.RevCouplePrep				:= TRUE;
-// GVL_MOTION.HomingState					:= 6;
-// 
-// 6:
-// GVL_MOTION.xCon.ExecuteUncouple			:= FALSE;
-// GVL_MOTION.xCon.ExecuteRevCouple		:= TRUE;
-// GVL_MOTION.xCon.Execute_REV_HOME		:= TRUE;
-// GVL_MOTION.HomingState					:= 7;
-// 
-// 7:
-// IF GVL_MOTION.xCHomeStatus.Done THEN
-// 	GVL_MOTION.xCon.Execute_REV_HOME	:= FALSE;
-// 	GVL_MOTION.xCon.ExecuteRevCouple	:= FALSE;
-// 	GVL_MOTION.xCon.ExecuteRevUncouple	:= TRUE;		
-// 	GVL_MOTION.RevCouplePrep			:= FALSE;
-// 	GVL_MOTION.HomingState				:= 0;
-// 	GVL_MOTION.HomeDone					:= TRUE;
-// 	GVL_MOTION.EXT_CTR.CMDHOME			:= FALSE;
-// END_IF
+
 
 END_CASE]]></ST>
     </Implementation>
@@ -107,8 +93,17 @@ END_CASE]]></ST>
       <LineId Id="104" Count="0" />
       <LineId Id="103" Count="0" />
       <LineId Id="105" Count="0" />
-      <LineId Id="108" Count="4" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="108" Count="3" />
       <LineId Id="106" Count="1" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="151" Count="1" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="157" Count="1" />
       <LineId Id="76" Count="0" />
       <LineId Id="114" Count="0" />
       <LineId Id="116" Count="0" />
@@ -122,36 +117,25 @@ END_CASE]]></ST>
       <LineId Id="123" Count="0" />
       <LineId Id="127" Count="5" />
       <LineId Id="134" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="163" Count="1" />
       <LineId Id="138" Count="0" />
       <LineId Id="137" Count="0" />
-      <LineId Id="140" Count="1" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="170" Count="0" />
       <LineId Id="139" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="169" Count="0" />
       <LineId Id="143" Count="0" />
       <LineId Id="142" Count="0" />
       <LineId Id="144" Count="1" />
       <LineId Id="147" Count="1" />
       <LineId Id="146" Count="0" />
       <LineId Id="125" Count="0" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="80" Count="0" />
-      <LineId Id="7" Count="6" />
-      <LineId Id="15" Count="1" />
-      <LineId Id="73" Count="0" />
-      <LineId Id="72" Count="0" />
-      <LineId Id="87" Count="0" />
-      <LineId Id="74" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="75" Count="0" />
-      <LineId Id="18" Count="1" />
-      <LineId Id="59" Count="0" />
-      <LineId Id="85" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="69" Count="0" />
-      <LineId Id="24" Count="5" />
-      <LineId Id="94" Count="0" />
-      <LineId Id="113" Count="0" />
-      <LineId Id="86" Count="0" />
       <LineId Id="31" Count="0" />
       <LineId Id="50" Count="1" />
     </LineIds>

@@ -1555,7 +1555,7 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000001}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..0] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000001}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..0] OF BIT</Name>
 			<BitSize>1</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -1573,7 +1573,7 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000005}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..4] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000005}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..4] OF BIT</Name>
 			<BitSize>5</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -2034,14 +2034,17 @@ External Setpoint Generation:
 				<IoIdleTask Priority="10"/>
 			</Settings>
 			<Tasks>
-				<Task Id="5" Priority="8" CycleTime="10000" AmsPort="350" AdtTasks="true">
+				<Task Id="2" Priority="8" CycleTime="10000" AmsPort="350" AdtTasks="true">
 					<Name>PlcTask</Name>
 				</Task>
 				<Task Id="6" Priority="14" CycleTime="2000000" AmsPort="351" DisableFpExceptions="true" AdtTasks="true">
 					<Name>VISU_TASK</Name>
 				</Task>
-				<Task Id="7" Priority="5" CycleTime="10000" AmsPort="352" Affinity="#x00000008" AdtTasks="true">
+				<Task Id="5" Priority="5" CycleTime="10000" AmsPort="352" Affinity="#x00000008" AdtTasks="true">
 					<Name>DAQ</Name>
+				</Task>
+				<Task Id="8" Priority="20" CycleTime="100000" AmsPort="353" AdtTasks="true">
+					<Name>CSVTask</Name>
 				</Task>
 			</Tasks>
 		</System>
@@ -2638,9 +2641,21 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{35F1EE57-8B64-404F-9A2B-38524D23373E}" Name="MotionControl" PrjFilePath="MotionControl\MotionControl.plcproj" TmcFilePath="MotionControl\MotionControl.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{1F27DA72-C7BE-3A0D-AE72-45D80E048ABA}" TmcPath="MotionControl\MotionControl.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{BEB945D0-6711-47BA-59B8-260A9C0840FB}" TmcPath="MotionControl\MotionControl.tmc">
 					<Name>MotionControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="1" ContextId="2" AreaNo="32">
+						<Name>CSVTask Inputs</Name>
+						<Var>
+							<Name>MAIN.PositionT5Ch1</Name>
+							<Type>UINT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.EL3174Ch1I</Name>
+							<Comment><![CDATA[current or voltage input]]></Comment>
+							<Type>INT</Type>
+						</Var>
+					</Vars>
 					<Vars VarGrpType="2" ContextId="1" AreaNo="17">
 						<Name>PlcTask Outputs</Name>
 						<Var>
@@ -2696,25 +2711,16 @@ External Setpoint Generation:
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
+							<Name>MAIN.xAxisCoupled.NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
 							<Name>MAIN.yAxis.NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>MAIN.zAxis.NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.xAxisCoupled.NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.PositionT5Ch1</Name>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.EL3174Ch1I</Name>
-							<Comment><![CDATA[current or voltage input]]></Comment>
-							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_MOTION.xCon.AxisToCouple.NcToPlc</Name>
@@ -2756,7 +2762,7 @@ External Setpoint Generation:
 							<Id>0</Id>
 							<Name>DAQ</Name>
 							<ManualConfig>
-								<OTCID>#x02010070</OTCID>
+								<OTCID>#x02010050</OTCID>
 							</ManualConfig>
 							<Priority>5</Priority>
 							<CycleTime>1000000</CycleTime>
@@ -2765,15 +2771,25 @@ External Setpoint Generation:
 							<Id>1</Id>
 							<Name>PlcTask</Name>
 							<ManualConfig>
-								<OTCID>#x02010050</OTCID>
+								<OTCID>#x02010020</OTCID>
 							</ManualConfig>
 							<Priority>8</Priority>
 							<CycleTime>1000000</CycleTime>
 						</Context>
+						<Context>
+							<Id>2</Id>
+							<Name>CSVTask</Name>
+							<ManualConfig>
+								<OTCID>#x02010080</OTCID>
+							</ManualConfig>
+							<Priority>20</Priority>
+							<CycleTime>10000000</CycleTime>
+						</Context>
 					</Contexts>
 					<TaskPouOids>
-						<TaskPouOid Prio="5" OTCID="#x08502002"/>
+						<TaskPouOid Prio="5" OTCID="#x08502001"/>
 						<TaskPouOid Prio="8" OTCID="#x08502003"/>
+						<TaskPouOid Prio="20" OTCID="#x08502002"/>
 					</TaskPouOids>
 				</Instance>
 			</Project>
@@ -7432,10 +7448,10 @@ Bit1: Value smaller than Limit2]]></Comment>
 		</Io>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{00000000-2002-0850-0020-500841000403}" Id="#x02030030"/>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500841000403}" Id="#x02030030"/>
 		<MappingInfo Identifier="{00000000-0020-0304-1000-040320000403}" Id="#x02030010"/>
 		<MappingInfo Identifier="{00000000-0030-0304-1000-040332000403}" Id="#x02030050"/>
-		<MappingInfo Identifier="{08502003-0020-0304-0020-500820000403}" Id="#x02030020" Watchdog="00000000000000000000000000000000"/>
+		<MappingInfo Identifier="{08502003-0020-0304-0020-500820000403}" Id="#x02030020" Watchdog="04000000040000000400000004000000"/>
 		<MappingInfo Identifier="{05000010-2003-0850-1000-040301205008}" Id="#x02030040" Watchdog="04000000040000000400000004000000"/>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^xAxis">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 4 (EK1200)^Term 5 (EL7062)">

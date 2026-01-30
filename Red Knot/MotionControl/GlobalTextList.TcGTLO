@@ -276,6 +276,16 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"326"</v>
+              <v n="TextDefault">"Enter Name of Script (no spaces or &lt; &gt; : " / \ | ? *"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1"</v>
+              <v n="TextDefault">"Enter Name of Script (no spaces or &lt; &gt; : " / \ | ? *)"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"958"</v>
               <v n="TextDefault">"FAULT RESET"</v>
               <l n="LanguageTexts" t="ArrayList" />

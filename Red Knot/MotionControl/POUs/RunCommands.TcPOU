@@ -290,6 +290,7 @@ CASE GVL_MOTION.InstructionState OF
 	//motion complete
 	IF GVL_MOTION.xOut.MoveDone AND GVL_MOTION.yOut.MoveDone AND GVL_MOTION.zOut.MoveDone THEN
 		GVL_DAQ.DAQ_CTR_INT.Activate_Trigger								:= DataTrigger.none;
+		GVL_DAQ.DAQ_CTR_INT.Measure_Run_Time								:= FALSE; //stop time collection for DAQ pass
 		GVL_DAQ.PASS_INDEX													:= GVL_DAQ.PASS_INDEX + 1;
 		IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].PauseTime > T#0MS THEN
 			timer(IN := TRUE, PT := GVL_MOTION.Script[GVL_MOTION.CurInstruction].PauseTime);
@@ -568,6 +569,7 @@ END_CASE]]></ST>
       <LineId Id="195" Count="0" />
       <LineId Id="483" Count="0" />
       <LineId Id="421" Count="2" />
+      <LineId Id="850" Count="0" />
       <LineId Id="498" Count="0" />
       <LineId Id="428" Count="1" />
       <LineId Id="431" Count="1" />
