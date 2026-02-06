@@ -27,6 +27,7 @@ VAR_GLOBAL
 	INDEX_COLLECTOR		:ARRAY [0..999] OF UDINT;
 	(*elapsed time of the data pass*)
 	RUNTIME_COLLECTOR	:ARRAY[0..999] OF TIME;
+	//buffer size - 200 meters worth of 1mm increments
 	//15MB - 80byte default element size
 	TIMESTAMP			:ARRAY[0..199999] OF STRING;
 	//1.5MB per array - 64bit element size
@@ -35,6 +36,9 @@ VAR_GLOBAL
 	X					:ARRAY[0..199999] OF LREAL;
 	Y					:ARRAY[0..199999] OF LREAL;
 	Z					:ARRAY[0..199999] OF LREAL;	
+	CARRIAGE_OFFSETS	:ARRAY[0..2]	  OF LREAL	:= [103.54,69.27,194];
+	KEYENCE_OFFSETS		:ARRAY[0..2]	  OF LREAL	:= [53.52,108.41,23.9];
+	MASSA_OFFSETS		:ARRAY[0..2]	  OF LREAL	:= [36,31,-116.11];
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

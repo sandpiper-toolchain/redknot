@@ -48,7 +48,7 @@ ELSE
 END_IF
 
 
-//TODO WriteData function in called in RunCommands based on selected sensors
+//TODO WriteData function is called in RunCommands based on selected sensors
 //default acquire every mm - increase DAQINDEX decrease resolution
 IF GVL_DAQ.DAQ_CTR_INT.Activate_Trigger <> DataTrigger.none THEN
 	CASE GVL_DAQ.DAQ_CTR_INT.Activate_Trigger OF
@@ -117,7 +117,7 @@ IF GVL_DAQ.DAQ_CTR_INT.Activate_Trigger <> DataTrigger.none THEN
 		
 			END_IF
 			prevZ												:= LREAL_TO_INT(GVL_MOTION.zOut.PositionOut);
-		DataTrigger.time1:
+		DataTrigger.timed:
 			temptime											:= F_GetSystemTime();
 			IF ULINT_TO_LINT(temptime) MOD GVL_DAQ.EXT_CTR.DAQACQRES = 0 AND (temptime <> prevtime) THEN
 				//timeASDT := SYSTEMTIME_TO_DT(fbtime.systemTime);
@@ -155,6 +155,7 @@ IF GVL_MOTION.EXT_CTR.AxesReset THEN
 END_IF
 
 (*measure time taken for DAQ pass controlled by GVL_DAQ.DAQ_CTR_INT.Measure_Run_Time*)
+
 DAQPassTime();]]></ST>
     </Implementation>
     <LineIds Name="DAQTask">
@@ -222,6 +223,7 @@ DAQPassTime();]]></ST>
       <LineId Id="44" Count="1" />
       <LineId Id="244" Count="0" />
       <LineId Id="243" Count="0" />
+      <LineId Id="245" Count="0" />
       <LineId Id="242" Count="0" />
     </LineIds>
   </POU>
