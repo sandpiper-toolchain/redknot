@@ -6,6 +6,7 @@ PROGRAM CSVWrite
 VAR
 	step			:DWORD 			:= 0;(*state control*)
 	datawrite		:BOOL			:= FALSE;(*start by writing header, then set TRUE*)
+	scriptwrite		:BOOL			:= FALSE;(*write column headers then script*)
 	headerstep		:INT			:= 0;(*state control for header write*)
 	
 	bWrite			:BOOL			:= FALSE;(* Rising edge starts program execution *)
@@ -18,7 +19,6 @@ VAR
 	nPassCompare	:UDINT			:= 0;
 	nColumn			:UDINT 			:= 0;(* Column number (record field) *)
 	hFile			:UINT			:= 0;(* File handle of the source file *)
-	labelhold		:BOOL			:= FALSE; (**)
 	
 	fbFileOpen		:FB_FileOpen;(* Opens file *)
 	fbFileClose		:FB_FileClose;(* Closes file *)
@@ -33,9 +33,11 @@ VAR
 	CMDPATH			:T_MaxString	:= 'C:\Windows\System32\cmd.exe';
 	COMNDLINE		:T_MaxString	:= '/C "mkdir ';
 	TOPDIR			:T_MaxString	:= 'C:\data';
-	FILEPATH		:T_MaxString; 	//path of directory for current experiment including file name
-	FILENAME		:T_MaxString;	
-	HOLDNAME		:T_MaxString;	//save file name for appending data across script runs
+	FILENAME		:T_MaxString;
+	FILEPATH		:T_MaxString; 	//path of directory for current experiment including file name	
+	HOLDNAME_M		:T_MaxString;	//save file name for appending data - Massa
+	HOLDNAME_K		:T_MaxString;	//save file name for appending data - Keyence
+	HOLDNAME_S		:T_MaxString;	//save file name for appending data - Sonar
 	
 	fbTime			:FB_LocalSystemTime;
 	timestring		:STRING;
@@ -57,15 +59,16 @@ fbtime(bEnable := TRUE, dwCycle := 1);
 DEFAULT_CSV_FIELD_SEP := 16#2C;(* Comma ASCII code *)
 //DEFAULT_CSV_FIELD_SEP := 16#3B;(* Semicolon ASCII code *)
 
-IF GVL_DAQ.EXT_CTR.CMDDATAWRITE THEN
-	GVL_DAQ.EXT_CTR.CMDDATAWRITE	:=FALSE;
+IF GVL_DAQ.EXT_CTR.CMDDATAWRITE OR GVL_DAQ.EXT_CTR.CMDSCRIPTWRITE THEN
+	GVL_DAQ.EXT_CTR.CMDDATAWRITE	:= FALSE;
+	GVL_DAQ.EXT_CTR.CMDSCRIPTWRITE	:= FALSE;
 	bWrite							:= TRUE;
 END_IF
 
 CASE step OF
 	0:	(* Wait for rising edge at bWrite variable *)
 		IF bWrite THEN
-			GVL_DAQ.DAQ_CTR_INT.CSVWriteMode	:= CSVWriteMode.keyence; //TESTING FEATURE
+			//GVL_DAQ.DAQ_CTR_INT.CSVWriteMode	:= CSVWriteMode.keyence; //TEST ONLY
 			bBusy 					:= TRUE;
 			bError					:= FALSE;
 			nErrId					:= 0;
@@ -79,10 +82,18 @@ CASE step OF
 			IF NOT fbCMD.BUSY THEN
 				bWrite 					:= FALSE;
 				FILEPATH				:= '';
-				IF GVL_MOTION.RUN_INDEX = 1 THEN
-					HOLDNAME			:= '';
+				IF GVL_MOTION.RUN_INDEX = 1 THEN //TODO chage this
+					HOLDNAME_M			:= '';
+					HOLDNAME_K			:= '';
+					HOLDNAME_S			:= '';
+					datawrite			:= FALSE; //first script run requires header write
 				END_IF
-				
+				IF NOT GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
+					datawrite			:= FALSE;
+				END_IF
+				IF GVL_DAQ.EXT_CTR.CMDDATAAPEND AND GVL_MOTION.RUN_INDEX <> 1 THEN
+					datawrite			:= TRUE;
+				END_IF
 				step 					:= 1;
 			END_IF
 			
@@ -115,9 +126,10 @@ CASE step OF
 					FILENAME			:= concat(FILENAME, '.csv');
 					IF GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
 						IF GVL_MOTION.RUN_INDEX = 1 THEN
-							HOLDNAME	:= FILENAME;
+							HOLDNAME_K	:= FILENAME;
 						ELSE
-							FILENAME	:= HOLDNAME;	
+							FILENAME	:= HOLDNAME_K;
+						
 						END_IF
 				
 					END_IF	
@@ -129,9 +141,10 @@ CASE step OF
 					FILENAME			:= concat(FILENAME, '.csv');
 					IF GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
 						IF GVL_MOTION.RUN_INDEX = 1 THEN
-							HOLDNAME	:= FILENAME;
+							HOLDNAME_M	:= FILENAME;
 						ELSE
-							FILENAME	:= HOLDNAME;	
+							FILENAME	:= HOLDNAME_M;
+							
 						END_IF
 				
 					END_IF	
@@ -143,9 +156,10 @@ CASE step OF
 					FILENAME			:= concat(FILENAME, '.csv');
 					IF GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
 						IF GVL_MOTION.RUN_INDEX = 1 THEN
-							HOLDNAME	:= FILENAME;
+							HOLDNAME_S	:= FILENAME;
 						ELSE
-							FILENAME	:= HOLDNAME;	
+							FILENAME	:= HOLDNAME_S;
+								
 						END_IF
 				
 					END_IF	
@@ -161,8 +175,15 @@ CASE step OF
 		
 	2:	(* Open source file *)
 		fbFileOpen(  bExecute := FALSE  );
-		fbFileOpen( sNetId := sNetId, sPathName := FILEPATH, nMode := FOPEN_MODEWRITE OR FOPEN_MODETEXT,(* Open file in TEXT mode! *)
-					ePath := PATH_GENERIC, bExecute := TRUE );
+		//header to be written - open at beginning
+		IF NOT datawrite THEN
+			fbFileOpen( sNetId := sNetId, sPathName := FILEPATH, nMode := FOPEN_MODEWRITE OR FOPEN_MODETEXT,
+						ePath := PATH_GENERIC, bExecute := TRUE );
+		//appending data				
+		ELSE
+			fbFileOpen( sNetId := sNetId, sPathName := FILEPATH, nMode := FOPEN_MODEAPPEND OR FOPEN_MODETEXT,
+						ePath := PATH_GENERIC, bExecute := TRUE );
+		END_IF			
 		step := 3;
 	
 	3:(* Wait until open not busy *)
@@ -177,11 +198,12 @@ CASE step OF
 			END_IF
 		END_IF
 
-	4:(* write header, then write data *)
+	4:(* write header (if not datawrite), then write data *)
 		sCSVLine := '';
 		fbWriter.eCmd := eEnumCmd_First;(* Write first field value *)
+		
 		IF GVL_DAQ.DAQ_CTR_INT.CSVWriteMode <> CSVWriteMode.script THEN
-			IF NOT datawrite THEN
+			IF NOT datawrite THEN //header write
 				CASE headerstep OF
 					0: 
 						sCSVField	:= STRING_TO_CSVFIELD('Data Capture - Begin Header', FALSE);
@@ -357,10 +379,9 @@ CASE step OF
 				END_IF			
 				step	:= 5;
 			ELSE //data write
-				IF nRow < GVL_DAQ.DATA_INDEX THEN
-					IF (nRow < GVL_DAQ.INDEX_COLLECTOR[nPassCompare+1]) OR (GVL_DAQ.INDEX_COLLECTOR[nPassCompare+1] = 0) THEN
-						//second parameter adds quotes to string
-						sCSVField := STRING_TO_CSVFIELD( UDINT_TO_STRING(nPassCompare+1), FALSE );
+				IF GVL_DAQ.CSV_ROW < GVL_DAQ.DATA_INDEX THEN
+					IF (GVL_DAQ.CSV_ROW < GVL_DAQ.INDEX_COLLECTOR[GVL_DAQ.CSV_PASS_COMPARE+1]) OR (GVL_DAQ.INDEX_COLLECTOR[GVL_DAQ.CSV_PASS_COMPARE+1] = 0) THEN
+						sCSVField := STRING_TO_CSVFIELD( UDINT_TO_STRING(GVL_DAQ.CSV_PASS_COMPARE+1), FALSE );//second parameter adds quotes to string
 						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
 									bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
 						IF fbWriter.bOk THEN
@@ -370,12 +391,12 @@ CASE step OF
 							RETURN;
 						END_IF		
 						
-						sCSVField := STRING_TO_CSVFIELD( TIME_TO_STRING(GVL_DAQ.RUNTIME_COLLECTOR[nPassCompare]), FALSE );
+						sCSVField := STRING_TO_CSVFIELD( TIME_TO_STRING(GVL_DAQ.RUNTIME_COLLECTOR[GVL_DAQ.CSV_PASS_COMPARE]), FALSE );
 						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
 									bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
 					ELSE
-						nPassCompare	:= nPassCompare + 1;
-						sCSVField := STRING_TO_CSVFIELD( UDINT_TO_STRING(nPassCompare+1), FALSE );
+						GVL_DAQ.CSV_PASS_COMPARE	:= GVL_DAQ.CSV_PASS_COMPARE + 1;
+						sCSVField := STRING_TO_CSVFIELD( UDINT_TO_STRING(GVL_DAQ.CSV_PASS_COMPARE+1), FALSE );
 						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
 									bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
 						IF fbWriter.bOk THEN
@@ -385,38 +406,38 @@ CASE step OF
 							RETURN;
 						END_IF
 						
-						sCSVField := STRING_TO_CSVFIELD( TIME_TO_STRING(GVL_DAQ.RUNTIME_COLLECTOR[nPassCompare]), FALSE );
+						sCSVField := STRING_TO_CSVFIELD( TIME_TO_STRING(GVL_DAQ.RUNTIME_COLLECTOR[GVL_DAQ.CSV_PASS_COMPARE]), FALSE );
 						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
 									bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
 					END_IF	
 					
-					sCSVField := STRING_TO_CSVFIELD(GVL_DAQ.TIMESTAMP[nRow], FALSE );
+					sCSVField := STRING_TO_CSVFIELD(GVL_DAQ.TIMESTAMP[GVL_DAQ.CSV_ROW], FALSE );
 					fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
 								bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
 					CASE GVL_DAQ.DAQ_CTR_INT.CSVWriteMode OF
-						CSVWriteMode.keyence: sCSVField	:= STRING_TO_CSVFIELD(LREAL_TO_STRING(GVL_DAQ.X[nRow] + GVL_DAQ.KEYENCE_OFFSETS[0]), FALSE);
-						CSVWriteMode.massa: sCSVField	:= STRING_TO_CSVFIELD(LREAL_TO_STRING(GVL_DAQ.X[nRow] + GVL_DAQ.MASSA_OFFSETS[0]), FALSE);
+						CSVWriteMode.keyence: sCSVField	:= STRING_TO_CSVFIELD(LREAL_TO_STRING(GVL_DAQ.X[GVL_DAQ.CSV_ROW] + GVL_DAQ.KEYENCE_OFFSETS[0]), FALSE);
+						CSVWriteMode.massa: sCSVField	:= STRING_TO_CSVFIELD(LREAL_TO_STRING(GVL_DAQ.X[GVL_DAQ.CSV_ROW] + GVL_DAQ.MASSA_OFFSETS[0]), FALSE);
 						//TODO sonar case
 					END_CASE				
 					fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
 								bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
 					CASE GVL_DAQ.DAQ_CTR_INT.CSVWriteMode OF
-						CSVWriteMode.keyence: sCSVField	:= STRING_TO_CSVFIELD(LREAL_TO_STRING(GVL_DAQ.Y[nRow] + GVL_DAQ.KEYENCE_OFFSETS[1]), FALSE);
-						CSVWriteMode.massa: sCSVField	:= STRING_TO_CSVFIELD(LREAL_TO_STRING(GVL_DAQ.Y[nRow] + GVL_DAQ.MASSA_OFFSETS[1]), FALSE);
+						CSVWriteMode.keyence: sCSVField	:= STRING_TO_CSVFIELD(LREAL_TO_STRING(GVL_DAQ.Y[GVL_DAQ.CSV_ROW] + GVL_DAQ.KEYENCE_OFFSETS[1]), FALSE);
+						CSVWriteMode.massa: sCSVField	:= STRING_TO_CSVFIELD(LREAL_TO_STRING(GVL_DAQ.Y[GVL_DAQ.CSV_ROW] + GVL_DAQ.MASSA_OFFSETS[1]), FALSE);
 						//TODO sonar case
 					END_CASE				
 					fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
 								bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)			
 					CASE GVL_DAQ.DAQ_CTR_INT.CSVWriteMode OF
-						CSVWriteMode.keyence: sCSVField	:= STRING_TO_CSVFIELD(LREAL_TO_STRING(GVL_DAQ.Z[nRow] + GVL_DAQ.KEYENCE_OFFSETS[2]), FALSE);
-						CSVWriteMode.massa: sCSVField	:= STRING_TO_CSVFIELD(LREAL_TO_STRING(GVL_DAQ.Z[nRow] + GVL_DAQ.MASSA_OFFSETS[2]), FALSE);
+						CSVWriteMode.keyence: sCSVField	:= STRING_TO_CSVFIELD(LREAL_TO_STRING(GVL_DAQ.Z[GVL_DAQ.CSV_ROW] + GVL_DAQ.KEYENCE_OFFSETS[2]), FALSE);
+						CSVWriteMode.massa: sCSVField	:= STRING_TO_CSVFIELD(LREAL_TO_STRING(GVL_DAQ.Z[GVL_DAQ.CSV_ROW] + GVL_DAQ.MASSA_OFFSETS[2]), FALSE);
 						//TODO sonar case
 					END_CASE				
 					fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
 								bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)			
 					CASE GVL_DAQ.DAQ_CTR_INT.CSVWriteMode OF
-						CSVWriteMode.keyence: sCSVField	:= STRING_TO_CSVFIELD(LREAL_TO_STRING(GVL_DAQ.KEYENCE[nRow]), FALSE);
-						CSVWriteMode.massa: sCSVField	:= STRING_TO_CSVFIELD(LREAL_TO_STRING(GVL_DAQ.MASSA[nRow]), FALSE);
+						CSVWriteMode.keyence: sCSVField	:= STRING_TO_CSVFIELD(LREAL_TO_STRING(GVL_DAQ.KEYENCE[GVL_DAQ.CSV_ROW]), FALSE);
+						CSVWriteMode.massa: sCSVField	:= STRING_TO_CSVFIELD(LREAL_TO_STRING(GVL_DAQ.MASSA[GVL_DAQ.CSV_ROW]), FALSE);
 						//TODO sonar case
 					END_CASE				
 					fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
@@ -427,20 +448,74 @@ CASE step OF
 					IF RIGHT( sCSVLine, 2 ) = '$R$L' THEN
 						sCSVLine := REPLACE( sCSVLine, '$L', 2, LEN( sCSVLine ) - 1 );
 					END_IF
-					nRow			:= nRow + 1;
+					GVL_DAQ.CSV_ROW	:= GVL_DAQ.CSV_ROW + 1;
 					step			:= 5;				
 				ELSE(* All rows written => Close file *)
-					nRow			:= 0;
-					nPassCompare	:= 0;
-					datawrite		:= FALSE;
+					CASE GVL_DAQ.DAQ_CTR_INT.CSVWriteMode OF
+							CSVWriteMode.keyence: GVL_DAQ.DAQ_CTR_INT.Keyence_Done	:= TRUE;
+							CSVWriteMode.massa: GVL_DAQ.DAQ_CTR_INT.Massa_Done	:= TRUE;
+							CSVWriteMode.sonar: GVL_DAQ.DAQ_CTR_INT.Sonar_Done	:= TRUE;
+					END_CASE
 					step			:= 10;
 				END_IF	
 	
 			END_IF
+		ELSE //script write
+			IF NOT scriptwrite THEN
+				sCSVField	:= STRING_TO_CSVFIELD('Command', FALSE);	
+				fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+								bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
+				IF fbWriter.bOk THEN
+					fbWriter.eCmd := eEnumCmd_Next;(* Write next field value *)
+				ELSE(* Error *)
+					step := 100;
+					RETURN;
+				END_IF	
+				sCSVField	:= STRING_TO_CSVFIELD('Z Type', FALSE);	
+				fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+								bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
+				sCSVField	:= STRING_TO_CSVFIELD('Trigger On', FALSE);
+				fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+								bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
+				sCSVField	:= STRING_TO_CSVFIELD('KSM', FALSE);
+				fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+								bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)		
+				sCSVField	:= STRING_TO_CSVFIELD('x Pos', FALSE);
+				fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+								bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)	
+				sCSVField	:= STRING_TO_CSVFIELD('x Vel', FALSE);
+				fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+								bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)	
+				sCSVField	:= STRING_TO_CSVFIELD('y Pos', FALSE);
+				fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+								bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)	
+				sCSVField	:= STRING_TO_CSVFIELD('y Vel', FALSE);
+				fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+								bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)	
+				sCSVField	:= STRING_TO_CSVFIELD('z Pos', FALSE);
+				fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+								bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)	
+				sCSVField	:= STRING_TO_CSVFIELD('z Vel', FALSE);
+				fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+								bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
+				sCSVField	:= STRING_TO_CSVFIELD('Pause Time', FALSE);
+				fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+								bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)	
+				sCSVField	:= STRING_TO_CSVFIELD('Comment', FALSE);
+				fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+								bCRLF := TRUE );(* bCRLF == TRUE => Write CRLF after the last field value *)
+				IF RIGHT( sCSVLine, 2 ) = '$R$L' THEN
+					sCSVLine := REPLACE( sCSVLine, '$L', 2, LEN( sCSVLine ) - 1 );
+				END_IF
+				scriptwrite		:= TRUE;
+				step			:= 5;	
+			ELSE//write script
+				;	
+			END_IF
 			
 		END_IF
 
-	5:	(* Write single text line *)
+	5:(* Write single text line *)
 		fbFilePuts( bExecute := FALSE );
 		fbFilePuts( sNetId := sNetId, hFile := hFile, sLine := sCSVLine, bExecute := TRUE );
 		step := 6;
@@ -472,11 +547,10 @@ CASE step OF
 			step := 10; (* Close the source file *)
 		ELSE
 			bBusy := FALSE;
+			GVL_DAQ.DAQ_CTR_INT.Data_Done	:= TRUE;
 			step := 0;	(* Ready *)
-			datawrite	:= FALSE;
 		END_IF
 
-//TODO clear HOLDNAME when GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.Script_Iterations
 END_CASE
 
 
@@ -490,6 +564,7 @@ END_CASE
       <LineId Id="280" Count="0" />
       <LineId Id="3" Count="0" />
       <LineId Id="125" Count="0" />
+      <LineId Id="676" Count="0" />
       <LineId Id="5" Count="5" />
       <LineId Id="261" Count="0" />
       <LineId Id="12" Count="5" />
@@ -500,7 +575,13 @@ END_CASE
       <LineId Id="269" Count="0" />
       <LineId Id="272" Count="0" />
       <LineId Id="124" Count="0" />
-      <LineId Id="199" Count="3" />
+      <LineId Id="199" Count="1" />
+      <LineId Id="586" Count="1" />
+      <LineId Id="612" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="615" Count="2" />
+      <LineId Id="202" Count="0" />
+      <LineId Id="613" Count="1" />
       <LineId Id="18" Count="0" />
       <LineId Id="270" Count="0" />
       <LineId Id="275" Count="0" />
@@ -526,17 +607,22 @@ END_CASE
       <LineId Id="174" Count="0" />
       <LineId Id="195" Count="0" />
       <LineId Id="197" Count="1" />
+      <LineId Id="590" Count="0" />
       <LineId Id="196" Count="0" />
       <LineId Id="190" Count="0" />
       <LineId Id="173" Count="0" />
       <LineId Id="203" Count="0" />
       <LineId Id="156" Count="0" />
       <LineId Id="158" Count="0" />
-      <LineId Id="204" Count="9" />
+      <LineId Id="204" Count="7" />
+      <LineId Id="589" Count="0" />
+      <LineId Id="212" Count="1" />
       <LineId Id="157" Count="0" />
       <LineId Id="214" Count="0" />
       <LineId Id="161" Count="1" />
-      <LineId Id="215" Count="9" />
+      <LineId Id="215" Count="7" />
+      <LineId Id="588" Count="0" />
+      <LineId Id="223" Count="1" />
       <LineId Id="160" Count="0" />
       <LineId Id="225" Count="0" />
       <LineId Id="165" Count="1" />
@@ -546,13 +632,22 @@ END_CASE
       <LineId Id="20" Count="0" />
       <LineId Id="268" Count="0" />
       <LineId Id="181" Count="0" />
-      <LineId Id="21" Count="4" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="609" Count="0" />
+      <LineId Id="604" Count="0" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="610" Count="0" />
+      <LineId Id="605" Count="1" />
+      <LineId Id="608" Count="0" />
+      <LineId Id="607" Count="0" />
+      <LineId Id="25" Count="0" />
       <LineId Id="183" Count="0" />
       <LineId Id="27" Count="4" />
       <LineId Id="485" Count="0" />
       <LineId Id="32" Count="1" />
       <LineId Id="267" Count="0" />
       <LineId Id="34" Count="5" />
+      <LineId Id="601" Count="0" />
       <LineId Id="227" Count="0" />
       <LineId Id="229" Count="0" />
       <LineId Id="232" Count="0" />
@@ -632,9 +727,7 @@ END_CASE
       <LineId Id="247" Count="0" />
       <LineId Id="233" Count="0" />
       <LineId Id="40" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="490" Count="0" />
-      <LineId Id="44" Count="0" />
+      <LineId Id="43" Count="1" />
       <LineId Id="491" Count="1" />
       <LineId Id="500" Count="4" />
       <LineId Id="499" Count="0" />
@@ -670,20 +763,32 @@ END_CASE
       <LineId Id="533" Count="0" />
       <LineId Id="535" Count="0" />
       <LineId Id="525" Count="0" />
-      <LineId Id="569" Count="0" />
-      <LineId Id="585" Count="0" />
-      <LineId Id="570" Count="0" />
+      <LineId Id="595" Count="3" />
+      <LineId Id="594" Count="0" />
       <LineId Id="526" Count="0" />
       <LineId Id="488" Count="0" />
       <LineId Id="45" Count="0" />
       <LineId Id="231" Count="0" />
       <LineId Id="234" Count="0" />
+      <LineId Id="642" Count="0" />
+      <LineId Id="619" Count="22" />
+      <LineId Id="618" Count="0" />
+      <LineId Id="645" Count="4" />
+      <LineId Id="644" Count="0" />
+      <LineId Id="651" Count="4" />
+      <LineId Id="650" Count="0" />
+      <LineId Id="657" Count="4" />
+      <LineId Id="656" Count="0" />
+      <LineId Id="669" Count="1" />
+      <LineId Id="668" Count="0" />
+      <LineId Id="671" Count="1" />
+      <LineId Id="674" Count="1" />
+      <LineId Id="643" Count="0" />
+      <LineId Id="673" Count="0" />
       <LineId Id="228" Count="0" />
-      <LineId Id="70" Count="33" />
-      <LineId Id="260" Count="0" />
-      <LineId Id="104" Count="0" />
-      <LineId Id="226" Count="0" />
-      <LineId Id="105" Count="5" />
+      <LineId Id="70" Count="32" />
+      <LineId Id="599" Count="0" />
+      <LineId Id="103" Count="7" />
     </LineIds>
   </POU>
 </TcPlcObject>

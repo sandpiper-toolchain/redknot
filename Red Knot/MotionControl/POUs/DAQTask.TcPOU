@@ -57,7 +57,7 @@ IF GVL_DAQ.DAQ_CTR_INT.Activate_Trigger <> DataTrigger.none THEN
 			tempX												:= LREAL_TO_INT(GVL_MOTION.xOut.PositionOut);
 			IF tempX MOD GVL_DAQ.EXT_CTR.DAQACQRES = 0 AND (tempX <> prevX) THEN
 				//timeASDT := SYSTEMTIME_TO_DT(fbtime.systemTime);
-				GVL_DAQ.TIMESTAMP[GVL_DAQ.DATA_INDEX] 			:= SYSTEMTIME_TO_STRING(fbtime.systemTime);
+				GVL_DAQ.TIMESTAMP[GVL_DAQ.DATA_INDEX] 			:= DELETE(SYSTEMTIME_TO_STRING(fbtime.systemTime),11,1);
 
 				GVL_DAQ.X[GVL_DAQ.DATA_INDEX] 			:= GVL_MOTION.xOut.PositionOut;
 				GVL_DAQ.Y[GVL_DAQ.DATA_INDEX] 			:= GVL_MOTION.yOut.PositionOut;
@@ -79,7 +79,7 @@ IF GVL_DAQ.DAQ_CTR_INT.Activate_Trigger <> DataTrigger.none THEN
 			tempY												:= LREAL_TO_INT(GVL_MOTION.yOut.PositionOut);
 			IF tempY MOD GVL_DAQ.EXT_CTR.DAQACQRES = 0 AND (tempY <> prevY) THEN
 				//timeASDT := SYSTEMTIME_TO_DT(fbtime.systemTime);
-				GVL_DAQ.TIMESTAMP[GVL_DAQ.DATA_INDEX] 			:= SYSTEMTIME_TO_STRING(fbtime.systemTime);
+				GVL_DAQ.TIMESTAMP[GVL_DAQ.DATA_INDEX] 			:= DELETE(SYSTEMTIME_TO_STRING(fbtime.systemTime),11,1);
 				
 				GVL_DAQ.X[GVL_DAQ.DATA_INDEX] 			:= GVL_MOTION.xOut.PositionOut;
 				GVL_DAQ.Y[GVL_DAQ.DATA_INDEX] 			:= GVL_MOTION.yOut.PositionOut;
@@ -100,7 +100,7 @@ IF GVL_DAQ.DAQ_CTR_INT.Activate_Trigger <> DataTrigger.none THEN
 			tempZ												:= LREAL_TO_INT(GVL_MOTION.zOut.PositionOut);
 			IF tempZ MOD GVL_DAQ.EXT_CTR.DAQACQRES = 0 AND (tempZ <> prevZ) THEN
 				//timeASDT := SYSTEMTIME_TO_DT(fbtime.systemTime);
-				GVL_DAQ.TIMESTAMP[GVL_DAQ.DATA_INDEX] 			:= SYSTEMTIME_TO_STRING(fbtime.systemTime);
+				GVL_DAQ.TIMESTAMP[GVL_DAQ.DATA_INDEX] 			:= DELETE(SYSTEMTIME_TO_STRING(fbtime.systemTime),11,1);
 					
 				GVL_DAQ.X[GVL_DAQ.DATA_INDEX] 			:= GVL_MOTION.xOut.PositionOut;
 				GVL_DAQ.Y[GVL_DAQ.DATA_INDEX] 			:= GVL_MOTION.yOut.PositionOut;
@@ -121,7 +121,7 @@ IF GVL_DAQ.DAQ_CTR_INT.Activate_Trigger <> DataTrigger.none THEN
 			temptime											:= F_GetSystemTime();
 			IF ULINT_TO_LINT(temptime) MOD GVL_DAQ.EXT_CTR.DAQACQRES = 0 AND (temptime <> prevtime) THEN
 				//timeASDT := SYSTEMTIME_TO_DT(fbtime.systemTime);
-				GVL_DAQ.TIMESTAMP[GVL_DAQ.DATA_INDEX] 			:= SYSTEMTIME_TO_STRING(fbtime.systemTime);
+				GVL_DAQ.TIMESTAMP[GVL_DAQ.DATA_INDEX] 			:= DELETE(SYSTEMTIME_TO_STRING(fbtime.systemTime),11,1);
 					
 				GVL_DAQ.X[GVL_DAQ.DATA_INDEX] 			:= GVL_MOTION.xOut.PositionOut;
 				GVL_DAQ.Y[GVL_DAQ.DATA_INDEX] 			:= GVL_MOTION.yOut.PositionOut;
@@ -152,6 +152,11 @@ END_IF
 
 IF GVL_MOTION.EXT_CTR.AxesReset THEN
 	GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= DataTrigger.none;
+END_IF
+
+IF GVL_DAQ.EXT_CTR.CMDSCRIPTWRITE THEN
+	GVL_DAQ.DAQ_CTR_INT.CSVWriteMode							:= CSVWriteMode.script;
+	
 END_IF
 
 (*measure time taken for DAQ pass controlled by GVL_DAQ.DAQ_CTR_INT.Measure_Run_Time*)
@@ -221,6 +226,11 @@ DAQPassTime();]]></ST>
       <LineId Id="43" Count="0" />
       <LineId Id="42" Count="0" />
       <LineId Id="44" Count="1" />
+      <LineId Id="247" Count="0" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="248" Count="0" />
+      <LineId Id="250" Count="0" />
+      <LineId Id="249" Count="0" />
       <LineId Id="244" Count="0" />
       <LineId Id="243" Count="0" />
       <LineId Id="245" Count="0" />
