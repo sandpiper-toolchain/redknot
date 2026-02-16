@@ -1555,7 +1555,7 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000001}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..0] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000001}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..0] OF BIT</Name>
 			<BitSize>1</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -1573,7 +1573,7 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000005}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..4] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000005}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..4] OF BIT</Name>
 			<BitSize>5</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -2028,9 +2028,9 @@ External Setpoint Generation:
 	</ImageDatas>
 	<Project ProjectGUID="{3341E311-E9ED-4CA1-8760-253F2F924762}" Target64Bit="true" AutoPrioManagement="true" ShowHideConfigurations="#x2c6">
 		<System>
-			<Settings MaxCpus="4" NonWinCpus="2" RouterMemory="16777216">
-				<Cpu CpuId="2" CpuMemorySize="#x100000"/>
-				<Cpu CpuId="3" BaseTime="5000" CpuMemorySize="#x100000"/>
+			<Settings MaxCpus="4" NonWinCpus="2" MaxStackSize="512">
+				<Cpu CpuId="2" CpuMemorySize="#x400000"/>
+				<Cpu CpuId="3" BaseTime="5000" CpuMemorySize="#x400000"/>
 				<IoIdleTask Priority="12"/>
 			</Settings>
 			<Tasks>
@@ -2641,7 +2641,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{35F1EE57-8B64-404F-9A2B-38524D23373E}" Name="MotionControl" PrjFilePath="MotionControl\MotionControl.plcproj" TmcFilePath="MotionControl\MotionControl.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{68DFF1C3-9700-2AB4-C7ED-F7379E1AE908}" TmcPath="MotionControl\MotionControl.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{977E1D19-7B83-3494-2A55-4D8214BAD681}" TmcPath="MotionControl\MotionControl.tmc">
 					<Name>MotionControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1" ContextId="2" AreaNo="32">
@@ -2659,11 +2659,11 @@ External Setpoint Generation:
 					<Vars VarGrpType="2" ContextId="1" AreaNo="17">
 						<Name>PlcTask Outputs</Name>
 						<Var>
-							<Name>MAIN.xAxis.PlcToNc</Name>
+							<Name>MAIN.xAxisCoupled.PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 						<Var>
-							<Name>MAIN.xAxisCoupled.PlcToNc</Name>
+							<Name>MAIN.xAxis.PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 						<Var>
@@ -2699,6 +2699,10 @@ External Setpoint Generation:
 							<Type>UINT</Type>
 						</Var>
 						<Var>
+							<Name>MAIN.InfoData1T6Ch1</Name>
+							<Type>UINT</Type>
+						</Var>
+						<Var>
 							<Name>MAIN.xAxis.NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
@@ -2713,10 +2717,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>MAIN.zAxis.NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.InfoData1T6Ch1</Name>
-							<Type>UINT</Type>
 						</Var>
 						<Var>
 							<Name>MAIN.InfoData1T6Ch2</Name>
@@ -7444,6 +7444,27 @@ Bit1: Value smaller than Limit2]]></Comment>
 					<Name>Image</Name>
 				</Image>
 				<Serial Baud="38400" Parity="1" StopBit="1" RsType="1" WaitTimeToShutdown="60" BufSize="4096" DataBit="8" ComPortNo="5" Timeout="300"/>
+			</Device>
+			<Device Id="2" DevType="121">
+				<Name>Device 2 (NOV-DP-RAM)</Name>
+				<AddressInfo>
+					<Pci>
+						<Address>819200</Address>
+						<Size>1024</Size>
+						<BusNo>0</BusNo>
+						<SlotNo>0</SlotNo>
+					</Pci>
+				</AddressInfo>
+				<Vars VarGrpType="1" InsertType="1">
+					<Name>Inputs</Name>
+				</Vars>
+				<Vars VarGrpType="2" InsertType="1">
+					<Name>Outputs</Name>
+				</Vars>
+				<Image Id="7" AddrType="5" ImageType="2">
+					<Name>Image</Name>
+				</Image>
+				<DpRam/>
 			</Device>
 		</Io>
 	</Project>

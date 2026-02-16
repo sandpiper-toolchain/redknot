@@ -4,6 +4,7 @@
     <Declaration><![CDATA[(* Writing of CSV file in text mode. None of the field value is containing any non-printing control characters like line feed, carriage return, quotation marks, semicolon... *)
 PROGRAM CSVWrite
 VAR
+	index			:INT; //write script for loop
 	step			:DWORD 			:= 0;(*state control*)
 	datawrite		:BOOL			:= FALSE;(*start by writing header, then set TRUE*)
 	scriptwrite		:BOOL			:= FALSE;(*write column headers then script*)
@@ -49,7 +50,6 @@ VAR
 	'3_0', '3_1', '3_2', '3_3', '3_4', '3_5',
 	'4_0', '4_1', '4_2', '4_3', '4_4', '4_5',
 	'5_0', '5_1', '5_2', '5_3', '5_4', '5_5'];
-	
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[//TODO 2 modes: write data and write script
@@ -446,27 +446,27 @@ CASE step OF
 					(* FB_FilePuts adds CR (carriage return) to the written line.
 					Replace the $R$L characters with $L character to avoid double CR. *)
 					IF RIGHT( sCSVLine, 2 ) = '$R$L' THEN
-						sCSVLine := REPLACE( sCSVLine, '$L', 2, LEN( sCSVLine ) - 1 );
+						sCSVLine		:= REPLACE( sCSVLine, '$L', 2, LEN( sCSVLine ) - 1 );
 					END_IF
-					GVL_DAQ.CSV_ROW	:= GVL_DAQ.CSV_ROW + 1;
-					step			:= 5;				
+					GVL_DAQ.CSV_ROW		:= GVL_DAQ.CSV_ROW + 1;
+					step				:= 5;				
 				ELSE(* All rows written => Close file *)
 					CASE GVL_DAQ.DAQ_CTR_INT.CSVWriteMode OF
 							CSVWriteMode.keyence: GVL_DAQ.DAQ_CTR_INT.Keyence_Done	:= TRUE;
 							CSVWriteMode.massa: GVL_DAQ.DAQ_CTR_INT.Massa_Done	:= TRUE;
 							CSVWriteMode.sonar: GVL_DAQ.DAQ_CTR_INT.Sonar_Done	:= TRUE;
 					END_CASE
-					step			:= 10;
+					step				:= 10;
 				END_IF	
 	
 			END_IF
 		ELSE //script write
 			IF NOT scriptwrite THEN
-				sCSVField	:= STRING_TO_CSVFIELD('Command', FALSE);	
+				sCSVField				:= STRING_TO_CSVFIELD('Command', FALSE);	
 				fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
 								bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
 				IF fbWriter.bOk THEN
-					fbWriter.eCmd := eEnumCmd_Next;(* Write next field value *)
+					fbWriter.eCmd 		:= eEnumCmd_Next;(* Write next field value *)
 				ELSE(* Error *)
 					step := 100;
 					RETURN;
@@ -507,10 +507,77 @@ CASE step OF
 				IF RIGHT( sCSVLine, 2 ) = '$R$L' THEN
 					sCSVLine := REPLACE( sCSVLine, '$L', 2, LEN( sCSVLine ) - 1 );
 				END_IF
-				scriptwrite		:= TRUE;
-				step			:= 5;	
+				scriptwrite				:= TRUE;
+				step					:= 5;	
 			ELSE//write script
-				;	
+				IF index <= 99 THEN
+					IF GVL_MOTION.Script[index].MotionCommand = MotionType.Null THEN
+						index			:= 0;
+						step			:= 10;
+					ELSE
+						sCSVField	:= STRING_TO_CSVFIELD(TO_STRING(GVL_MOTION.Script[index].MotionCommand), FALSE);
+						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+									bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
+						IF fbWriter.bOk THEN
+							fbWriter.eCmd := eEnumCmd_Next;(* Write next field value *)
+						ELSE(* Error *)
+							step 		:= 100;
+							RETURN;
+						END_IF
+						sCSVField	:= STRING_TO_CSVFIELD(TO_STRING(GVL_MOTION.Script[index].zType), FALSE);
+						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+									bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
+						sCSVField	:= STRING_TO_CSVFIELD(TO_STRING(GVL_MOTION.Script[index].DataTrigger), FALSE);
+						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+									bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
+						sCSVField		:= '';
+						IF GVL_MOTION.Script[index].Acq_Keyence THEN	
+							sCSVField	:= concat(sCSVField, 'K');		
+						END_IF
+						IF GVL_MOTION.Script[index].Acq_Sonar THEN	
+							sCSVField	:= concat(sCSVField, 'S');		
+						END_IF
+						IF GVL_MOTION.Script[index].Acq_Massa THEN	
+							sCSVField	:= concat(sCSVField, 'M');		
+						END_IF
+						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+									bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)	
+						sCSVField	:= STRING_TO_CSVFIELD(REAL_TO_STRING(GVL_MOTION.Script[index].SetXPosition), FALSE);
+						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+									bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
+						sCSVField	:= STRING_TO_CSVFIELD(INT_TO_STRING(GVL_MOTION.Script[index].SetXVelocity), FALSE);
+						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+									bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)	
+						sCSVField	:= STRING_TO_CSVFIELD(REAL_TO_STRING(GVL_MOTION.Script[index].SetYPosition), FALSE);
+						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+									bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
+						sCSVField	:= STRING_TO_CSVFIELD(INT_TO_STRING(GVL_MOTION.Script[index].SetYVelocity), FALSE);
+						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+									bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)	
+						sCSVField	:= STRING_TO_CSVFIELD(REAL_TO_STRING(GVL_MOTION.Script[index].SetZPosition), FALSE);
+						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+									bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
+						sCSVField	:= STRING_TO_CSVFIELD(INT_TO_STRING(GVL_MOTION.Script[index].SetZVelocity), FALSE);
+						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+									bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)	
+						sCSVField	:= STRING_TO_CSVFIELD(TIME_TO_STRING(GVL_MOTION.Script[index].PauseTime), FALSE);
+						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+									bCRLF := FALSE );(* bCRLF == TRUE => Write CRLF after the last field value *)
+						sCSVField	:= STRING_TO_CSVFIELD(GVL_MOTION.Script[index].Comment, FALSE);
+						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
+									bCRLF := TRUE );(* bCRLF == TRUE => Write CRLF after the last field value *)
+						IF RIGHT( sCSVLine, 2 ) = '$R$L' THEN
+							sCSVLine		:= REPLACE( sCSVLine, '$L', 2, LEN( sCSVLine ) - 1 );
+						END_IF
+						index				:= index + 1;
+						step				:= 5;			
+					END_IF
+					
+				ELSE
+						index				:= 0;
+						step				:= 10;
+				END_IF
+				
 			END_IF
 			
 		END_IF
@@ -782,7 +849,49 @@ END_CASE
       <LineId Id="669" Count="1" />
       <LineId Id="668" Count="0" />
       <LineId Id="671" Count="1" />
-      <LineId Id="674" Count="1" />
+      <LineId Id="674" Count="0" />
+      <LineId Id="677" Count="0" />
+      <LineId Id="681" Count="0" />
+      <LineId Id="746" Count="0" />
+      <LineId Id="688" Count="0" />
+      <LineId Id="685" Count="0" />
+      <LineId Id="687" Count="0" />
+      <LineId Id="689" Count="1" />
+      <LineId Id="692" Count="4" />
+      <LineId Id="691" Count="0" />
+      <LineId Id="697" Count="0" />
+      <LineId Id="699" Count="1" />
+      <LineId Id="702" Count="1" />
+      <LineId Id="701" Count="0" />
+      <LineId Id="707" Count="2" />
+      <LineId Id="705" Count="0" />
+      <LineId Id="717" Count="1" />
+      <LineId Id="716" Count="0" />
+      <LineId Id="711" Count="1" />
+      <LineId Id="710" Count="0" />
+      <LineId Id="706" Count="0" />
+      <LineId Id="704" Count="0" />
+      <LineId Id="720" Count="1" />
+      <LineId Id="719" Count="0" />
+      <LineId Id="723" Count="1" />
+      <LineId Id="722" Count="0" />
+      <LineId Id="726" Count="4" />
+      <LineId Id="725" Count="0" />
+      <LineId Id="732" Count="4" />
+      <LineId Id="731" Count="0" />
+      <LineId Id="738" Count="1" />
+      <LineId Id="737" Count="0" />
+      <LineId Id="741" Count="1" />
+      <LineId Id="740" Count="0" />
+      <LineId Id="744" Count="1" />
+      <LineId Id="743" Count="0" />
+      <LineId Id="747" Count="1" />
+      <LineId Id="686" Count="0" />
+      <LineId Id="754" Count="0" />
+      <LineId Id="752" Count="1" />
+      <LineId Id="698" Count="0" />
+      <LineId Id="682" Count="0" />
+      <LineId Id="678" Count="0" />
       <LineId Id="643" Count="0" />
       <LineId Id="673" Count="0" />
       <LineId Id="228" Count="0" />

@@ -556,6 +556,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"776"</v>
+              <v n="TextDefault">"PWR Fail"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"419"</v>
               <v n="TextDefault">"RELAT"</v>
               <l n="LanguageTexts" t="ArrayList" />

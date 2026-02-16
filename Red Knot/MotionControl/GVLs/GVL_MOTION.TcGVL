@@ -46,6 +46,7 @@ VAR_GLOBAL PERSISTENT
 	yHomeStatus				:MOTION_FB_STATUS;
 	zHomeStatus				:MOTION_FB_STATUS;
 	MoveActive				:BOOL;
+	PowerFail				:BOOL						:= FALSE;
 	
 	//for the drop down lists
 	xyzCMDSelect			:ARRAY[0..3] OF MotionType	:= [0,1,2,3];
