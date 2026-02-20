@@ -45,7 +45,7 @@ CASE GVL_MOTION.InstructionState OF
 			ELSE
 				GVL_MOTION.CurInstruction									:= 0;
 				IF NOT GVL_MOTION.EXT_CTR.CMDLOOP THEN
-					IF GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.Script_Iterations THEN
+					IF GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.SCRIPTITERATIONS THEN
 						GVL_MOTION.RUN_INDEX								:= 1;
 						GVL_MOTION.EXT_CTR.CMDRUN 							:= FALSE;	 //command list executed
 					ELSE
@@ -181,7 +181,7 @@ CASE GVL_MOTION.InstructionState OF
 				GVL_MOTION.CurInstruction 									:= 0;
 				GVL_MOTION.InstructionState 								:= 0;
 				IF NOT GVL_MOTION.EXT_CTR.CMDLOOP THEN
-					IF GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.Script_Iterations THEN
+					IF GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.SCRIPTITERATIONS THEN
 						GVL_MOTION.RUN_INDEX								:= 1;
 						GVL_MOTION.EXT_CTR.CMDRUN 							:= FALSE;	 //command list executed
 					ELSE
@@ -303,7 +303,7 @@ CASE GVL_MOTION.InstructionState OF
 						
 						GVL_MOTION.InstructionState 								:= 0;
 						IF NOT GVL_MOTION.EXT_CTR.CMDLOOP THEN
-							IF GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.Script_Iterations THEN
+							IF GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.SCRIPTITERATIONS THEN
 								GVL_MOTION.RUN_INDEX								:= 1;
 								//GVL_DAQ.PASS_INDEX									:= 0;
 								GVL_MOTION.EXT_CTR.CMDRUN 							:= FALSE;	 //command list executed
@@ -346,7 +346,7 @@ CASE GVL_MOTION.InstructionState OF
 		GVL_DAQ.EXT_CTR.CMDDATAWRITE										:= TRUE;
 		GVL_MOTION.InstructionState 										:= 5;
 	ELSE
-		IF ((GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.Script_Iterations) 
+		IF ((GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.SCRIPTITERATIONS) 
 		OR GVL_MOTION.EXT_CTR.CMDLOOP) AND NOT dataclr THEN
 			GVL_MOTION.InstructionState 									:= 6;
 		ELSE
@@ -363,7 +363,7 @@ CASE GVL_MOTION.InstructionState OF
 					
 				GVL_MOTION.InstructionState 								:= 0;
 				IF NOT GVL_MOTION.EXT_CTR.CMDLOOP THEN
-					IF GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.Script_Iterations THEN
+					IF GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.SCRIPTITERATIONS THEN
 						GVL_MOTION.RUN_INDEX								:= 1;
 						//GVL_DAQ.PASS_INDEX								:= 0;
 						GVL_MOTION.EXT_CTR.CMDRUN 							:= FALSE;	 //command list executed

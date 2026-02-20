@@ -3,22 +3,23 @@
   <DUT Name="MOTION_CTR" Id="{7b736c67-30bf-4989-9a85-4ad577225276}">
     <Declaration><![CDATA[TYPE MOTION_CTR :
 STRUCT
-	CMDADD					:BOOL	:= FALSE;
-	CMDCLR					:BOOL	:= FALSE;
-	CMDDEL					:BOOL	:= FALSE;
-	CMDRUN					:BOOL	:= FALSE;
-	CMDHOME					:BOOL	:= FALSE;
-	CMDSETZLIM				:BOOL	:= FALSE;
-	CMDFINDSTOPS			:BOOL	:= FALSE;
-	CMDLOOP					:BOOL	:= FALSE;
-	AxesHalt				:BOOL	:= FALSE;
-	AxesEn					:BOOL	:= FALSE;
+	CMDADD					:BOOL	:= FALSE; //add instruction to script
+	CMDCLR					:BOOL	:= FALSE; //clear script
+	CMDDEL					:BOOL	:= FALSE; //delete instruction at end of script
+	CMDRUN					:BOOL	:= FALSE; //run script if all safety conditions are met (homed, hard stops located, x axes coupled, safe z set)
+	CMDHOME					:BOOL	:= FALSE; //run home routine
+	CMDSETZLIM				:BOOL	:= FALSE; //this will set the safe lower limit of z to where it is currently positioned
+	CMDFINDSTOPS			:BOOL	:= FALSE; //run find stops routine
+	CMDLOOP					:BOOL	:= FALSE; //sets script to run indefinitely and forces separate data files for each script run
+	AXESHALT				:BOOL	:= FALSE; //pause motion during script run if true. set to false to continue motion
+	AXESEN					:BOOL	:= FALSE; //sends enable signal to all axes
 	(*deactivate daq trigger, reset home and hardstop states,  *)
-	AxesReset				:BOOL	:= FALSE;
-	Write_Script			:BOOL	:= FALSE;
-	Read_Script				:BOOL	:= FALSE;
+	AXESRESET				:BOOL	:= FALSE; //sends reset signal to each axis sequentially. ResetAxes program has some coupling logic to ensure both x axes reset
+	CMDSCRIPTWRITE			:BOOL	:= FALSE; //write script to file based on script name entered
+	CMDSCRIPTREAD			:BOOL	:= FALSE; //read script from file based on script name
 	(*maybe make new struct for script data *)
-	Script_Iterations		:INT	:= 1;
+	SCRIPTITERATIONS		:INT	:= 1; //number of times a script will be executed in a run
+	SCRIPTNAME				:T_MaxString; //name of script for data and script files. all data stored in folder with this name
 END_STRUCT
 END_TYPE
 ]]></Declaration>

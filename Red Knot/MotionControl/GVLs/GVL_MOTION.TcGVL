@@ -20,6 +20,7 @@ VAR_GLOBAL PERSISTENT
 	EmptyInstruction		:MOTION_INSTRUCTION;
 	(*add commands from instruction buffer or load script*)
 	Script 					:ARRAY[0..99] OF MOTION_INSTRUCTION;
+	ScriptReadBuffer		:ARRAY[0..99] OF MOTION_INSTRUCTION;
 	ContinuousMode			:BOOL;
 	ScriptEnd				:INT						:= 0; //empty/not executed
 	CurInstruction			:INT						:= 0; //current instruction
@@ -46,7 +47,9 @@ VAR_GLOBAL PERSISTENT
 	yHomeStatus				:MOTION_FB_STATUS;
 	zHomeStatus				:MOTION_FB_STATUS;
 	MoveActive				:BOOL;
-	PowerFail				:BOOL						:= FALSE;
+	Script_Open_Error		:BOOL			:= FALSE;
+	Script_Read_Error		:BOOL			:= FALSE;
+	Move_Rel_Error			:BOOL			:= FALSE;
 	
 	//for the drop down lists
 	xyzCMDSelect			:ARRAY[0..3] OF MotionType	:= [0,1,2,3];
@@ -69,10 +72,6 @@ VAR_GLOBAL PERSISTENT
 	HomingState				:INT						:= 0;
 	RevCouplePrep			:BOOL						:= FALSE;
 	HomeDone				:BOOL						:= FALSE;
-	
-	//maybe put in script struct
-	//motion script file name - also used for data output
-	SCRIPT_TITLE			:T_MaxString;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

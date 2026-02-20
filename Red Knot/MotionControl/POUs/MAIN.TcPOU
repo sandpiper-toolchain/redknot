@@ -28,10 +28,7 @@ VAR
 	xPos					:LREAL;
 	eStop					:BOOL;
 	
-	 tStart					:TIME; (* Time program start *)
-     tWork 					:TIME; (* Execution time *)
-	 t1						:TON;	
-	 timebool				:BOOL := FALSE;
+	tStart					:TIME; (* Time program start *)	 
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -114,7 +111,7 @@ IF GVL_MOTION.EXT_CTR.CMDADD THEN
 	AddCommand(); //toggler
 END_IF
 IF GVL_MOTION.EXT_CTR.CMDCLR THEN
-	DeleteQueue(); //toggler
+	ClearScript(); //toggler
 END_IF
 IF GVL_MOTION.EXT_CTR.CMDDEL THEN
 	DeleteLastInstruction();
@@ -143,21 +140,7 @@ IF eStop THEN
 	GVL_DAQ.DAQ_CTR_INT.Activate_Trigger	:= DataTrigger.none;
 END_IF
 
-GVL_MOTION.NextInstruction						:= GVL_MOTION.CurInstruction + 1;
-
-IF NOT timebool THEN
-	tStart	:= TIME();
-	timebool	:= TRUE;
-END_IF
-t1(IN := TRUE, PT := T#5S);
-
-IF t1.Q THEN
-	t1(IN:=FALSE);
-	twork := TIME() - tstart;
-	tstart := T#0S;
-	timebool	:=FALSE;
-END_IF
-]]></ST>
+GVL_MOTION.NextInstruction						:= GVL_MOTION.CurInstruction + 1;]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="232" Count="45" />
@@ -166,20 +149,6 @@ END_IF
       <LineId Id="278" Count="58" />
       <LineId Id="344" Count="0" />
       <LineId Id="219" Count="0" />
-      <LineId Id="359" Count="0" />
-      <LineId Id="346" Count="0" />
-      <LineId Id="345" Count="0" />
-      <LineId Id="349" Count="0" />
-      <LineId Id="348" Count="0" />
-      <LineId Id="356" Count="0" />
-      <LineId Id="352" Count="0" />
-      <LineId Id="351" Count="0" />
-      <LineId Id="358" Count="0" />
-      <LineId Id="353" Count="0" />
-      <LineId Id="357" Count="0" />
-      <LineId Id="355" Count="0" />
-      <LineId Id="354" Count="0" />
-      <LineId Id="347" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

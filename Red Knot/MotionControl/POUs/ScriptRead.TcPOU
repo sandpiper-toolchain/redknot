@@ -1,0 +1,295 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="ScriptRead" Id="{f3115fd0-e05a-484a-8721-db5714ee2bf3}" SpecialFunc="None">
+    <Declaration><![CDATA[(* Reading of CSV file in text mode. None of the field value is containing any non-printing control characters like line feed, carriage return, quotation marks, semicolon... *)
+PROGRAM ScriptRead
+VAR
+	sNetId			:T_AmsNetId := '';	(* TwinCAT system network address *)
+	FilePath		:T_MaxString := 'C:\data\';(* CSV source file path and name *)
+	sCSVLine		:T_MaxString := '';(* Single CSV text line (row, record), we are using string as record buffer (your are able to see read fields)  *)
+	sCSVField		:T_MaxString := '';(* Single CSV field value (column, record field) *)
+	
+	bRead			:BOOL	:= FALSE;(* Rising edge starts program execution *)
+	bBusy			:BOOL;
+	bError			:BOOL;
+	nErrId			:UDINT;
+	nRow	 		:UDINT 	:= 0;(* Row number (record) *)
+	nColumn			:UDINT 	:= 0;(* Column number (record field) *)
+	hFile			:UINT	:= 0;(* File handle of the source file *)
+	step			:DWORD 	:= 0;
+	fbFileOpen		:FB_FileOpen;(* Opens file *)
+	fbFileClose		:FB_FileClose;(* Closes file *)
+	fbFileGets		:FB_FileGets;(* Reads one record (line) *)
+	fbReader		:FB_CSVMemBufferReader;(* Helper function block used to parse CSV data bytes (single record line) *)
+	lastline		:UDINT;
+	temp			:ARRAY[0..100, 0..12 ] OF STRING;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF GVL_MOTION.EXT_CTR.CMDSCRIPTREAD THEN
+	GVL_MOTION.EXT_CTR.CMDSCRIPTREAD				:= FALSE;
+	bRead											:= TRUE;
+END_IF
+
+CASE step OF
+	0:	(* Wait for rising edge at bRead variable *)
+		IF bRead THEN
+			bRead 		:= FALSE;
+			bBusy 		:= TRUE;
+			bError		:= FALSE;
+			GVL_MOTION.Script_Open_Error	:= FALSE; //pop up in HMI
+			GVL_MOTION.Script_Read_Error	:= FALSE; //pop up in HMI
+			nErrId		:= 0;
+			hFile		:= 0;
+			FilePath	:= 'C:\data\';
+			FilePath	:= concat(FilePath, GVL_MOTION.EXT_CTR.SCRIPTNAME);
+			FilePath	:= concat(FilePath, '\');
+			FilePath	:= concat(FilePath, GVL_MOTION.EXT_CTR.SCRIPTNAME);
+			FilePath	:= concat(FilePath, '_');
+			FilePath	:= concat(FilePath, 'Script.csv');
+			lastline	:= 100;
+			nRow		:= 0;
+			nColumn		:= 0;
+			MEMSET( ADR( GVL_MOTION.ScriptReadBuffer ), 0, SIZEOF( GVL_MOTION.ScriptReadBuffer ) );
+			MEMSET( ADR( temp ), 0, SIZEOF( temp ) );
+			step 		:= 1;
+		END_IF
+	
+
+	1:	(* Open source file *)
+		fbFileOpen(  bExecute := FALSE  );
+		fbFileOpen( sNetId := sNetId, sPathName := FilePath, nMode := FOPEN_MODEREAD OR FOPEN_MODETEXT,(* Open file in TEXT mode! *)
+					ePath := PATH_GENERIC, bExecute := TRUE );
+		step := 2;
+
+	2:(* Wait until open not busy *)
+		fbFileOpen( bExecute := FALSE, bError => bError, nErrID => nErrID, hFile => hFile );
+		IF NOT fbFileOpen.bBusy THEN
+			IF NOT fbFileOpen.bError THEN
+				step := 3;
+			ELSE(* Error: file not found? *)
+				GVL_MOTION.Script_Open_Error	:= TRUE;
+				step := 100;
+				
+			END_IF
+		END_IF
+
+	3:	(* Read single line (record) *)
+		fbFileGets( bExecute := FALSE );
+		fbFileGets( sNetId := sNetId, hFile := hFile, bExecute := TRUE );
+		step := 4;
+
+	4:(* Wait until read not busy *)
+		fbFileGets( bExecute := FALSE, bError => bError, nErrID => nErrID, sLine => sCSVLine );
+		IF NOT fbFileGets.bBusy THEN
+			IF NOT fbFileGets.bError THEN
+				IF fbFileGets.bEOF THEN
+					lastline	:= nRow - 1;
+					nRow		:= 1; //skip labels on script verify
+					step := 6;(* End of file reached => check script is valid *)
+				ELSE
+
+					(* FB_FileGets returns text line without the CR (carriage return) character.
+					We have to restore the CR character (replace the $L character with $R$L characters) *)
+					IF RIGHT( sCSVLine, 1 ) = '$L' THEN
+						sCSVLine := REPLACE( sCSVLine, '$R$L', 2, LEN( sCSVLine ) );
+					END_IF
+
+					step := 5;
+				END_IF
+			ELSE(* Error *)
+				step := 100;
+			END_IF
+		END_IF
+
+	5:(* Parse single line (record) *)
+		fbReader.eCmd := eEnumCmd_First;(* Read first field value *)
+		REPEAT
+			fbReader( pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ), getValue => sCSVField );
+			IF fbReader.bOk THEN
+				fbReader.eCmd := eEnumCmd_Next;(* Read next field value *)
+
+				IF ( nRow <= 100 ) THEN
+					IF ( nColumn <= 12 ) THEN
+						temp[nRow, nColumn] := CSVFIELD_TO_STRING( sCSVField, FALSE );(* TODO: Save or use the field value in your application *)
+					END_IF
+				END_IF
+
+				nColumn := nColumn + 1;(* Increment number of read columns *)
+				IF fbReader.bCRLF THEN(* CRLF == TRUE => End of reacord reached *)
+					nRow 		:= nRow + 1;(* Increment number of read records *)
+					nColumn 	:= 0;(* Reset number of columns *)
+				END_IF
+
+			ELSE(* Error: End of record reached or all fields read *)
+				step := 3;(* Try to read next line *)
+			END_IF
+		UNTIL NOT fbReader.bOk
+		END_REPEAT
+		
+	6:(* validate script format before loading *)	
+		IF nRow <= lastline THEN
+			IF temp[nRow, 0] <> 'Absolute' AND temp[nRow, 0] <> 'Relative' AND temp[nRow, 0] <> 'WaitOk' THEN
+				GVL_MOTION.Script_Read_Error	:= TRUE;
+				step							:= 10;
+			END_IF	
+			IF temp[nRow, 1] <> 'Manual' AND temp[nRow, 1] <> 'WaterSurface' AND temp[nRow, 1] <> 'SedSurface' THEN
+				GVL_MOTION.Script_Read_Error	:= TRUE;
+				step							:= 10;
+			END_IF
+			IF temp[nRow, 2] <> 'none' AND temp[nRow, 2] <> 'x' AND temp[nRow, 2] <> 'y' 
+			AND temp[nRow, 2] <> 'z' AND temp[nRow, 2] <> 'timed' THEN
+				GVL_MOTION.Script_Read_Error	:= TRUE;
+				step							:= 10;
+			END_IF	
+			IF temp[nRow, 3] <> 'KSM' AND temp[nRow, 3] <> 'KS' AND temp[nRow, 3] <> 'KM' 
+			AND temp[nRow, 3] <> 'SM' AND temp[nRow, 3] <> 'K' 
+			AND temp[nRow, 3] <> 'S' AND temp[nRow, 3] <> 'M' AND temp[nRow, 3] <> '' THEN
+				GVL_MOTION.Script_Read_Error	:= TRUE;
+				step							:= 10;
+			END_IF
+            IF NOT ( (0 <= STRING_TO_INT(temp[nRow, 4]) ) AND
+   			(STRING_TO_INT(temp[nRow, 4]) <= GVL_MOTION.HardStopLocations[0]) ) THEN
+				GVL_MOTION.Script_Read_Error	:= TRUE;
+				step							:= 10;
+			END_IF	                                                                                                                 
+			IF NOT ( (0 <= STRING_TO_INT(temp[nRow, 5]) ) AND
+   			(STRING_TO_INT(temp[nRow, 5]) <= 300) ) THEN
+				GVL_MOTION.Script_Read_Error	:= TRUE;
+				step							:= 10;
+			END_IF
+			IF NOT ( (0 <= STRING_TO_INT(temp[nRow, 6]) ) AND
+   			(STRING_TO_INT(temp[nRow, 4]) <= GVL_MOTION.HardStopLocations[1]) ) THEN
+				GVL_MOTION.Script_Read_Error	:= TRUE;
+				step							:= 10;
+			END_IF
+			IF NOT ( (0 <= STRING_TO_INT(temp[nRow, 7]) ) AND
+   			(STRING_TO_INT(temp[nRow, 4]) <= 300) ) THEN
+				GVL_MOTION.Script_Read_Error	:= TRUE;
+				step							:= 10;
+			END_IF
+			IF NOT ( (0 <= STRING_TO_INT(temp[nRow, 8]) ) AND
+   			(STRING_TO_INT(temp[nRow, 4]) <= GVL_MOTION.HardStopLocations[2]) ) THEN
+				GVL_MOTION.Script_Read_Error	:= TRUE;
+				step							:= 10;
+			END_IF
+			IF NOT ( (0 <= STRING_TO_INT(temp[nRow, 9]) ) AND
+   			(STRING_TO_INT(temp[nRow, 4]) <= 30) ) THEN
+				GVL_MOTION.Script_Read_Error	:= TRUE;
+				step							:= 10;
+			END_IF
+			nRow := nRow + 1;
+		ELSE
+			nRow	:= 1;
+			step								:= 7;//script valid - send to script struct
+		END_IF
+	7: (*write script into program*)
+ 		IF nRow <= lastline THEN
+			IF temp[nRow, 0] = 'Absolute' THEN
+				
+			ELSIF temp[nRow, 0] = 'Relative' THEN
+	
+			ELSIF temp[nRow, 0] = 'WaitOk' THEN
+				
+			ELSE
+				GVL_MOTION.Script_Read_Error	:= TRUE;
+				step							:= 10;
+			END_IF	
+			
+			nRow	:= nRow + 1;
+		END_IF
+
+	10:	(* Close source file *)
+		fbFileClose( bExecute := FALSE );
+		fbFileClose( sNetId := sNetId, hFile := hFile, bExecute := TRUE );
+		step := 11;
+
+	11:(* Wait until close not busy *)
+		fbFileClose( bExecute := FALSE, bError => bError, nErrID => nErrID );
+		IF ( NOT fbFileClose.bBusy ) THEN
+			hFile := 0;
+			step := 100;
+		END_IF
+
+	100: (* Error or ready step => cleanup *)
+		IF ( hFile <> 0 ) THEN
+			step := 10; (* Close the source file *)
+		ELSE
+			bBusy := FALSE;
+			step := 0;	(* Ready *)
+		END_IF
+
+END_CASE
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="ScriptRead">
+      <LineId Id="110" Count="0" />
+      <LineId Id="112" Count="1" />
+      <LineId Id="108" Count="1" />
+      <LineId Id="3" Count="5" />
+      <LineId Id="124" Count="1" />
+      <LineId Id="9" Count="1" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="117" Count="3" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="11" Count="2" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="16" Count="12" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="30" Count="12" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="43" Count="39" />
+      <LineId Id="127" Count="2" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="143" Count="2" />
+      <LineId Id="142" Count="0" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="149" Count="1" />
+      <LineId Id="146" Count="0" />
+      <LineId Id="153" Count="1" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="155" Count="1" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="161" Count="1" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="166" Count="3" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="171" Count="3" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="176" Count="3" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="182" Count="8" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="191" Count="0" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="192" Count="0" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="201" Count="1" />
+      <LineId Id="207" Count="3" />
+      <LineId Id="204" Count="2" />
+      <LineId Id="199" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="83" Count="24" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

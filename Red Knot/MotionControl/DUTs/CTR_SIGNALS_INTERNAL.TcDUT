@@ -33,6 +33,8 @@ STRUCT
 	ExecuteRevCouple		:BOOL; //GearIn AxisCoupledControl
 	ExecuteRevUncouple		:BOOL; //GearOut
 	AxisToCouple			:AXIS_REF;
+	
+	
 END_STRUCT
 END_TYPE
 ]]></Declaration>

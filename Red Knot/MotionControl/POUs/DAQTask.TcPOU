@@ -154,11 +154,6 @@ IF GVL_MOTION.EXT_CTR.AxesReset THEN
 	GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= DataTrigger.none;
 END_IF
 
-IF GVL_DAQ.EXT_CTR.CMDSCRIPTWRITE THEN
-	GVL_DAQ.DAQ_CTR_INT.CSVWriteMode							:= CSVWriteMode.script;
-	
-END_IF
-
 (*measure time taken for DAQ pass controlled by GVL_DAQ.DAQ_CTR_INT.Measure_Run_Time*)
 
 DAQPassTime();]]></ST>
@@ -226,11 +221,6 @@ DAQPassTime();]]></ST>
       <LineId Id="43" Count="0" />
       <LineId Id="42" Count="0" />
       <LineId Id="44" Count="1" />
-      <LineId Id="247" Count="0" />
-      <LineId Id="246" Count="0" />
-      <LineId Id="248" Count="0" />
-      <LineId Id="250" Count="0" />
-      <LineId Id="249" Count="0" />
       <LineId Id="244" Count="0" />
       <LineId Id="243" Count="0" />
       <LineId Id="245" Count="0" />

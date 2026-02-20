@@ -16,11 +16,9 @@ STRUCT
 	Clear_Massa			:BOOL;
 	Clear_Keyence		:BOOL;
 	Clear_DAQ_Task		:BOOL;
-	
 	Measure_Run_Time	:BOOL			:= FALSE;
-	
-	Write_Data			:BOOL;
-	Write_Data_Append	:BOOL;
+
+	CMDDATAWRITE		:BOOL; //testing feature
 END_STRUCT
 END_TYPE
 ]]></Declaration>

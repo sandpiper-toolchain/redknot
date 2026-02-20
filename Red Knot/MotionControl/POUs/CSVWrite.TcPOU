@@ -42,14 +42,6 @@ VAR
 	
 	fbTime			:FB_LocalSystemTime;
 	timestring		:STRING;
-
-	database		:ARRAY[0..100, 0..5 ] OF STRING(100) :=[ (* Source PLC database *)
-	'0_0', '0_1', '0_2', '0_3', '0_4', '0_5',
-	'1_0', '1_1', '1_2', '1_3', '1_4', '1_5',
-	'2_0', '2_1', '2_2', '2_3', '2_4', '2_5',
-	'3_0', '3_1', '3_2', '3_3', '3_4', '3_5',
-	'4_0', '4_1', '4_2', '4_3', '4_4', '4_5',
-	'5_0', '5_1', '5_2', '5_3', '5_4', '5_5'];
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[//TODO 2 modes: write data and write script
@@ -59,10 +51,16 @@ fbtime(bEnable := TRUE, dwCycle := 1);
 DEFAULT_CSV_FIELD_SEP := 16#2C;(* Comma ASCII code *)
 //DEFAULT_CSV_FIELD_SEP := 16#3B;(* Semicolon ASCII code *)
 
-IF GVL_DAQ.EXT_CTR.CMDDATAWRITE OR GVL_DAQ.EXT_CTR.CMDSCRIPTWRITE THEN
-	GVL_DAQ.EXT_CTR.CMDDATAWRITE	:= FALSE;
-	GVL_DAQ.EXT_CTR.CMDSCRIPTWRITE	:= FALSE;
-	bWrite							:= TRUE;
+IF GVL_DAQ.EXT_CTR.CMDDATAWRITE OR GVL_DAQ.DAQ_CTR_INT.CMDDATAWRITE THEN //should be int ctr signal
+	GVL_DAQ.EXT_CTR.CMDDATAWRITE		:= FALSE; //for testing only
+	GVL_DAQ.DAQ_CTR_INT.CMDDATAWRITE	:= FALSE;
+	bWrite								:= TRUE;
+END_IF
+
+IF GVL_MOTION.EXT_CTR.CMDSCRIPTWRITE THEN
+	GVL_MOTION.EXT_CTR.CMDSCRIPTWRITE		:= FALSE;
+	GVL_DAQ.DAQ_CTR_INT.CSVWriteMode	:= CSVWriteMode.script;
+	bWrite								:= TRUE;
 END_IF
 
 CASE step OF
@@ -101,7 +99,7 @@ CASE step OF
 		
 	1:
 		//create directory for current script to contain script file and data output
-		TEMP						:= concat(GVL_MOTION.SCRIPT_TITLE, '"');
+		TEMP						:= concat(GVL_MOTION.EXT_CTR.SCRIPTNAME, '"');
 		fbCMD( PATHSTR:= CMDPATH, DIRNAME:= TOPDIR, COMNDLINE:= concat(COMNDLINE, TEMP), START:= TRUE);
 		fbCMD(START:= FALSE);
 		IF NOT fbCMD.BUSY THEN
@@ -113,10 +111,10 @@ CASE step OF
 			timestring					:= delete(timestring, 1, 14); 
 			
 			TOPDIR						:= concat(TOPDIR, '\');
-			TOPDIR						:= concat(TOPDIR, GVL_MOTION.SCRIPT_TITLE);
+			TOPDIR						:= concat(TOPDIR, GVL_MOTION.EXT_CTR.SCRIPTNAME);
 			TOPDIR						:= concat(TOPDIR, '\');
 			
-			FILENAME					:= concat(GVL_MOTION.SCRIPT_TITLE, '_');
+			FILENAME					:= concat(GVL_MOTION.EXT_CTR.SCRIPTNAME, '_');
 			
 			CASE GVL_DAQ.DAQ_CTR_INT.CSVWriteMode OF
 				CSVWriteMode.keyence: 
@@ -211,7 +209,7 @@ CASE step OF
 										bCRLF := TRUE );(* bCRLF == TRUE => Write CRLF after the last field value *)			
 						headerstep	:= 1;				
 					1:
-						sCSVField	:= STRING_TO_CSVFIELD(GVL_MOTION.SCRIPT_TITLE, FALSE);
+						sCSVField	:= STRING_TO_CSVFIELD(GVL_MOTION.EXT_CTR.SCRIPTNAME, FALSE);
 						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
 										bCRLF := TRUE );(* bCRLF == TRUE => Write CRLF after the last field value *)			
 						headerstep	:= 2;
@@ -316,7 +314,7 @@ CASE step OF
 							step := 100;
 							RETURN;
 						END_IF
-						sCSVField	:= STRING_TO_CSVFIELD(INT_TO_STRING(GVL_MOTION.EXT_CTR.Script_Iterations), FALSE);
+						sCSVField	:= STRING_TO_CSVFIELD(INT_TO_STRING(GVL_MOTION.EXT_CTR.SCRIPTITERATIONS), FALSE);
 						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
 										bCRLF := TRUE );(* bCRLF == TRUE => Write CRLF after the last field value *)												
 						headerstep	:= 8;		
@@ -631,8 +629,14 @@ END_CASE
       <LineId Id="280" Count="0" />
       <LineId Id="3" Count="0" />
       <LineId Id="125" Count="0" />
-      <LineId Id="676" Count="0" />
-      <LineId Id="5" Count="5" />
+      <LineId Id="761" Count="0" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="755" Count="0" />
+      <LineId Id="757" Count="0" />
+      <LineId Id="760" Count="0" />
+      <LineId Id="758" Count="1" />
+      <LineId Id="756" Count="0" />
+      <LineId Id="7" Count="3" />
       <LineId Id="261" Count="0" />
       <LineId Id="12" Count="5" />
       <LineId Id="123" Count="0" />
