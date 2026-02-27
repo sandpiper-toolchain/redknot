@@ -6,40 +6,38 @@ VAR_GLOBAL PERSISTENT
 	EXT_CTR				:DAQ_CTR;
 	TEST_CTR			:DAQ_CTR;
 	DAQ_CTR_INT			:DAQ_CTR_INTERNAL;
-	//indicates DATA_INDEX exceeding 199999
-	//halts motion and DAQ, requires data dump or 
-	//data clear to resume queue
+	DATA				:DATA; //real time sensor data
+	(*indicates DATA_INDEX exceeding 199999,
+	 halts motion and DAQ, requires data dump or 
+	 data clear to resume queue*)
 	DATA_OVERFLOW		:BOOL	:= 0;
 	//index for data arrays
 	DATA_INDEX			:UDINT	:= 0;
-	//increment after each DAQ instruction
-	//reset after each complete script run
-	//used to populate INDEX_COLLECTOR
+	(*increment after each DAQ instruction
+	 reset after each complete script run
+	 used to populate INDEX_COLLECTOR*)
 	PASS_INDEX			:INT	:= 0;
-	MASSA_TEMP			:INT;
-	KEYENCE_TEMP		:INT;
 	
 	CSV_ROW				:UDINT := 0;
 	CSV_PASS_COMPARE	:UDINT := 0;
 END_VAR
 
 VAR_GLOBAL
-	//stored during state 0
-	//index of INDEX_COLLECTOR is the number of the pass that starts at the value recorded
-	(*array to store the DATA_INDEX for each instruction pass*)
-	INDEX_COLLECTOR		:ARRAY [0..999] OF UDINT;
+	(*stored during state 0,
+	 stores DATA_INDEX corresponding to data pass IE - INDEX_COLLECTOR[data pass]*)
+	INDEX_COLLECTOR		:ARRAY[0..999] OF UDINT;
 	(*elapsed time of the data pass*)
 	RUNTIME_COLLECTOR	:ARRAY[0..999] OF TIME;
+	
 	//buffer size - 200 meters worth of 1mm increments
-	//15MB - 80byte default element size
-	TIMESTAMP			:ARRAY[0..199999] OF STRING;
-	//1.5MB per array - 64bit element size
-	MASSA				:ARRAY[0..199999] OF LREAL;
-	KEYENCE				:ARRAY[0..199999] OF LREAL;
-	X					:ARRAY[0..199999] OF LREAL;
-	Y					:ARRAY[0..199999] OF LREAL;
-	Z					:ARRAY[0..199999] OF LREAL;	
-	CARRIAGE_OFFSETS	:ARRAY[0..2]	  OF LREAL	:= [103.54,69.27,194];
+	
+	TIMESTAMP			:ARRAY[0..199999] OF STRING; //15MB - 80byte default element size
+	MASSA				:ARRAY[0..199999] OF LREAL; //1.5MB - 64bit element size
+	KEYENCE				:ARRAY[0..199999] OF LREAL; //1.5MB - 64bit element size
+	X					:ARRAY[0..199999] OF LREAL; //1.5MB - 64bit element size
+	Y					:ARRAY[0..199999] OF LREAL; //1.5MB - 64bit element size
+	Z					:ARRAY[0..199999] OF LREAL;	//1.5MB - 64bit element size
+	CARRIAGE_OFFSETS	:ARRAY[0..2]	  OF LREAL	:= [84.25,62.5,193.7];
 	KEYENCE_OFFSETS		:ARRAY[0..2]	  OF LREAL	:= [53.52,108.41,23.9];
 	MASSA_OFFSETS		:ARRAY[0..2]	  OF LREAL	:= [36,31,-116.11];
 END_VAR]]></Declaration>

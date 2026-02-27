@@ -5,7 +5,7 @@
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"1083"</v>
+          <v n="UniqueIdGenerator">"1104"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -6507,7 +6507,7 @@
                     </o>
                     <o>
                       <v n="Id">743958181L</v>
-                      <v n="Value">"MAIN.eStop"</v>
+                      <v n="Value">"GVL_MOTION.STATUS.eStop"</v>
                     </o>
                   </l>
                 </o>
@@ -14974,7 +14974,7 @@
                     </o>
                     <o>
                       <v n="Id">743958181L</v>
-                      <v n="Value">"GVL_MOTION.zSafeLimitIsSet"</v>
+                      <v n="Value">"GVL_MOTION.STATUS.zSafeSet"</v>
                     </o>
                   </l>
                 </o>
@@ -15080,7 +15080,7 @@
                     </o>
                     <o>
                       <v n="Id">743958181L</v>
-                      <v n="Value">"GVL_MOTION.HomeDone"</v>
+                      <v n="Value">"GVL_MOTION.STATUS.HomeDone"</v>
                     </o>
                   </l>
                 </o>
@@ -15576,7 +15576,7 @@
                     </o>
                     <o>
                       <v n="Id">743958181L</v>
-                      <v n="Value">"GVL_MOTION.HardStopLocateDone"</v>
+                      <v n="Value">"GVL_MOTION.STATUS.HardStopLoc"</v>
                     </o>
                   </l>
                 </o>
@@ -16312,7 +16312,7 @@
                     </o>
                     <o>
                       <v n="Id">743958181L</v>
-                      <v n="Value">"GVL_MOTION.MoveActive"</v>
+                      <v n="Value">"GVL_MOTION.STATUS.MoveActive"</v>
                     </o>
                     <o>
                       <v n="Id">318782457L</v>

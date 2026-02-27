@@ -20,13 +20,8 @@ STRUCT
 	SetYAccel				:INT;
 	SetZPosition			:REAL;
 	SetZVelocity			:INT := 10;
-	(*variable format T#1D4H5M2S1MS*)
-	PauseTime				:TIME;	
+	PauseTime				:TIME;	//comes in as UDINT in MS, variable format T#1D4H5M2S1MS
 	Comment					:STRING;
-	//MOTION_SETTINGS MQTT topic shall contain variable 'PauseTimeUdint'
-	//to be converted to pause time in MS on transfer
-	//xyzMotionCommand and zBehaviorCommand shall be passed through 
-	//MQTT as int, removed strict attribute from enumerations
 
 END_STRUCT
 END_TYPE

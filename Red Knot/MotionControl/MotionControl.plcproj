@@ -34,6 +34,9 @@
     <Compile Include="DUTs\DAQ_CTR_INTERNAL.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\DATA.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\MotionType.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -56,6 +59,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\MOTION_CTR.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\STATUS.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\zBehavior.TcDUT">

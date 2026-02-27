@@ -13,7 +13,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF GVL_MOTION.EXT_CTR.AxesEn AND NOT Main.eStop THEN
+      <ST><![CDATA[IF GVL_MOTION.EXT_CTR.AxesEn AND NOT GVL_MOTION.STATUS.eStop THEN
 	control.Enable 						:= TRUE;
 	control.CouplePowerEn  				:= TRUE;
 ELSE

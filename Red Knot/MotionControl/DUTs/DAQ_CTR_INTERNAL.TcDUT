@@ -18,7 +18,7 @@ STRUCT
 	Clear_DAQ_Task		:BOOL;
 	Measure_Run_Time	:BOOL			:= FALSE;
 
-	CMDDATAWRITE		:BOOL; //testing feature
+	CMDDATAWRITE		:BOOL; //testing feature in HMI
 END_STRUCT
 END_TYPE
 ]]></Declaration>

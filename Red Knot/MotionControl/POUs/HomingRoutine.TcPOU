@@ -62,14 +62,14 @@ GVL_MOTION.RevCouplePrep				:= FALSE;
 GVL_MOTION.HomingState					:= 9;
 
 9:
-GVL_MOTION.xCon.ExecuteRevUncouple	:= FALSE;
-GVL_MOTION.xCon.ExecuteCouple		:= FALSE;
-GVL_MOTION.HomingState				:= 10;
+GVL_MOTION.xCon.ExecuteRevUncouple		:= FALSE;
+GVL_MOTION.xCon.ExecuteCouple			:= FALSE;
+GVL_MOTION.HomingState					:= 10;
 
 10:
-GVL_MOTION.xCon.ExecuteCouple		:= TRUE;
-GVL_MOTION.xCon.Execute_HOME		:= TRUE;
-GVL_MOTION.HomingState				:= 11;
+GVL_MOTION.xCon.ExecuteCouple			:= TRUE;
+GVL_MOTION.xCon.Execute_HOME			:= TRUE;
+GVL_MOTION.HomingState					:= 11;
 
 11:
 IF GVL_MOTION.xHomeStatus.Done THEN

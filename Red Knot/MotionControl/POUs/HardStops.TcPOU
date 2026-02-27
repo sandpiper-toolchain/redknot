@@ -61,7 +61,7 @@ ELSE
 		IF NOT GVL_MOTION.xCon.LimPos THEN
 			GVL_MOTION.xCon.JogBw			:= FALSE;
 			GVL_MOTION.HardStopLocations[0]	:= GVL_MOTION.xOut.PositionOut;
-			GVL_MOTION.HardStopLocateDone	:= TRUE;
+			GVL_MOTION.STATUS.HardStopLoc	:= TRUE;
 			GVL_MOTION.HardStopState		:= 0;
 			GVL_MOTION.EXT_CTR.CMDFINDSTOPS	:= FALSE;
 		END_IF

@@ -36,8 +36,8 @@ CASE step OF
 			bRead 		:= FALSE;
 			bBusy 		:= TRUE;
 			bError		:= FALSE;
-			GVL_MOTION.Script_Open_Error	:= FALSE; //pop up in HMI
-			GVL_MOTION.Script_Read_Error	:= FALSE; //pop up in HMI
+			GVL_MOTION.STATUS.Script_Open_Err	:= FALSE; //pop up in HMI
+			GVL_MOTION.STATUS.Script_Read_Err	:= FALSE; //pop up in HMI
 			nErrId		:= 0;
 			hFile		:= 0;
 			FilePath	:= 'C:\data\';
@@ -67,7 +67,7 @@ CASE step OF
 			IF NOT fbFileOpen.bError THEN
 				step := 3;
 			ELSE(* Error: file not found? *)
-				GVL_MOTION.Script_Open_Error	:= TRUE;
+				GVL_MOTION.STATUS.Script_Open_Err	:= TRUE;
 				step := 100;
 				
 			END_IF
@@ -85,7 +85,7 @@ CASE step OF
 				IF fbFileGets.bEOF THEN
 					lastline	:= nRow - 1;
 					nRow		:= 1; //skip labels on script verify
-					step := 6;(* End of file reached => check script is valid *)
+					step := 6;(* End of file reached => check and load script *)
 				ELSE
 
 					(* FB_FileGets returns text line without the CR (carriage return) character.
@@ -126,76 +126,131 @@ CASE step OF
 		UNTIL NOT fbReader.bOk
 		END_REPEAT
 		
-	6:(* validate script format before loading *)	
-		IF nRow <= lastline THEN
-			IF temp[nRow, 0] <> 'Absolute' AND temp[nRow, 0] <> 'Relative' AND temp[nRow, 0] <> 'WaitOk' THEN
-				GVL_MOTION.Script_Read_Error	:= TRUE;
-				step							:= 10;
-			END_IF	
-			IF temp[nRow, 1] <> 'Manual' AND temp[nRow, 1] <> 'WaterSurface' AND temp[nRow, 1] <> 'SedSurface' THEN
-				GVL_MOTION.Script_Read_Error	:= TRUE;
-				step							:= 10;
-			END_IF
-			IF temp[nRow, 2] <> 'none' AND temp[nRow, 2] <> 'x' AND temp[nRow, 2] <> 'y' 
-			AND temp[nRow, 2] <> 'z' AND temp[nRow, 2] <> 'timed' THEN
-				GVL_MOTION.Script_Read_Error	:= TRUE;
-				step							:= 10;
-			END_IF	
-			IF temp[nRow, 3] <> 'KSM' AND temp[nRow, 3] <> 'KS' AND temp[nRow, 3] <> 'KM' 
-			AND temp[nRow, 3] <> 'SM' AND temp[nRow, 3] <> 'K' 
-			AND temp[nRow, 3] <> 'S' AND temp[nRow, 3] <> 'M' AND temp[nRow, 3] <> '' THEN
-				GVL_MOTION.Script_Read_Error	:= TRUE;
-				step							:= 10;
-			END_IF
-            IF NOT ( (0 <= STRING_TO_INT(temp[nRow, 4]) ) AND
-   			(STRING_TO_INT(temp[nRow, 4]) <= GVL_MOTION.HardStopLocations[0]) ) THEN
-				GVL_MOTION.Script_Read_Error	:= TRUE;
-				step							:= 10;
-			END_IF	                                                                                                                 
-			IF NOT ( (0 <= STRING_TO_INT(temp[nRow, 5]) ) AND
-   			(STRING_TO_INT(temp[nRow, 5]) <= 300) ) THEN
-				GVL_MOTION.Script_Read_Error	:= TRUE;
-				step							:= 10;
-			END_IF
-			IF NOT ( (0 <= STRING_TO_INT(temp[nRow, 6]) ) AND
-   			(STRING_TO_INT(temp[nRow, 4]) <= GVL_MOTION.HardStopLocations[1]) ) THEN
-				GVL_MOTION.Script_Read_Error	:= TRUE;
-				step							:= 10;
-			END_IF
-			IF NOT ( (0 <= STRING_TO_INT(temp[nRow, 7]) ) AND
-   			(STRING_TO_INT(temp[nRow, 4]) <= 300) ) THEN
-				GVL_MOTION.Script_Read_Error	:= TRUE;
-				step							:= 10;
-			END_IF
-			IF NOT ( (0 <= STRING_TO_INT(temp[nRow, 8]) ) AND
-   			(STRING_TO_INT(temp[nRow, 4]) <= GVL_MOTION.HardStopLocations[2]) ) THEN
-				GVL_MOTION.Script_Read_Error	:= TRUE;
-				step							:= 10;
-			END_IF
-			IF NOT ( (0 <= STRING_TO_INT(temp[nRow, 9]) ) AND
-   			(STRING_TO_INT(temp[nRow, 4]) <= 30) ) THEN
-				GVL_MOTION.Script_Read_Error	:= TRUE;
-				step							:= 10;
-			END_IF
-			nRow := nRow + 1;
-		ELSE
-			nRow	:= 1;
-			step								:= 7;//script valid - send to script struct
-		END_IF
-	7: (*write script into program*)
+	
+	6: (*check format and write script*)
  		IF nRow <= lastline THEN
 			IF temp[nRow, 0] = 'Absolute' THEN
-				
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].MotionCommand	:= MotionType.Absolute;
 			ELSIF temp[nRow, 0] = 'Relative' THEN
-	
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].MotionCommand	:= MotionType.Relative;
 			ELSIF temp[nRow, 0] = 'WaitOk' THEN
-				
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].MotionCommand	:= MotionType.WaitOK;
 			ELSE
-				GVL_MOTION.Script_Read_Error	:= TRUE;
+				GVL_MOTION.STATUS.Script_Read_Err	:= TRUE;
 				step							:= 10;
 			END_IF	
 			
+			IF temp[nRow, 1] = 'Manual' THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].zType	:= zBehavior.Manual;
+			ELSIF temp[nRow, 1] = 'SedSurface' THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].MotionCommand	:= zBehavior.SedSurface;
+			ELSIF temp[nRow, 1] = 'WaterSurface' THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].MotionCommand	:= zBehavior.WaterSurface;
+			ELSE
+				GVL_MOTION.STATUS.Script_Read_Err	:= TRUE;
+				step							:= 10;
+			END_IF	
+			
+			IF temp[nRow, 2] = 'none' THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].DataTrigger	:= DataTrigger.none;
+			ELSIF temp[nRow, 2] = 'timed' THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].DataTrigger	:= DataTrigger.timed;
+			ELSIF temp[nRow, 2] = 'x' THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].DataTrigger	:= DataTrigger.x;
+			ELSIF temp[nRow, 2] = 'y' THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].DataTrigger	:= DataTrigger.y;
+			ELSIF temp[nRow, 2] = 'z' THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].DataTrigger	:= DataTrigger.z;
+			ELSE
+				GVL_MOTION.STATUS.Script_Read_Err	:= TRUE;
+				step							:= 10;
+			END_IF	
+			
+			IF temp[nRow, 3] = '' THEN
+				;
+			ELSIF temp[nRow, 3] = 'KSM' THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].Acq_Keyence	:= TRUE;
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].Acq_Sonar		:= TRUE;
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].Acq_Massa		:= TRUE;
+			ELSIF temp[nRow, 3] = 'KS' THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].Acq_Keyence	:= TRUE;
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].Acq_Sonar		:= TRUE;
+			ELSIF temp[nRow, 3] = 'KM' THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].Acq_Keyence	:= TRUE;
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].Acq_Massa		:= TRUE;
+			ELSIF temp[nRow, 3] = 'SM' THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].Acq_Sonar		:= TRUE;
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].Acq_Massa		:= TRUE;
+			ELSIF temp[nRow, 3] = 'K' THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].Acq_Keyence	:= TRUE;
+			ELSIF temp[nRow, 3] = 'S' THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].Acq_Sonar		:= TRUE;
+			ELSIF temp[nRow, 3] = 'M' THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].Acq_Massa		:= TRUE;	
+			ELSE
+				GVL_MOTION.STATUS.Script_Read_Err	:= TRUE;
+				step							:= 10;
+			END_IF	
+			
+			IF ( (0 <= STRING_TO_INT(temp[nRow, 4]) ) AND
+   			(STRING_TO_INT(temp[nRow, 4]) <= GVL_MOTION.HardStopLocations[0]) ) THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].SetXPosition	:= STRING_TO_REAL(temp[nRow, 4]);			
+			ELSE
+				GVL_MOTION.STATUS.Script_Read_Err	:= TRUE;
+				step							:= 10;
+			END_IF	 
+			
+			IF ( (0 <= STRING_TO_INT(temp[nRow, 5]) ) AND
+   			(STRING_TO_INT(temp[nRow, 5]) <= 300) ) THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].SetXVelocity	:= STRING_TO_INT(temp[nRow, 5]);			
+			ELSE
+				GVL_MOTION.STATUS.Script_Read_Err	:= TRUE;
+				step							:= 10;
+			END_IF
+			
+			IF ( (0 <= STRING_TO_INT(temp[nRow, 6]) ) AND
+   			(STRING_TO_INT(temp[nRow, 6]) <= GVL_MOTION.HardStopLocations[1]) ) THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].SetYPosition	:= STRING_TO_REAL(temp[nRow, 6]);			
+			ELSE
+				GVL_MOTION.STATUS.Script_Read_Err	:= TRUE;
+				step							:= 10;
+			END_IF	 
+			
+			IF ( (0 <= STRING_TO_INT(temp[nRow, 7]) ) AND
+   			(STRING_TO_INT(temp[nRow, 7]) <= 300) ) THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].SetYVelocity	:= STRING_TO_INT(temp[nRow, 7]);			
+			ELSE
+				GVL_MOTION.STATUS.Script_Read_Err	:= TRUE;
+				step							:= 10;
+			END_IF
+			
+			IF ( (0 <= STRING_TO_INT(temp[nRow, 8]) ) AND
+   			(STRING_TO_INT(temp[nRow, 8]) <= GVL_MOTION.HardStopLocations[2]) ) THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].SetZPosition	:= STRING_TO_REAL(temp[nRow, 8]);			
+			ELSE
+				GVL_MOTION.STATUS.Script_Read_Err	:= TRUE;
+				step							:= 10;
+			END_IF	 
+			
+			IF ( (0 <= STRING_TO_INT(temp[nRow, 9]) ) AND
+   			(STRING_TO_INT(temp[nRow, 9]) <= 30) ) THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 1].SetZVelocity	:= STRING_TO_INT(temp[nRow, 9]);			
+			ELSE
+				GVL_MOTION.STATUS.Script_Read_Err	:= TRUE;
+				step							:= 10;
+			END_IF
+			
+			GVL_MOTION.ScriptReadBuffer[nRow - 1].PauseTime			:= STRING_TO_TIME(temp[nRow, 10]);
+			
+			GVL_MOTION.ScriptReadBuffer[nRow - 1].Comment				:= temp[nRow, 11];
+			
 			nRow	:= nRow + 1;
+		ELSE //no errors found
+			ClearScript();
+			GVL_MOTION.ScriptEnd				:= UDINT_TO_INT(nRow - 1);
+			GVL_MOTION.Script					:= GVL_MOTION.ScriptReadBuffer;
+			
+			step	:= 10;	
 		END_IF
 
 	10:	(* Close source file *)
@@ -247,37 +302,7 @@ END_CASE
       <LineId Id="131" Count="0" />
       <LineId Id="133" Count="0" />
       <LineId Id="43" Count="39" />
-      <LineId Id="127" Count="2" />
-      <LineId Id="134" Count="0" />
-      <LineId Id="138" Count="0" />
-      <LineId Id="141" Count="0" />
-      <LineId Id="139" Count="0" />
-      <LineId Id="143" Count="2" />
-      <LineId Id="142" Count="0" />
-      <LineId Id="148" Count="0" />
-      <LineId Id="151" Count="0" />
-      <LineId Id="149" Count="1" />
-      <LineId Id="146" Count="0" />
-      <LineId Id="153" Count="1" />
-      <LineId Id="157" Count="0" />
-      <LineId Id="155" Count="1" />
-      <LineId Id="152" Count="0" />
-      <LineId Id="163" Count="0" />
-      <LineId Id="165" Count="0" />
-      <LineId Id="161" Count="1" />
-      <LineId Id="158" Count="0" />
-      <LineId Id="166" Count="3" />
-      <LineId Id="147" Count="0" />
-      <LineId Id="171" Count="3" />
-      <LineId Id="170" Count="0" />
-      <LineId Id="176" Count="3" />
-      <LineId Id="175" Count="0" />
-      <LineId Id="182" Count="8" />
-      <LineId Id="181" Count="0" />
-      <LineId Id="191" Count="0" />
-      <LineId Id="136" Count="0" />
-      <LineId Id="192" Count="0" />
-      <LineId Id="137" Count="0" />
+      <LineId Id="127" Count="0" />
       <LineId Id="135" Count="0" />
       <LineId Id="140" Count="0" />
       <LineId Id="193" Count="0" />
@@ -286,7 +311,48 @@ END_CASE
       <LineId Id="204" Count="2" />
       <LineId Id="199" Count="0" />
       <LineId Id="197" Count="0" />
+      <LineId Id="213" Count="8" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="224" Count="5" />
+      <LineId Id="235" Count="3" />
+      <LineId Id="230" Count="2" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="239" Count="0" />
+      <LineId Id="241" Count="3" />
+      <LineId Id="260" Count="1" />
+      <LineId Id="245" Count="1" />
+      <LineId Id="262" Count="0" />
+      <LineId Id="247" Count="1" />
+      <LineId Id="263" Count="0" />
+      <LineId Id="249" Count="1" />
+      <LineId Id="264" Count="0" />
+      <LineId Id="255" Count="4" />
+      <LineId Id="254" Count="0" />
+      <LineId Id="251" Count="2" />
+      <LineId Id="240" Count="0" />
+      <LineId Id="233" Count="0" />
+      <LineId Id="266" Count="2" />
+      <LineId Id="273" Count="0" />
+      <LineId Id="271" Count="1" />
+      <LineId Id="265" Count="0" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="276" Count="5" />
+      <LineId Id="274" Count="0" />
+      <LineId Id="282" Count="0" />
+      <LineId Id="284" Count="13" />
+      <LineId Id="283" Count="0" />
+      <LineId Id="298" Count="0" />
+      <LineId Id="300" Count="13" />
+      <LineId Id="299" Count="0" />
+      <LineId Id="314" Count="3" />
+      <LineId Id="275" Count="0" />
       <LineId Id="196" Count="0" />
+      <LineId Id="318" Count="0" />
+      <LineId Id="324" Count="0" />
+      <LineId Id="320" Count="1" />
+      <LineId Id="323" Count="0" />
+      <LineId Id="319" Count="0" />
       <LineId Id="195" Count="0" />
       <LineId Id="83" Count="24" />
       <LineId Id="2" Count="0" />

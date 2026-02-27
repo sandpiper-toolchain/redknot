@@ -26,7 +26,6 @@ VAR
 	
 	EL3174Ch1I AT %I*		:INT; //current or voltage input
 	xPos					:LREAL;
-	eStop					:BOOL;
 	
 	tStart					:TIME; (* Time program start *)	 
 END_VAR
@@ -39,7 +38,7 @@ END_VAR
 //digital io assignments
 GVL_MOTION.xCon.LimPos						:= InfoData1T5Ch1.0;
 GVL_MOTION.xCon.LimNeg				 		:= InfoData1T5Ch1.1;
-eStop   							 		:= InfoData1T5Ch2.0;
+GVL_MOTION.STATUS.eStop   					:= InfoData1T5Ch2.0;
 //Input										:= InfoData1T5Ch2.1; unused
 GVL_MOTION.yCon.LimNeg				 		:= InfoData1T6Ch1.0;
 GVL_MOTION.yCon.LimPos				 		:= InfoData1T6Ch1.1;
@@ -136,11 +135,27 @@ IF GVL_DAQ.EXT_CTR.CMDDATACLR THEN
 END_IF
 
 //stop data collection
-IF eStop THEN
+IF GVL_MOTION.STATUS.eStop THEN
 	GVL_DAQ.DAQ_CTR_INT.Activate_Trigger	:= DataTrigger.none;
 END_IF
 
-GVL_MOTION.NextInstruction						:= GVL_MOTION.CurInstruction + 1;]]></ST>
+GVL_MOTION.NextInstruction					:= GVL_MOTION.CurInstruction + 1;
+GVL_MOTION.STATUS.CurInstr					:= GVL_MOTION.CurInstruction;
+GVL_MOTION.STATUS.NextInstr					:= GVL_MOTION.NextInstruction;
+GVL_MOTION.STATUS.RUN_INDEX					:= GVL_MOTION.RUN_INDEX;
+GVL_MOTION.STATUS.xCoupled					:= GVL_MOTION.xOut.AxisCoupled;
+GVL_MOTION.STATUS.xPosOut					:= GVL_MOTION.xOut.PositionOut;
+GVL_MOTION.STATUS.xVelOut					:= GVL_MOTION.xOut.VelocityOut;
+GVL_MOTION.STATUS.yPosOut					:= GVL_MOTION.yOut.PositionOut;
+GVL_MOTION.STATUS.yVelOut					:= GVL_MOTION.yOut.VelocityOut;
+GVL_MOTION.STATUS.zPosOut					:= GVL_MOTION.zOut.PositionOut;
+GVL_MOTION.STATUS.zVelOut					:= GVL_MOTION.zOut.VelocityOut;
+GVL_MOTION.STATUS.HardStopLocations			:= GVL_MOTION.HardStopLocations;
+GVL_MOTION.STATUS.HomeDone					:= GVL_MOTION.HomeDone;
+GVL_MOTION.STATUS.zSafeSet					:= GVL_MOTION.zSafeSet;						
+
+
+]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="232" Count="45" />
@@ -149,6 +164,19 @@ GVL_MOTION.NextInstruction						:= GVL_MOTION.CurInstruction + 1;]]></ST>
       <LineId Id="278" Count="58" />
       <LineId Id="344" Count="0" />
       <LineId Id="219" Count="0" />
+      <LineId Id="365" Count="0" />
+      <LineId Id="368" Count="1" />
+      <LineId Id="371" Count="0" />
+      <LineId Id="373" Count="1" />
+      <LineId Id="376" Count="0" />
+      <LineId Id="375" Count="0" />
+      <LineId Id="378" Count="0" />
+      <LineId Id="377" Count="0" />
+      <LineId Id="379" Count="0" />
+      <LineId Id="372" Count="0" />
+      <LineId Id="370" Count="0" />
+      <LineId Id="366" Count="1" />
+      <LineId Id="364" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

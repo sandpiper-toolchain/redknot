@@ -36,7 +36,6 @@ END_IF
 {attribute 'c++_compatible'}
 {attribute 'minimal_input_size' := '4'}
 {attribute 'pack_mode' := '4'}
-{warning 'add method implementation'}
 METHOD OnBool : HRESULT
 VAR_INPUT
 	value	: BOOL;
@@ -44,27 +43,50 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT bStartObjectFound THEN
-	//XYZ_MOTION_CTR
-	IF label = 'XYZ_MOTION_CTR' THEN
+	IF label = 'CTR' THEN
+		(*MOTION/CTR*)
 		IF tempkey = 'CMDADD' THEN
 			GVL_MOTION.TEST_CTR.CMDADD := value;
 		ELSIF tempkey = 'CMDCLR' THEN
 			GVL_MOTION.TEST_CTR.CMDCLR := value;
+		ELSIF tempkey = 'CMDDEL' THEN
+			GVL_MOTION.TEST_CTR.CMDDEL := value;	
 		ELSIF tempkey = 'CMDRUN' THEN
 			GVL_MOTION.TEST_CTR.CMDRUN := value;
 		ELSIF tempkey = 'CMDHOME' THEN
 			GVL_MOTION.TEST_CTR.CMDHOME := value;
-		ELSIF tempkey = 'CMDSETLIM' THEN
-			GVL_MOTION.TEST_CTR.CMDSETZLIM := value;				
+		ELSIF tempkey = 'CMDSETZLIM' THEN
+			GVL_MOTION.TEST_CTR.CMDSETZLIM := value;
+		ELSIF tempkey = 'CMDFINDSTOPS' THEN
+			GVL_MOTION.TEST_CTR.CMDFINDSTOPS := value;				
 		ELSIF tempkey = 'CMDLOOP' THEN
 			GVL_MOTION.TEST_CTR.CMDLOOP := value;	
-		ELSIF tempkey = 'AxesHalt' THEN
-			GVL_MOTION.TEST_CTR.AxesHalt := value;	
-		ELSIF tempkey = 'AxesEn' THEN
-			GVL_MOTION.TEST_CTR.AxesEn := value;		
-		ELSIF tempkey = 'AxesReset' THEN
-			GVL_MOTION.TEST_CTR.AxesReset := value;	
-		END_IF		
+		ELSIF tempkey = 'AXESHALT' THEN
+			GVL_MOTION.TEST_CTR.AXESHALT := value;	
+		ELSIF tempkey = 'AXESEN' THEN
+			GVL_MOTION.TEST_CTR.AXESEN := value;		
+		ELSIF tempkey = 'AXESRESET' THEN
+			GVL_MOTION.TEST_CTR.AXESRESET := value;	
+		ELSIF tempkey = 'CMDSCRIPTWRITE' THEN
+			GVL_MOTION.TEST_CTR.CMDSCRIPTWRITE := value;
+		ELSIF tempkey = 'CMDSCRIPTREAD' THEN
+			GVL_MOTION.TEST_CTR.CMDSCRIPTREAD := value;	
+		(*DAQ/CTR*)
+		ELSIF tempkey = 'CMDDATACLR' THEN
+			GVL_DAQ.TEST_CTR.CMDDATACLR := value;	
+		ELSIF tempkey = 'CMDDATAAPEND' THEN
+			GVL_DAQ.TEST_CTR.CMDDATAAPEND := value;
+		ELSIF tempkey = 'CMDDATAWRITE' THEN
+			GVL_DAQ.TEST_CTR.CMDDATAWRITE := value;
+		END_IF	
+	ELSIF label = 'INSTR_BUFFER' THEN
+		IF tempkey = 'Acq_Keyence' THEN
+			GVL_MOTION.TestBuffer.Acq_Keyence := value;
+		ELSIF tempkey = 'Acq_Massa' THEN
+			GVL_MOTION.TestBuffer.Acq_Massa := value;
+		ELSIF tempkey = 'Acq_Sonar' THEN
+			GVL_MOTION.TestBuffer.Acq_Sonar := value;
+		END_IF	
 	END_IF
 
 END_IF]]></ST>
@@ -75,7 +97,6 @@ END_IF]]></ST>
 {attribute 'c++_compatible'}
 {attribute 'minimal_input_size' := '4'}
 {attribute 'pack_mode' := '4'}
-{warning 'add method implementation'}
 METHOD OnDint : HRESULT
 VAR_INPUT
 	value	: DINT;
@@ -90,7 +111,6 @@ END_VAR
 {attribute 'c++_compatible'}
 {attribute 'minimal_input_size' := '4'}
 {attribute 'pack_mode' := '4'}
-{warning 'add method implementation'}
 METHOD OnEndArray : HRESULT
 VAR_INPUT
 	elementCount	: UDINT;
@@ -105,7 +125,6 @@ END_VAR
 {attribute 'c++_compatible'}
 {attribute 'minimal_input_size' := '4'}
 {attribute 'pack_mode' := '4'}
-{warning 'add method implementation'}
 METHOD OnEndObject : HRESULT
 VAR_INPUT
 	memberCount	: UDINT;
@@ -132,7 +151,6 @@ keystate := keystate - 1;]]></ST>
 {attribute 'c++_compatible'}
 {attribute 'minimal_input_size' := '4'}
 {attribute 'pack_mode' := '4'}
-{warning 'add method implementation'}
 METHOD OnKey : HRESULT
 VAR_IN_OUT CONSTANT
 	key	: STRING;
@@ -182,7 +200,6 @@ END_IF
 {attribute 'c++_compatible'}
 {attribute 'minimal_input_size' := '4'}
 {attribute 'pack_mode' := '4'}
-{warning 'add method implementation'}
 METHOD OnLint : HRESULT
 VAR_INPUT
 	value	: LINT;
@@ -197,7 +214,6 @@ END_VAR
 {attribute 'c++_compatible'}
 {attribute 'minimal_input_size' := '4'}
 {attribute 'pack_mode' := '4'}
-{warning 'add method implementation'}
 METHOD OnLreal : HRESULT
 VAR_INPUT
 	value	: LREAL;
@@ -212,7 +228,20 @@ END_VAR
 // 	bError := TRUE;
 // 	OnLreal := S_FALSE;
 // END_IF
-]]></ST>
+IF NOT bStartObjectFound THEN
+	(*MOTION/INSTR_BUFFER*)
+	IF label = 'INSTR_BUFFER' THEN
+		IF tempkey = 'SetXPosition' THEN
+			GVL_MOTION.TestBuffer.SetXPosition		:= value;
+		ELSIF tempkey = 'SetYPosition' THEN
+			GVL_MOTION.TestBuffer.SetYPosition		:= value;
+		ELSIF tempkey = 'SetZPosition' THEN
+			GVL_MOTION.TestBuffer.SetZPosition		:= value;	
+		END_IF
+		
+	END_IF
+	
+END_IF	]]></ST>
       </Implementation>
     </Method>
     <Method Name="OnNull" Id="{65642340-6997-4108-83d9-c8813a05825e}">
@@ -220,7 +249,6 @@ END_VAR
 {attribute 'c++_compatible'}
 {attribute 'minimal_input_size' := '4'}
 {attribute 'pack_mode' := '4'}
-{warning 'add method implementation'}
 METHOD OnNull : HRESULT
 ]]></Declaration>
       <Implementation>
@@ -232,7 +260,6 @@ METHOD OnNull : HRESULT
 {attribute 'c++_compatible'}
 {attribute 'minimal_input_size' := '4'}
 {attribute 'pack_mode' := '4'}
-{warning 'add method implementation'}
 METHOD OnRawNumber : HRESULT
 VAR_IN_OUT CONSTANT
 	value	: STRING;
@@ -250,7 +277,6 @@ END_VAR
 {attribute 'c++_compatible'}
 {attribute 'minimal_input_size' := '4'}
 {attribute 'pack_mode' := '4'}
-{warning 'add method implementation'}
 METHOD OnStartArray : HRESULT
 ]]></Declaration>
       <Implementation>
@@ -262,7 +288,6 @@ METHOD OnStartArray : HRESULT
 {attribute 'c++_compatible'}
 {attribute 'minimal_input_size' := '4'}
 {attribute 'pack_mode' := '4'}
-{warning 'add method implementation'}
 METHOD OnStartObject : HRESULT
 ]]></Declaration>
       <Implementation>
@@ -286,7 +311,6 @@ bStartObjectFound := TRUE;]]></ST>
 {attribute 'c++_compatible'}
 {attribute 'minimal_input_size' := '4'}
 {attribute 'pack_mode' := '4'}
-{warning 'add method implementation'}
 METHOD OnString : HRESULT
 VAR_IN_OUT CONSTANT
 	value	: STRING;
@@ -304,7 +328,19 @@ END_VAR
 // 	bError := TRUE;
 // 	OnString := S_FALSE;
 // END_IF
-]]></ST>
+IF NOT bStartObjectFound THEN
+	(*MOTION/INSTR_BUFFER*)
+	IF label = 'INSTR_BUFFER' THEN
+		IF tempkey = 'Comment' THEN
+			GVL_MOTION.TestBuffer.Comment		:= value;
+		END_IF
+	ELSIF label = 'CTR' THEN
+		IF tempkey = 'SCRIPTNAME' THEN
+			GVL_MOTION.TEST_CTR.SCRIPTNAME		:= value;
+		END_IF	
+	END_IF
+	
+END_IF	]]></ST>
       </Implementation>
     </Method>
     <Method Name="OnUdint" Id="{296ac94a-f1f7-4890-a4b8-5d9fd3b55ce6}">
@@ -312,7 +348,6 @@ END_VAR
 {attribute 'c++_compatible'}
 {attribute 'minimal_input_size' := '4'}
 {attribute 'pack_mode' := '4'}
-{warning 'add method implementation'}
 METHOD OnUdint : HRESULT
 VAR_INPUT
 	value		:UDINT;
@@ -331,12 +366,14 @@ END_VAR
 // 	OnUdint := S_FALSE;
 // END_IF
 IF NOT bStartObjectFound THEN
-	//XYZ_MOTION_CTR
-	IF label = 'MOTION_SETTINGS' THEN
-		IF tempkey = 'xyzMotionCommand' THEN
+	(*MOTION/INSTR_BUFFER*)
+	IF label = 'INSTR_BUFFER' THEN
+		IF tempkey = 'MotionCommand' THEN
 			GVL_MOTION.TestBuffer.MotionCommand		:= UDINT_TO_INT(value);
-		ELSIF tempkey = 'zBehaviorCommand' THEN
+		ELSIF tempkey = 'zType' THEN
 			GVL_MOTION.TestBuffer.zType				:= UDINT_TO_INT(value);
+		ELSIF tempkey = 'DataTrigger' THEN
+			GVL_MOTION.TestBuffer.DataTrigger		:= UDINT_TO_INT(value);	
 		ELSIF tempkey = 'SetXPosition' THEN
 			GVL_MOTION.TestBuffer.SetXPosition		:= UDINT_TO_INT(value);
 		ELSIF tempkey = 'SetXVelocity' THEN
@@ -353,10 +390,18 @@ IF NOT bStartObjectFound THEN
 			GVL_MOTION.TestBuffer.SetZPosition		:= UDINT_TO_INT(value);
 		ELSIF tempkey = 'SetZVelocity' THEN
 			GVL_MOTION.TestBuffer.SetZVelocity		:= UDINT_TO_INT(value);			
-		ELSIF tempkey = 'PauseTimeUdint' THEN
+		ELSIF tempkey = 'PauseTime' THEN
 			//temptime := TIME#1MS * value;
 			GVL_MOTION.TestBuffer.PauseTime 		:= TIME#1MS * value;
 		END_IF		
+	ELSIF label = 'CTR' THEN
+		(*DAQ/CTR*)	
+		IF tempkey = 'DAQACQRES' THEN
+			GVL_DAQ.TEST_CTR.DAQACQRES				:= UDINT_TO_INT(value);
+		(*MOTION/CTR*)
+		ELSIF tempkey = 'SCRIPTITERATIONS' THEN 	
+			GVL_MOTION.TEST_CTR.SCRIPTITERATIONS	:= UDINT_TO_INT(value);	
+		END_IF
 	END_IF
 
 END_IF]]></ST>
@@ -367,7 +412,6 @@ END_IF]]></ST>
 {attribute 'c++_compatible'}
 {attribute 'minimal_input_size' := '4'}
 {attribute 'pack_mode' := '4'}
-{warning 'add method implementation'}
 METHOD OnUlint : HRESULT
 VAR_INPUT
 	value	: ULINT;
@@ -382,7 +426,6 @@ END_VAR
 {attribute 'c++_compatible'}
 {attribute 'minimal_input_size' := '4'}
 {attribute 'pack_mode' := '4'}
-{warning 'add method implementation'}
 METHOD TcAddRef : UDINT
 ]]></Declaration>
       <Implementation>
@@ -394,7 +437,6 @@ METHOD TcAddRef : UDINT
 {attribute 'c++_compatible'}
 {attribute 'minimal_input_size' := '4'}
 {attribute 'pack_mode' := '4'}
-{warning 'add method implementation'}
 METHOD TcQueryInterface : HRESULT
 VAR_INPUT
 	iid	: REFERENCE TO IID;
@@ -410,7 +452,6 @@ END_VAR
 {attribute 'c++_compatible'}
 {attribute 'minimal_input_size' := '4'}
 {attribute 'pack_mode' := '4'}
-{warning 'add method implementation'}
 METHOD TcRelease : UDINT
 ]]></Declaration>
       <Implementation>
@@ -421,7 +462,23 @@ METHOD TcRelease : UDINT
       <LineId Id="1" Count="3" />
     </LineIds>
     <LineIds Name="JsonSaxHandler.OnBool">
-      <LineId Id="1" Count="24" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="4" Count="3" />
+      <LineId Id="27" Count="1" />
+      <LineId Id="8" Count="5" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="14" Count="7" />
+      <LineId Id="31" Count="4" />
+      <LineId Id="37" Count="4" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="44" Count="4" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="23" Count="2" />
     </LineIds>
     <LineIds Name="JsonSaxHandler.OnDint">
       <LineId Id="1" Count="0" />
@@ -439,7 +496,14 @@ METHOD TcRelease : UDINT
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="JsonSaxHandler.OnLreal">
-      <LineId Id="1" Count="8" />
+      <LineId Id="1" Count="7" />
+      <LineId Id="10" Count="7" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="20" Count="0" />
     </LineIds>
     <LineIds Name="JsonSaxHandler.OnNull">
       <LineId Id="1" Count="0" />
@@ -454,10 +518,26 @@ METHOD TcRelease : UDINT
       <LineId Id="1" Count="12" />
     </LineIds>
     <LineIds Name="JsonSaxHandler.OnString">
-      <LineId Id="1" Count="8" />
+      <LineId Id="1" Count="7" />
+      <LineId Id="10" Count="3" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="2" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="16" Count="0" />
     </LineIds>
     <LineIds Name="JsonSaxHandler.OnUdint">
-      <LineId Id="1" Count="37" />
+      <LineId Id="1" Count="14" />
+      <LineId Id="39" Count="1" />
+      <LineId Id="16" Count="19" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="42" Count="1" />
+      <LineId Id="46" Count="2" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="36" Count="2" />
     </LineIds>
     <LineIds Name="JsonSaxHandler.OnUlint">
       <LineId Id="1" Count="0" />

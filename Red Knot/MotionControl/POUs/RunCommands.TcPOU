@@ -14,8 +14,8 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[//require safe z limit, home complete, x axes coupled, hard stops located
-IF (NOT GVL_MOTION.zSafeLimitIsSet) OR (NOT GVL_MOTION.HomeDone)
-OR (NOT GVL_MOTION.xOut.AxisCoupled) OR (NOT GVL_MOTION.HardStopLocateDone) THEN
+IF (NOT GVL_MOTION.zSafeSet) OR (NOT GVL_MOTION.HomeDone)
+OR (NOT GVL_MOTION.xOut.AxisCoupled) OR (NOT GVL_MOTION.STATUS.HardStopLoc) THEN
 	GVL_MOTION.CurInstruction												:= 0;
 	GVL_MOTION.EXT_CTR.CMDRUN												:= FALSE;	//maybe change this to internal variable
 END_IF
@@ -25,6 +25,9 @@ CASE GVL_MOTION.InstructionState OF
 	//WaitOK command type stays in state 0
 	//state 0: set axes destinations and enable/send to state 1 or set data acquistion along single axis and enable/send to state 4
 	0:
+	GVL_MOTION.STATUS.Move_Rel_Err											:= FALSE;
+	GVL_MOTION.STATUS.Move_Abs_Err											:= FALSE;
+	
 	IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.WaitOK THEN
 		IF NOT GVL_MOTION.HaltMem THEN
 			GVL_MOTION.HaltMem 												:= TRUE;
@@ -92,17 +95,25 @@ CASE GVL_MOTION.InstructionState OF
 					DataTrigger.timed: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger	:= 4;	
 				END_CASE
 				
-				GVL_MOTION.xCon.Execute_MABS								:= TRUE;
-				GVL_MOTION.yCon.Execute_MABS								:= TRUE;
-				GVL_MOTION.zCon.Execute_MABS								:= TRUE;
-				IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none THEN
-					GVL_DAQ.INDEX_COLLECTOR[GVL_DAQ.PASS_INDEX]				:= GVL_DAQ.DATA_INDEX;
-					GVL_DAQ.DAQ_CTR_INT.Measure_Run_Time					:= TRUE; //start time collection for DAQ pass
-					GVL_MOTION.InstructionState 							:= 3;
+				IF (GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition < GVL_MOTION.STATUS.HardStopLocations[0])
+				AND	(GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition < GVL_MOTION.STATUS.HardStopLocations[1])
+				AND (GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition < GVL_MOTION.STATUS.HardStopLocations[2])
+				THEN
+					GVL_MOTION.xCon.Execute_MABS								:= TRUE;
+					GVL_MOTION.yCon.Execute_MABS								:= TRUE;
+					GVL_MOTION.zCon.Execute_MABS								:= TRUE;
+					IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none THEN
+						GVL_DAQ.INDEX_COLLECTOR[GVL_DAQ.PASS_INDEX]				:= GVL_DAQ.DATA_INDEX;
+						GVL_DAQ.DAQ_CTR_INT.Measure_Run_Time					:= TRUE; //start time collection for DAQ pass
+						GVL_MOTION.InstructionState 							:= 3;
+					ELSE
+						GVL_MOTION.InstructionState 							:= 1;	
+					END_IF
 				ELSE
-					GVL_MOTION.InstructionState 							:= 1;	
-				END_IF
-			
+					GVL_MOTION.STATUS.Move_Abs_Err								:= TRUE;
+					GVL_MOTION.CurInstruction 									:= 0;
+					GVL_MOTION.EXT_CTR.CMDRUN 									:= FALSE;
+				END_IF	
 			ELSE
 				;//TODO different funtions for z auto follow - MC_ExtSetPointGenEnable
 			END_IF
@@ -117,16 +128,25 @@ CASE GVL_MOTION.InstructionState OF
 					DataTrigger.timed: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger	:= 4;					
 				END_CASE			
 				
-				GVL_MOTION.xCon.Execute_MREL								:= TRUE;
-				GVL_MOTION.yCon.Execute_MREL								:= TRUE;
-				GVL_MOTION.zCon.Execute_MREL								:= TRUE;
-				IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none THEN
-					GVL_DAQ.INDEX_COLLECTOR[GVL_DAQ.PASS_INDEX]				:= GVL_DAQ.DATA_INDEX;
-					GVL_DAQ.DAQ_CTR_INT.Measure_Run_Time					:= TRUE; //start time collection for DAQ pass
-					GVL_MOTION.InstructionState 							:= 3;
+				IF (GVL_MOTION.xOut.PositionOut + GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition < GVL_MOTION.STATUS.HardStopLocations[0])
+				AND (GVL_MOTION.yOut.PositionOut + GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition < GVL_MOTION.STATUS.HardStopLocations[1]) 
+				AND (GVL_MOTION.zOut.PositionOut + GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition < GVL_MOTION.STATUS.HardStopLocations[2])
+				THEN		
+					GVL_MOTION.xCon.Execute_MREL								:= TRUE;
+					GVL_MOTION.yCon.Execute_MREL								:= TRUE;
+					GVL_MOTION.zCon.Execute_MREL								:= TRUE;
+					IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none THEN
+						GVL_DAQ.INDEX_COLLECTOR[GVL_DAQ.PASS_INDEX]				:= GVL_DAQ.DATA_INDEX;
+						GVL_DAQ.DAQ_CTR_INT.Measure_Run_Time					:= TRUE; //start time collection for DAQ pass
+						GVL_MOTION.InstructionState 							:= 3;
+					ELSE
+						GVL_MOTION.InstructionState 							:= 1;	
+					END_IF
 				ELSE
-					GVL_MOTION.InstructionState 							:= 1;	
-				END_IF
+					GVL_MOTION.STATUS.Move_Rel_Err								:= TRUE;
+					GVL_MOTION.CurInstruction 									:= 0;
+					GVL_MOTION.EXT_CTR.CMDRUN 									:= FALSE;
+				END_IF	
 			
 			ELSE
 				;//TODO different funtions for z auto follow - MC_ExtSetPointGenEnable
@@ -419,7 +439,10 @@ END_CASE]]></ST>
       <LineId Id="1" Count="0" />
       <LineId Id="3" Count="0" />
       <LineId Id="461" Count="0" />
-      <LineId Id="4" Count="4" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="1040" Count="1" />
+      <LineId Id="1051" Count="0" />
+      <LineId Id="5" Count="3" />
       <LineId Id="83" Count="1" />
       <LineId Id="9" Count="1" />
       <LineId Id="112" Count="0" />
@@ -466,6 +489,8 @@ END_CASE]]></ST>
       <LineId Id="660" Count="0" />
       <LineId Id="658" Count="0" />
       <LineId Id="671" Count="0" />
+      <LineId Id="1042" Count="1" />
+      <LineId Id="1045" Count="1" />
       <LineId Id="216" Count="2" />
       <LineId Id="653" Count="0" />
       <LineId Id="747" Count="0" />
@@ -474,6 +499,9 @@ END_CASE]]></ST>
       <LineId Id="674" Count="1" />
       <LineId Id="673" Count="0" />
       <LineId Id="676" Count="0" />
+      <LineId Id="1049" Count="1" />
+      <LineId Id="1048" Count="0" />
+      <LineId Id="1047" Count="0" />
       <LineId Id="654" Count="1" />
       <LineId Id="652" Count="0" />
       <LineId Id="672" Count="0" />
@@ -481,10 +509,19 @@ END_CASE]]></ST>
       <LineId Id="677" Count="5" />
       <LineId Id="852" Count="0" />
       <LineId Id="684" Count="0" />
-      <LineId Id="693" Count="4" />
+      <LineId Id="693" Count="0" />
+      <LineId Id="1030" Count="1" />
+      <LineId Id="1033" Count="1" />
+      <LineId Id="694" Count="3" />
       <LineId Id="748" Count="0" />
       <LineId Id="849" Count="0" />
-      <LineId Id="698" Count="6" />
+      <LineId Id="698" Count="3" />
+      <LineId Id="1035" Count="0" />
+      <LineId Id="1039" Count="0" />
+      <LineId Id="1036" Count="0" />
+      <LineId Id="1038" Count="0" />
+      <LineId Id="1037" Count="0" />
+      <LineId Id="702" Count="2" />
       <LineId Id="527" Count="0" />
       <LineId Id="709" Count="0" />
       <LineId Id="253" Count="0" />
