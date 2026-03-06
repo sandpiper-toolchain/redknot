@@ -139,7 +139,13 @@ IF GVL_MOTION.STATUS.eStop THEN
 	GVL_DAQ.DAQ_CTR_INT.Activate_Trigger	:= DataTrigger.none;
 END_IF
 
+//program to create basin coordinates
+CreateBasin();
+
+GVL_MOTION.BasinInstr	:= GVL_MOTION.BasinState;
+
 GVL_MOTION.NextInstruction					:= GVL_MOTION.CurInstruction + 1;
+
 GVL_MOTION.STATUS.CurInstr					:= GVL_MOTION.CurInstruction;
 GVL_MOTION.STATUS.NextInstr					:= GVL_MOTION.NextInstruction;
 GVL_MOTION.STATUS.RUN_INDEX					:= GVL_MOTION.RUN_INDEX;
@@ -152,7 +158,10 @@ GVL_MOTION.STATUS.zPosOut					:= GVL_MOTION.zOut.PositionOut;
 GVL_MOTION.STATUS.zVelOut					:= GVL_MOTION.zOut.VelocityOut;
 GVL_MOTION.STATUS.HardStopLocations			:= GVL_MOTION.HardStopLocations;
 GVL_MOTION.STATUS.HomeDone					:= GVL_MOTION.HomeDone;
-GVL_MOTION.STATUS.zSafeSet					:= GVL_MOTION.zSafeSet;						
+GVL_MOTION.STATUS.zSafeSet					:= GVL_MOTION.zSafeSet;			
+GVL_MOTION.STATUS.HaltDone					:= GVL_MOTION.xOut.HaltDone;
+GVL_MOTION.STATUS.PowerError				:= GVL_MOTION.xOut.PowerError OR GVL_MOTION.yOut.PowerError	OR
+											   GVL_MOTION.zOut.PowerError OR GVL_MOTION.xCOut.PowerError;	
 
 
 ]]></ST>
@@ -162,8 +171,14 @@ GVL_MOTION.STATUS.zSafeSet					:= GVL_MOTION.zSafeSet;
       <LineId Id="361" Count="0" />
       <LineId Id="360" Count="0" />
       <LineId Id="278" Count="58" />
+      <LineId Id="384" Count="0" />
+      <LineId Id="383" Count="0" />
+      <LineId Id="386" Count="0" />
+      <LineId Id="388" Count="0" />
+      <LineId Id="391" Count="0" />
       <LineId Id="344" Count="0" />
       <LineId Id="219" Count="0" />
+      <LineId Id="390" Count="0" />
       <LineId Id="365" Count="0" />
       <LineId Id="368" Count="1" />
       <LineId Id="371" Count="0" />
@@ -175,6 +190,7 @@ GVL_MOTION.STATUS.zSafeSet					:= GVL_MOTION.zSafeSet;
       <LineId Id="379" Count="0" />
       <LineId Id="372" Count="0" />
       <LineId Id="370" Count="0" />
+      <LineId Id="380" Count="2" />
       <LineId Id="366" Count="1" />
       <LineId Id="364" Count="0" />
     </LineIds>

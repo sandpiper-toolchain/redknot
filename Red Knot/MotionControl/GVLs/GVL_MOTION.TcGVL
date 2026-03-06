@@ -14,6 +14,8 @@ VAR_GLOBAL PERSISTENT
 	
 	EXT_CTR					:MOTION_CTR; 
 	TEST_CTR				:MOTION_CTR; //test buffer for MQTT
+	{attribute 'TcEncoding':='UTF-8'}
+	TopicRcv				:STRING(255); //for MQTT
 	
 	//script variables
 	
@@ -27,6 +29,11 @@ VAR_GLOBAL PERSISTENT
 	InstructionState		:INT						:= 0; //control case statement in RunCommands
 	TxtBxWaitOK				:BOOL						:= TRUE; //hide text box
 	HaltMem					:BOOL						:= FALSE; //part of the waitOK motion button control
+	
+	//basin variables
+	BasinState				:INT	:= 0; 
+	Basin					:BASIN;
+	BasinInstr				:BasinStateDisp;
 
 	//output signals
 	

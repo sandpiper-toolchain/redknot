@@ -58,14 +58,14 @@ IF GVL_DAQ.EXT_CTR.CMDDATAWRITE OR GVL_DAQ.DAQ_CTR_INT.CMDDATAWRITE THEN //shoul
 END_IF
 
 IF GVL_MOTION.EXT_CTR.CMDSCRIPTWRITE THEN
-	GVL_MOTION.EXT_CTR.CMDSCRIPTWRITE		:= FALSE;
+	GVL_MOTION.EXT_CTR.CMDSCRIPTWRITE	:= FALSE;
 	GVL_DAQ.DAQ_CTR_INT.CSVWriteMode	:= CSVWriteMode.script;
 	bWrite								:= TRUE;
 END_IF
 
 CASE step OF
 	0:	(* Wait for rising edge at bWrite variable *)
-		IF bWrite THEN
+		IF bWrite AND GVL_MOTION.STATUS.BasinSet THEN
 			//GVL_DAQ.DAQ_CTR_INT.CSVWriteMode	:= CSVWriteMode.keyence; //TEST ONLY
 			bBusy 					:= TRUE;
 			bError					:= FALSE;
@@ -80,7 +80,7 @@ CASE step OF
 			IF NOT fbCMD.BUSY THEN
 				bWrite 					:= FALSE;
 				FILEPATH				:= '';
-				IF GVL_MOTION.RUN_INDEX = 1 THEN //TODO chage this
+				IF GVL_MOTION.RUN_INDEX = 1 THEN //TODO change this
 					HOLDNAME_M			:= '';
 					HOLDNAME_K			:= '';
 					HOLDNAME_S			:= '';
@@ -94,11 +94,12 @@ CASE step OF
 				END_IF
 				step 					:= 1;
 			END_IF
-			
+		ELSE
+			bWrite 						:= FALSE;	
 		END_IF
 		
 	1:
-		//create directory for current script to contain script file and data output
+		//create directory for current basin to contain script and data files
 		TEMP						:= concat(GVL_MOTION.EXT_CTR.SCRIPTNAME, '"');
 		fbCMD( PATHSTR:= CMDPATH, DIRNAME:= TOPDIR, COMNDLINE:= concat(COMNDLINE, TEMP), START:= TRUE);
 		fbCMD(START:= FALSE);
@@ -656,6 +657,7 @@ END_CASE
       <LineId Id="18" Count="0" />
       <LineId Id="270" Count="0" />
       <LineId Id="275" Count="0" />
+      <LineId Id="762" Count="0" />
       <LineId Id="19" Count="0" />
       <LineId Id="112" Count="1" />
       <LineId Id="120" Count="0" />

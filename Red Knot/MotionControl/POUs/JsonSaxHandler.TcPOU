@@ -42,9 +42,8 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT bStartObjectFound THEN
-	IF label = 'CTR' THEN
-		(*MOTION/CTR*)
+        <ST><![CDATA[
+	IF label = 'MOTION/CTR' THEN
 		IF tempkey = 'CMDADD' THEN
 			GVL_MOTION.TEST_CTR.CMDADD := value;
 		ELSIF tempkey = 'CMDCLR' THEN
@@ -71,15 +70,16 @@ END_VAR
 			GVL_MOTION.TEST_CTR.CMDSCRIPTWRITE := value;
 		ELSIF tempkey = 'CMDSCRIPTREAD' THEN
 			GVL_MOTION.TEST_CTR.CMDSCRIPTREAD := value;	
-		(*DAQ/CTR*)
-		ELSIF tempkey = 'CMDDATACLR' THEN
+		END_IF		
+	ELSIF label = 'DAQ/CTR' THEN
+		IF tempkey = 'CMDDATACLR' THEN
 			GVL_DAQ.TEST_CTR.CMDDATACLR := value;	
 		ELSIF tempkey = 'CMDDATAAPEND' THEN
 			GVL_DAQ.TEST_CTR.CMDDATAAPEND := value;
 		ELSIF tempkey = 'CMDDATAWRITE' THEN
 			GVL_DAQ.TEST_CTR.CMDDATAWRITE := value;
 		END_IF	
-	ELSIF label = 'INSTR_BUFFER' THEN
+	ELSIF label = 'MOTION/INSTR_BUFFER' THEN
 		IF tempkey = 'Acq_Keyence' THEN
 			GVL_MOTION.TestBuffer.Acq_Keyence := value;
 		ELSIF tempkey = 'Acq_Massa' THEN
@@ -87,9 +87,10 @@ END_VAR
 		ELSIF tempkey = 'Acq_Sonar' THEN
 			GVL_MOTION.TestBuffer.Acq_Sonar := value;
 		END_IF	
+		
 	END_IF
 
-END_IF]]></ST>
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="OnDint" Id="{24238a66-3ba2-41ea-bb1d-dec022507274}">
@@ -143,7 +144,7 @@ END_VAR
 // 	  END_IF			
 // END_IF
 
-keystate := keystate - 1;]]></ST>
+//keystate := keystate - 1;]]></ST>
       </Implementation>
     </Method>
     <Method Name="OnKey" Id="{0166f13e-7ed0-43f7-a777-b23d02f1dd47}">
@@ -160,35 +161,16 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[// IF ((eState = 20)AND(key = 'Values')) THEN
-// 	bValuesFound := TRUE;
-// 	//eState := 30;
-// ELSE
-// 	IF ((eState = 40)AND(key = 'Timestamp')) THEN
-// 		bTimestampFound := TRUE;
-// 		eState := 50;
-// 	ELSE
-// 		IF ((eState = 60)AND(key = 'Sensor1')) THEN
-// 			bSensor1Found := TRUE;
-// 			eState := 70;
-// 		ELSE
-// 			IF ((eState = 80)AND(key = 'Sensor2')) THEN
-// 				bSensor2Found := TRUE;
-// 				eState := 90;
-// 			ELSE
-// 				bError := TRUE;
-// 				Onkey := S_FALSE;
-// 			END_IF				  
-// 		END_IF	  
-// 	  END_IF
+        <ST><![CDATA[
+
+// IF keystate = 1 THEN
+// 	label := key;
+// ELSIF keystate > 1 THEN
+// 	tempkey	:= key;
+// 	bStartObjectFound := FALSE;
 // END_IF
 
-IF keystate = 1 THEN
-	label := key;
-ELSIF keystate > 1 THEN
-	tempkey	:= key;
-	bStartObjectFound := FALSE;
-END_IF
+tempkey	:= key;
 
 
 
@@ -228,9 +210,8 @@ END_VAR
 // 	bError := TRUE;
 // 	OnLreal := S_FALSE;
 // END_IF
-IF NOT bStartObjectFound THEN
-	(*MOTION/INSTR_BUFFER*)
-	IF label = 'INSTR_BUFFER' THEN
+
+	IF label = 'MOTION/INSTR_BUFFER' THEN
 		IF tempkey = 'SetXPosition' THEN
 			GVL_MOTION.TestBuffer.SetXPosition		:= value;
 		ELSIF tempkey = 'SetYPosition' THEN
@@ -240,8 +221,7 @@ IF NOT bStartObjectFound THEN
 		END_IF
 		
 	END_IF
-	
-END_IF	]]></ST>
+	]]></ST>
       </Implementation>
     </Method>
     <Method Name="OnNull" Id="{65642340-6997-4108-83d9-c8813a05825e}">
@@ -291,18 +271,9 @@ METHOD OnStartArray : HRESULT
 METHOD OnStartObject : HRESULT
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[// IF (eState = 10) THEN
-// 	bStartObjectFound := TRUE;
-// 	eState := 20;  
-// ELSE
-// 	IF (*(eState = 30)*) 1 THEN
-// 		bStartObjectFound := TRUE;
-// 		eState := 40;
-// 	ELSE
-// 		bError := TRUE;  
-//   	END_IF			
-// END_IF
-keystate := keystate + 1;
+        <ST><![CDATA[
+//keystate := keystate + 1;
+label := GVL_MOTION.TopicRcv;
 bStartObjectFound := TRUE;]]></ST>
       </Implementation>
     </Method>
@@ -328,19 +299,18 @@ END_VAR
 // 	bError := TRUE;
 // 	OnString := S_FALSE;
 // END_IF
-IF NOT bStartObjectFound THEN
-	(*MOTION/INSTR_BUFFER*)
-	IF label = 'INSTR_BUFFER' THEN
+
+	IF label = 'MOTION/INSTR_BUFFER' THEN
 		IF tempkey = 'Comment' THEN
 			GVL_MOTION.TestBuffer.Comment		:= value;
 		END_IF
-	ELSIF label = 'CTR' THEN
+	ELSIF label = 'MOTION/CTR' THEN
 		IF tempkey = 'SCRIPTNAME' THEN
 			GVL_MOTION.TEST_CTR.SCRIPTNAME		:= value;
 		END_IF	
 	END_IF
 	
-END_IF	]]></ST>
+	]]></ST>
       </Implementation>
     </Method>
     <Method Name="OnUdint" Id="{296ac94a-f1f7-4890-a4b8-5d9fd3b55ce6}">
@@ -365,9 +335,8 @@ END_VAR
 // 	bError := TRUE;TO_TIME
 // 	OnUdint := S_FALSE;
 // END_IF
-IF NOT bStartObjectFound THEN
-	(*MOTION/INSTR_BUFFER*)
-	IF label = 'INSTR_BUFFER' THEN
+
+	IF label = 'MOTION/INSTR_BUFFER' THEN
 		IF tempkey = 'MotionCommand' THEN
 			GVL_MOTION.TestBuffer.MotionCommand		:= UDINT_TO_INT(value);
 		ELSIF tempkey = 'zType' THEN
@@ -394,17 +363,17 @@ IF NOT bStartObjectFound THEN
 			//temptime := TIME#1MS * value;
 			GVL_MOTION.TestBuffer.PauseTime 		:= TIME#1MS * value;
 		END_IF		
-	ELSIF label = 'CTR' THEN
-		(*DAQ/CTR*)	
+	ELSIF label = 'DAQ/CTR' THEN
 		IF tempkey = 'DAQACQRES' THEN
 			GVL_DAQ.TEST_CTR.DAQACQRES				:= UDINT_TO_INT(value);
-		(*MOTION/CTR*)
-		ELSIF tempkey = 'SCRIPTITERATIONS' THEN 	
+		END_IF	
+	ELSIF label = 'MOTION/CTR' THEN	
+		IF tempkey = 'SCRIPTITERATIONS' THEN 	
 			GVL_MOTION.TEST_CTR.SCRIPTITERATIONS	:= UDINT_TO_INT(value);	
 		END_IF
+		
 	END_IF
-
-END_IF]]></ST>
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="OnUlint" Id="{3d01b1c5-c02d-481b-a604-269325783bc9}">
@@ -463,21 +432,21 @@ METHOD TcRelease : UDINT
     </LineIds>
     <LineIds Name="JsonSaxHandler.OnBool">
       <LineId Id="1" Count="0" />
-      <LineId Id="3" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="4" Count="3" />
+      <LineId Id="3" Count="4" />
       <LineId Id="27" Count="1" />
       <LineId Id="8" Count="5" />
       <LineId Id="29" Count="1" />
       <LineId Id="14" Count="7" />
-      <LineId Id="31" Count="4" />
+      <LineId Id="31" Count="3" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="35" Count="0" />
       <LineId Id="37" Count="4" />
       <LineId Id="36" Count="0" />
       <LineId Id="22" Count="0" />
       <LineId Id="42" Count="0" />
       <LineId Id="44" Count="4" />
       <LineId Id="43" Count="0" />
-      <LineId Id="49" Count="0" />
+      <LineId Id="49" Count="1" />
       <LineId Id="23" Count="2" />
     </LineIds>
     <LineIds Name="JsonSaxHandler.OnDint">
@@ -490,20 +459,22 @@ METHOD TcRelease : UDINT
       <LineId Id="1" Count="12" />
     </LineIds>
     <LineIds Name="JsonSaxHandler.OnKey">
-      <LineId Id="1" Count="32" />
+      <LineId Id="22" Count="7" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="30" Count="3" />
     </LineIds>
     <LineIds Name="JsonSaxHandler.OnLint">
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="JsonSaxHandler.OnLreal">
       <LineId Id="1" Count="7" />
-      <LineId Id="10" Count="7" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="5" />
       <LineId Id="9" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="21" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="20" Count="0" />
+      <LineId Id="19" Count="1" />
     </LineIds>
     <LineIds Name="JsonSaxHandler.OnNull">
       <LineId Id="1" Count="0" />
@@ -515,11 +486,13 @@ METHOD TcRelease : UDINT
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="JsonSaxHandler.OnStartObject">
-      <LineId Id="1" Count="12" />
+      <LineId Id="11" Count="1" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="13" Count="0" />
     </LineIds>
     <LineIds Name="JsonSaxHandler.OnString">
       <LineId Id="1" Count="7" />
-      <LineId Id="10" Count="3" />
+      <LineId Id="11" Count="2" />
       <LineId Id="9" Count="0" />
       <LineId Id="14" Count="0" />
       <LineId Id="17" Count="0" />
@@ -529,15 +502,17 @@ METHOD TcRelease : UDINT
       <LineId Id="16" Count="0" />
     </LineIds>
     <LineIds Name="JsonSaxHandler.OnUdint">
-      <LineId Id="1" Count="14" />
+      <LineId Id="1" Count="8" />
+      <LineId Id="11" Count="4" />
       <LineId Id="39" Count="1" />
       <LineId Id="16" Count="19" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="42" Count="1" />
-      <LineId Id="46" Count="2" />
+      <LineId Id="41" Count="2" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="47" Count="1" />
       <LineId Id="44" Count="0" />
-      <LineId Id="36" Count="2" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="38" Count="0" />
     </LineIds>
     <LineIds Name="JsonSaxHandler.OnUlint">
       <LineId Id="1" Count="0" />

@@ -19,7 +19,11 @@ STRUCT
 	CMDSCRIPTREAD			:BOOL	:= FALSE; //read script from file based on script name
 	(*maybe make new struct for script data *)
 	SCRIPTITERATIONS		:INT	:= 1; //number of times a script will be executed in a run
-	SCRIPTNAME				:T_MaxString; //name of script for data and script files. all data stored in folder with this name
+	SCRIPTNAME				:T_MaxString; //name of script for data and script files.
+	BASINNAME				:T_MaxString; //name of basin, and folder for all associated data and scripts
+	USEBASINCOORDINATES		:BOOL	:= FALSE; //use basin coordinate system in the interface and data output
+	BASINCTR				:BOOL	:= FALSE;
+	DEFAULTBASIN			:BOOL	:= FALSE;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

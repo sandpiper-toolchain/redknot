@@ -15,7 +15,7 @@ VAR
 	IBuffEcho		:STRING(255) := 'MOTION/INSTR_ECHO';
 	sPayloadPub 	:STRING(1000);
 	fbTimer 		:TON 		 := (PT:=T#1S);
-	//i 				:UDINT;	
+	found 			:UDINT;	
 	
    (* received message *)
     SubMCTR		    :BOOL;
@@ -64,7 +64,7 @@ fbMqttClient.Execute(bConnect);
 
 IF fbMessageQueue.nQueuedMessages > 0 THEN
     IF fbMessageQueue.Dequeue(fbMessage:=fbMessage) THEN
-        fbMessage.GetTopic(pTopic:=ADR(sTopicRcv), nTopicSize:=SIZEOF(sTopicRcv) );
+        fbMessage.GetTopic(pTopic:=ADR(GVL_MOTION.TopicRcv), nTopicSize:=SIZEOF(GVL_MOTION.TopicRcv) );
         fbMessage.GetPayload(pPayload:=ADR(sPayloadRcv), nPayloadSize:=SIZEOF(sPayloadRcv), bSetNullTermination:=FALSE);
 		fbJsonSaxReader.Parse(sJson := sPayloadRcv, ipHdl := pJsonParse);
 		
@@ -91,48 +91,72 @@ IF fbMqttClient.bConnected THEN
 		//AddJsonValueFromSymbol does not auto format in mosquitto, this one does
 		//this function doesnt work with custom data types in the struct
 		//3rd variable is the struct type
-		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, 'STATUS', 'STATUS', SIZEOF(GVL_MOTION.STATUS), ADR(GVL_MOTION.STATUS));
+		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, '', 'STATUS', SIZEOF(GVL_MOTION.STATUS), ADR(GVL_MOTION.STATUS));
 		//fbJson.AddKeyBool('EN',GVL_MOTION.xCon.Enable);
 		fbJson.EndObject();
 		fbJson.CopyDocument(sPayloadPub, SIZEOF(sPayLoadPub));
-		//sPayLoadPub := fbJson.GetDocument(); //only for <255 characters
+		
+		found	:= FIND2(ADR(sPayLoadPub), ADR('}}'));
+		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 1, found + 1);
+		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 4, 1);
+		
         fbMqttClient.Publish(sTopic:= MotionStatusPub, pPayload:= ADR(sPayloadPub), 
 			nPayloadSize:= LEN2(ADR(sPayloadPub)), eQoS:= TcIotMqttQos.AtMostOnceDelivery, 
 			bRetain:= TRUE, bQueue:= FALSE );
-			//nPayloadSize + 1?
+			
 			
 		fbJson.ResetDocument();
 		fbJson.StartObject();	
-		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, 'CTR_ECHO', 'MOTION_CTR', SIZEOF(GVL_MOTION.TEST_CTR), ADR(GVL_MOTION.TEST_CTR));
+		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, '', 'MOTION_CTR', SIZEOF(GVL_MOTION.TEST_CTR), ADR(GVL_MOTION.TEST_CTR));
 		fbJson.EndObject();
 		fbJson.CopyDocument(sPayloadPub, SIZEOF(sPayLoadPub));
+		
+		found	:= FIND2(ADR(sPayLoadPub), ADR('}}'));
+		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 1, found + 1);
+		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 4, 1);
+		
 		fbMqttClient.Publish(sTopic:= MotionCTREcho, pPayload:= ADR(sPayloadPub), 
 			nPayloadSize:= LEN2(ADR(sPayloadPub)), eQoS:= TcIotMqttQos.AtMostOnceDelivery, 
 			bRetain:= TRUE, bQueue:= FALSE );
 			
 		fbJson.ResetDocument();
 		fbJson.StartObject();	
-		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, 'DAQ_DATA', 'DATA', SIZEOF(GVL_DAQ.DATA), ADR(GVL_DAQ.DATA));
+		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, '', 'DATA', SIZEOF(GVL_DAQ.DATA), ADR(GVL_DAQ.DATA));
 		fbJson.EndObject();
 		fbJson.CopyDocument(sPayloadPub, SIZEOF(sPayLoadPub));
+		
+		found	:= FIND2(ADR(sPayLoadPub), ADR('}}'));
+		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 1, found + 1);
+		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 4, 1);
+		
 		fbMqttClient.Publish(sTopic:= DaqDataPub, pPayload:= ADR(sPayloadPub), 
 			nPayloadSize:= LEN2(ADR(sPayloadPub)), eQoS:= TcIotMqttQos.AtMostOnceDelivery, 
 			bRetain:= TRUE, bQueue:= FALSE );	
 		
 		fbJson.ResetDocument();
 		fbJson.StartObject();	
-		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, 'CTR_ECHO', 'DAQ_CTR', SIZEOF(GVL_DAQ.TEST_CTR), ADR(GVL_DAQ.TEST_CTR));
+		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, '', 'DAQ_CTR', SIZEOF(GVL_DAQ.TEST_CTR), ADR(GVL_DAQ.TEST_CTR));
 		fbJson.EndObject();
 		fbJson.CopyDocument(sPayloadPub, SIZEOF(sPayLoadPub));
+		
+		found	:= FIND2(ADR(sPayLoadPub), ADR('}}'));
+		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 1, found + 1);
+		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 4, 1);
+		
 		fbMqttClient.Publish(sTopic:= DAQCTREcho, pPayload:= ADR(sPayloadPub), 
 			nPayloadSize:= LEN2(ADR(sPayloadPub)), eQoS:= TcIotMqttQos.AtMostOnceDelivery, 
 			bRetain:= TRUE, bQueue:= FALSE );
 
 		fbJson.ResetDocument();
 		fbJson.StartObject();	
-		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, 'INSTR_ECHO', 'MOTION_INSTRUCTION', SIZEOF(GVL_MOTION.TestBuffer), ADR(GVL_MOTION.TestBuffer));
+		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, '', 'MOTION_INSTRUCTION', SIZEOF(GVL_MOTION.TestBuffer), ADR(GVL_MOTION.TestBuffer));
 		fbJson.EndObject();
 		fbJson.CopyDocument(sPayloadPub, SIZEOF(sPayLoadPub));
+		
+		found	:= FIND2(ADR(sPayLoadPub), ADR('}}'));
+		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 1, found + 1);
+		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 4, 1);
+		
 		fbMqttClient.Publish(sTopic:= IBuffEcho, pPayload:= ADR(sPayloadPub), 
 			nPayloadSize:= LEN2(ADR(sPayloadPub)), eQoS:= TcIotMqttQos.AtMostOnceDelivery, 
 			bRetain:= TRUE, bQueue:= FALSE );	
@@ -173,19 +197,37 @@ END_IF]]></ST>
       <LineId Id="42" Count="0" />
       <LineId Id="46" Count="0" />
       <LineId Id="43" Count="0" />
+      <LineId Id="191" Count="1" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="193" Count="0" />
       <LineId Id="25" Count="0" />
       <LineId Id="31" Count="2" />
       <LineId Id="127" Count="2" />
       <LineId Id="131" Count="2" />
+      <LineId Id="185" Count="0" />
+      <LineId Id="187" Count="1" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="189" Count="0" />
       <LineId Id="135" Count="1" />
       <LineId Id="134" Count="0" />
       <LineId Id="147" Count="0" />
-      <LineId Id="140" Count="6" />
+      <LineId Id="140" Count="4" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="183" Count="1" />
+      <LineId Id="181" Count="1" />
+      <LineId Id="145" Count="1" />
       <LineId Id="138" Count="0" />
       <LineId Id="148" Count="0" />
-      <LineId Id="150" Count="6" />
+      <LineId Id="150" Count="4" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="178" Count="1" />
+      <LineId Id="176" Count="1" />
+      <LineId Id="155" Count="1" />
       <LineId Id="149" Count="0" />
-      <LineId Id="161" Count="7" />
+      <LineId Id="161" Count="5" />
+      <LineId Id="169" Count="3" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="167" Count="1" />
       <LineId Id="160" Count="0" />
       <LineId Id="139" Count="0" />
       <LineId Id="26" Count="1" />

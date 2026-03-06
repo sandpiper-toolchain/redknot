@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <DUT Name="BASIN" Id="{d5f750ff-2f32-48c5-b571-5a6ebc463182}">
+    <Declaration><![CDATA[TYPE BASIN :
+STRUCT
+	Name	:T_MaxString;
+	xMin	:REAL;
+	xMax	:REAL;
+	yMin	:REAL;
+	yMax	:REAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

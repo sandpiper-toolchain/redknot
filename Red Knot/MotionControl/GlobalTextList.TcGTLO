@@ -131,6 +131,16 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"1705"</v>
+              <v n="TextDefault">"Basin Control"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1413"</v>
+              <v n="TextDefault">"Basin Set"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"100"</v>
               <v n="TextDefault">"BROKEN"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -236,6 +246,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"1223"</v>
+              <v n="TextDefault">"Default Basin (Full Area)"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"1420"</v>
               <v n="TextDefault">"Delete Last Instruction"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -273,6 +288,11 @@
             <o>
               <v n="TextID">"1622"</v>
               <v n="TextDefault">"Enter Comment"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"752"</v>
+              <v n="TextDefault">"Enter name of basin (no spaces or &lt; &gt; : " / \ | ? *)"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -646,6 +666,16 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"558"</v>
+              <v n="TextDefault">"Set Basin"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1079"</v>
+              <v n="TextDefault">"Set Basin Manually"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"160"</v>
               <v n="TextDefault">"Set Safe Z"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -751,6 +781,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"1091"</v>
+              <v n="TextDefault">"Use Basin Coordinates"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"560"</v>
               <v n="TextDefault">"Velocity"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -808,6 +843,16 @@
             <o>
               <v n="TextID">"839"</v>
               <v n="TextDefault">"X Coupled Spd"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1001"</v>
+              <v n="TextDefault">"X Max"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"475"</v>
+              <v n="TextDefault">"X Min"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -891,6 +936,16 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"1376"</v>
+              <v n="TextDefault">"Y Max"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"215"</v>
+              <v n="TextDefault">"Y Min"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"982"</v>
               <v n="TextDefault">"y pos"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -948,6 +1003,16 @@
             <o>
               <v n="TextID">"343"</v>
               <v n="TextDefault">"z beh"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"631"</v>
+              <v n="TextDefault">"Z Max"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1036"</v>
+              <v n="TextDefault">"Z Min"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

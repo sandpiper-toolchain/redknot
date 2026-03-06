@@ -28,6 +28,12 @@
     <Compile Include="DAQ.TcTTO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\BASIN.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\BasinStateDisp.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\CSVWriteMode.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -91,6 +97,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\ClearData.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\CreateBasin.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\DAQPassTime.TcPOU">

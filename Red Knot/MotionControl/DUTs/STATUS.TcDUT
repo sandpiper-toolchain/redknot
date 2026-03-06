@@ -4,14 +4,20 @@
     <Declaration><![CDATA[TYPE STATUS :
 STRUCT
 	MoveActive		:BOOL;
+	
 	eStop			:BOOL;
 	Script_Open_Err	:BOOL	:= FALSE;	
 	Script_Read_Err	:BOOL	:= FALSE;
 	Move_Rel_Err	:BOOL 	:= FALSE;
 	Move_Abs_Err	:BOOL	:= FALSE;
+	Basin_Set_Err	:BOOL	:= FALSE;
+	
 	HomeDone		:BOOL	:= FALSE;
 	HardStopLoc		:BOOL	:= FALSE; //persistent
 	zSafeSet		:BOOL	:= FALSE;
+	BasinSet		:BOOL	:= FALSE;
+	HaltDone		:BOOL	:= FALSE;
+	PowerError		:BOOL	:= FALSE;
 	
 	CurInstr		:INT;
 	NextInstr		:INT;
@@ -26,6 +32,7 @@ STRUCT
 	zVelOut			:LREAL;
 	
 	HardStopLocations		:ARRAY[0..2] OF LREAL;
+	
 END_STRUCT
 END_TYPE
 ]]></Declaration>
