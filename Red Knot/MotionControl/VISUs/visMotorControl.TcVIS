@@ -5,7 +5,7 @@
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"1137"</v>
+          <v n="UniqueIdGenerator">"1143"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -1452,7 +1452,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_MOTION.xOut.VelocityOut"</v>
+                      <v n="Value">"GVL_MOTION.STATUS.xVelOut"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -1637,7 +1637,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_MOTION.xOut.PositionOut"</v>
+                      <v n="Value">"GVL_MOTION.STATUS.xPosOut"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5571,7 +5571,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_MOTION.yOut.VelocityOut"</v>
+                      <v n="Value">"GVL_MOTION.STATUS.yVelOut"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5756,7 +5756,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_MOTION.yOut.PositionOut"</v>
+                      <v n="Value">"GVL_MOTION.STATUS.yPosOut"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -9313,7 +9313,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_MOTION.zOut.VelocityOut"</v>
+                      <v n="Value">"GVL_MOTION.STATUS.zVelOut"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -9498,7 +9498,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"GVL_MOTION.zOut.PositionOut"</v>
+                      <v n="Value">"GVL_MOTION.STATUS.zPosOut"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -20962,7 +20962,7 @@
                     </o>
                     <o>
                       <v n="Id">2422045748L</v>
-                      <v n="Value">122</v>
+                      <v n="Value">173</v>
                     </o>
                     <o>
                       <v n="Id">2134141914L</v>
@@ -20970,7 +20970,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">"Read Script (from title)"</v>
+                      <v n="Value">"Read Script (data/basin/script)"</v>
                     </o>
                     <o>
                       <v n="Id">3729828405L</v>
@@ -21014,7 +21014,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"634"</v>
+                      <v n="Value">"438"</v>
                     </o>
                   </l>
                 </o>

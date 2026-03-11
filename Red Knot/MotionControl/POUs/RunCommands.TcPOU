@@ -67,13 +67,9 @@ CASE GVL_MOTION.InstructionState OF
 	ELSIF (GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Absolute)
 			OR (GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Relative) THEN
 	
-		GVL_MOTION.xCon.SetPosition											:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition;
-		GVL_MOTION.xCon.SetVelocity											:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXVelocity;
-		GVL_MOTION.yCon.SetPosition											:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition;
-		GVL_MOTION.yCon.SetVelocity											:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYVelocity;
 		IF 	GVL_MOTION.Script[GVL_MOTION.CurInstruction].zType = zBehavior.Manual THEN
 			IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition > GVL_MOTION.zSafePosition THEN
-				GVL_MOTION.zCon.SetPosition									:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition;
+				GVL_MOTION.zCon.SetPosition									:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition - GVL_MOTION.CARRIAGE_OFFSETS[2];
 			ELSE
 				GVL_MOTION.zCon.SetPosition									:= GVL_MOTION.zSafePosition;	
 			END_IF
@@ -96,10 +92,14 @@ CASE GVL_MOTION.InstructionState OF
 					DataTrigger.timed: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger	:= 4;	
 				END_CASE
 				
-				IF (GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition < GVL_MOTION.STATUS.HardStopLocations[0])
-				AND	(GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition < GVL_MOTION.STATUS.HardStopLocations[1])
-				AND (GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition < GVL_MOTION.STATUS.HardStopLocations[2])
+				IF ((GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition - GVL_MOTION.CARRIAGE_OFFSETS[0]) < GVL_MOTION.STATUS.HardStopLocations[0])
+				AND((GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition - GVL_MOTION.CARRIAGE_OFFSETS[1]) < GVL_MOTION.STATUS.HardStopLocations[1])
+				AND((GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition - GVL_MOTION.CARRIAGE_OFFSETS[2]) < GVL_MOTION.STATUS.HardStopLocations[2])
 				THEN
+					GVL_MOTION.xCon.SetPosition									:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition - GVL_MOTION.CARRIAGE_OFFSETS[0];
+					GVL_MOTION.xCon.SetVelocity									:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXVelocity;
+					GVL_MOTION.yCon.SetPosition									:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition - GVL_MOTION.CARRIAGE_OFFSETS[1];
+					GVL_MOTION.yCon.SetVelocity									:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYVelocity;
 					GVL_MOTION.xCon.Execute_MABS								:= TRUE;
 					GVL_MOTION.yCon.Execute_MABS								:= TRUE;
 					GVL_MOTION.zCon.Execute_MABS								:= TRUE;
@@ -133,6 +133,10 @@ CASE GVL_MOTION.InstructionState OF
 				AND (GVL_MOTION.yOut.PositionOut + GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition < GVL_MOTION.STATUS.HardStopLocations[1]) 
 				AND (GVL_MOTION.zOut.PositionOut + GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition < GVL_MOTION.STATUS.HardStopLocations[2])
 				THEN		
+					GVL_MOTION.xCon.SetPosition									:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition;
+					GVL_MOTION.xCon.SetVelocity									:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXVelocity;
+					GVL_MOTION.yCon.SetPosition									:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition;
+					GVL_MOTION.yCon.SetVelocity									:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYVelocity;
 					GVL_MOTION.xCon.Execute_MREL								:= TRUE;
 					GVL_MOTION.yCon.Execute_MREL								:= TRUE;
 					GVL_MOTION.zCon.Execute_MREL								:= TRUE;
@@ -470,9 +474,6 @@ END_CASE]]></ST>
       <LineId Id="21" Count="0" />
       <LineId Id="250" Count="0" />
       <LineId Id="128" Count="0" />
-      <LineId Id="22" Count="1" />
-      <LineId Id="99" Count="0" />
-      <LineId Id="98" Count="0" />
       <LineId Id="636" Count="1" />
       <LineId Id="639" Count="0" />
       <LineId Id="643" Count="1" />
@@ -493,6 +494,8 @@ END_CASE]]></ST>
       <LineId Id="671" Count="0" />
       <LineId Id="1042" Count="1" />
       <LineId Id="1045" Count="1" />
+      <LineId Id="1054" Count="2" />
+      <LineId Id="1053" Count="0" />
       <LineId Id="216" Count="2" />
       <LineId Id="653" Count="0" />
       <LineId Id="747" Count="0" />
@@ -514,6 +517,8 @@ END_CASE]]></ST>
       <LineId Id="693" Count="0" />
       <LineId Id="1030" Count="1" />
       <LineId Id="1033" Count="1" />
+      <LineId Id="1058" Count="2" />
+      <LineId Id="1057" Count="0" />
       <LineId Id="694" Count="3" />
       <LineId Id="748" Count="0" />
       <LineId Id="849" Count="0" />

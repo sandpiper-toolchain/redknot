@@ -8,7 +8,7 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[IF GVL_MOTION.EXT_CTR.CMDSETZLIM THEN
-	GVL_MOTION.zSafePosition 		:= GVL_MOTION.zOut.PositionOut;
+	GVL_MOTION.zSafePosition 		:= GVL_MOTION.zOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[2];
 	GVL_MOTION.zSafeSet 			:= TRUE;
 	GVL_MOTION.EXT_CTR.CMDSETZLIM	:= FALSE;
 END_IF

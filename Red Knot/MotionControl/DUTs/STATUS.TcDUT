@@ -31,7 +31,7 @@ STRUCT
 	zPosOut			:LREAL;
 	zVelOut			:LREAL;
 	
-	HardStopLocations		:ARRAY[0..2] OF LREAL;
+	HardStopLocations		:ARRAY[0..2] OF LREAL; //no offsets applied
 	
 END_STRUCT
 END_TYPE
