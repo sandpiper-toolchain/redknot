@@ -146,6 +146,13 @@ GVL_MOTION.BasinInstr	:= GVL_MOTION.BasinState;
 
 GVL_MOTION.NextInstruction					:= GVL_MOTION.CurInstruction + 1;
 
+GVL_MOTION.xCon.JogFw						:= GVL_MOTION.EXT_CTR.XJOGFW OR GVL_MOTION.xJogFW;
+GVL_MOTION.xCon.JogBw						:= GVL_MOTION.EXT_CTR.XJOGBW OR GVL_MOTION.xJogBW;
+GVL_MOTION.yCon.JogFw						:= GVL_MOTION.EXT_CTR.YJOGFW OR GVL_MOTION.yJogFW;
+GVL_MOTION.yCon.JogBw						:= GVL_MOTION.EXT_CTR.YJOGBW OR GVL_MOTION.yJogBW;
+GVL_MOTION.zCon.JogFw						:= GVL_MOTION.EXT_CTR.ZJOGFW OR GVL_MOTION.zJogFW;
+GVL_MOTION.zCon.JogBw						:= GVL_MOTION.EXT_CTR.ZJOGBW OR GVL_MOTION.zJogBW;
+
 GVL_MOTION.STATUS.CurInstr					:= GVL_MOTION.CurInstruction;
 GVL_MOTION.STATUS.NextInstr					:= GVL_MOTION.NextInstruction;
 GVL_MOTION.STATUS.RUN_INDEX					:= GVL_MOTION.RUN_INDEX;
@@ -196,6 +203,9 @@ END_IF
       <LineId Id="391" Count="0" />
       <LineId Id="344" Count="0" />
       <LineId Id="219" Count="0" />
+      <LineId Id="416" Count="0" />
+      <LineId Id="415" Count="0" />
+      <LineId Id="417" Count="4" />
       <LineId Id="390" Count="0" />
       <LineId Id="365" Count="0" />
       <LineId Id="368" Count="1" />

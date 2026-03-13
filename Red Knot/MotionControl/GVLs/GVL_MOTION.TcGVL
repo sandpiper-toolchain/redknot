@@ -10,6 +10,13 @@ VAR_GLOBAL PERSISTENT
 	yCon					:CTR_SIGNALS_INTERNAL;	
 	zCon					:CTR_SIGNALS_INTERNAL;
 	
+	xJogFW					:BOOL;
+	xJogBW					:BOOL;
+	yJogFW					:BOOL;
+	yJogBW					:BOOL;
+	zJogFW					:BOOL;
+	zJogBW					:BOOL;
+	
 	//external controls
 	
 	EXT_CTR					:MOTION_CTR; 

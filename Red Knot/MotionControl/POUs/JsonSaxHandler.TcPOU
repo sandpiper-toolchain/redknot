@@ -364,8 +364,8 @@ END_VAR
 			GVL_MOTION.TestBuffer.PauseTime 		:= TIME#1MS * value;
 		END_IF		
 	ELSIF label = 'DAQ/CTR' THEN
-		IF tempkey = 'DAQACQRES' THEN
-			GVL_DAQ.TEST_CTR.DAQACQRES				:= UDINT_TO_INT(value);
+		IF tempkey = 'DAQRES' THEN
+			GVL_DAQ.TEST_CTR.DAQRES				:= UDINT_TO_INT(value);
 		END_IF	
 	ELSIF label = 'MOTION/CTR' THEN	
 		IF tempkey = 'SCRIPTITERATIONS' THEN 	

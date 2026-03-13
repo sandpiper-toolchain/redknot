@@ -24,6 +24,12 @@ STRUCT
 	USEBASINCOORDINATES		:BOOL	:= FALSE; //use basin coordinate system in the interface and data output
 	BASINCTR				:BOOL	:= FALSE;
 	DEFAULTBASIN			:BOOL	:= FALSE;
+	XJOGFW					:BOOL	:= FALSE;
+	XJOGBW					:BOOL	:= FALSE;
+	YJOGFW					:BOOL	:= FALSE;
+	YJOGBW					:BOOL	:= FALSE;
+	ZJOGFW					:BOOL	:= FALSE;
+	ZJOGBW					:BOOL	:= FALSE;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

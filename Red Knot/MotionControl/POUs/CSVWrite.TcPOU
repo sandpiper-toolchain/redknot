@@ -329,7 +329,7 @@ CASE step OF
 							step := 100;
 							RETURN;
 						END_IF
-						sCSVField	:= STRING_TO_CSVFIELD(INT_TO_STRING(GVL_DAQ.EXT_CTR.DAQACQRES), FALSE);
+						sCSVField	:= STRING_TO_CSVFIELD(INT_TO_STRING(GVL_DAQ.EXT_CTR.DAQRES), FALSE);
 						fbWriter( 	pBuffer := ADR( sCSVLine ), cbBuffer := SIZEOF( sCSVLine ) - 1, putValue := sCSVField, pValue := 0, cbValue := 0,
 										bCRLF := TRUE );(* bCRLF == TRUE => Write CRLF after the last field value *)												
 						headerstep	:= 9;		

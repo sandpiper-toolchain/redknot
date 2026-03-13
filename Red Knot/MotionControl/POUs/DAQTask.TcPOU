@@ -55,7 +55,7 @@ IF GVL_DAQ.DAQ_CTR_INT.Activate_Trigger <> DataTrigger.none THEN
 		DataTrigger.none:;
 		DataTrigger.x:
 			tempX												:= LREAL_TO_INT(GVL_MOTION.xOut.PositionOut);
-			IF tempX MOD GVL_DAQ.EXT_CTR.DAQACQRES = 0 AND (tempX <> prevX) THEN
+			IF tempX MOD GVL_DAQ.EXT_CTR.DAQRES = 0 AND (tempX <> prevX) THEN
 				//timeASDT := SYSTEMTIME_TO_DT(fbtime.systemTime);
 				GVL_DAQ.TIMESTAMP[GVL_DAQ.DATA_INDEX] 			:= DELETE(SYSTEMTIME_TO_STRING(fbtime.systemTime),11,1);
 
@@ -77,7 +77,7 @@ IF GVL_DAQ.DAQ_CTR_INT.Activate_Trigger <> DataTrigger.none THEN
 			prevX												:= LREAL_TO_INT(GVL_MOTION.xOut.PositionOut);
 		DataTrigger.y:
 			tempY												:= LREAL_TO_INT(GVL_MOTION.yOut.PositionOut);
-			IF tempY MOD GVL_DAQ.EXT_CTR.DAQACQRES = 0 AND (tempY <> prevY) THEN
+			IF tempY MOD GVL_DAQ.EXT_CTR.DAQRES = 0 AND (tempY <> prevY) THEN
 				//timeASDT := SYSTEMTIME_TO_DT(fbtime.systemTime);
 				GVL_DAQ.TIMESTAMP[GVL_DAQ.DATA_INDEX] 			:= DELETE(SYSTEMTIME_TO_STRING(fbtime.systemTime),11,1);
 				
@@ -98,7 +98,7 @@ IF GVL_DAQ.DAQ_CTR_INT.Activate_Trigger <> DataTrigger.none THEN
 			prevY												:= LREAL_TO_INT(GVL_MOTION.yOut.PositionOut);
 		DataTrigger.z:
 			tempZ												:= LREAL_TO_INT(GVL_MOTION.zOut.PositionOut);
-			IF tempZ MOD GVL_DAQ.EXT_CTR.DAQACQRES = 0 AND (tempZ <> prevZ) THEN
+			IF tempZ MOD GVL_DAQ.EXT_CTR.DAQRES = 0 AND (tempZ <> prevZ) THEN
 				//timeASDT := SYSTEMTIME_TO_DT(fbtime.systemTime);
 				GVL_DAQ.TIMESTAMP[GVL_DAQ.DATA_INDEX] 			:= DELETE(SYSTEMTIME_TO_STRING(fbtime.systemTime),11,1);
 					
@@ -119,7 +119,7 @@ IF GVL_DAQ.DAQ_CTR_INT.Activate_Trigger <> DataTrigger.none THEN
 			prevZ												:= LREAL_TO_INT(GVL_MOTION.zOut.PositionOut);
 		DataTrigger.timed:
 			temptime											:= F_GetSystemTime();
-			IF ULINT_TO_LINT(temptime) MOD GVL_DAQ.EXT_CTR.DAQACQRES = 0 AND (temptime <> prevtime) THEN
+			IF ULINT_TO_LINT(temptime) MOD GVL_DAQ.EXT_CTR.DAQRES = 0 AND (temptime <> prevtime) THEN
 				//timeASDT := SYSTEMTIME_TO_DT(fbtime.systemTime);
 				GVL_DAQ.TIMESTAMP[GVL_DAQ.DATA_INDEX] 			:= DELETE(SYSTEMTIME_TO_STRING(fbtime.systemTime),11,1);
 					
