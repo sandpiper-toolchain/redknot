@@ -33,6 +33,8 @@ STRUCT
 	
 	HardStopLocations		:ARRAY[0..2] OF LREAL; //no offsets applied
 	
+	
+	
 END_STRUCT
 END_TYPE
 ]]></Declaration>
