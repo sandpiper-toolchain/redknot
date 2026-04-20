@@ -11,44 +11,46 @@ END_VAR
 	0:
 	IF GVL_MOTION.EXT_CTR.AxesReset THEN
 		GVL_MOTION.HomingState				:= 0;
+		GVL_MOTION.xCon.Execute_MREL		:= FALSE;
 		GVL_MOTION.HardStopState			:= 0;
-		GVL_MOTION.xCon.ExecuteRevCouple	:= FALSE;
-		GVL_MOTION.xCon.ExecuteCouple		:= FALSE;
-		GVL_MOTION.RevCouplePrep			:= TRUE;
+		GVL_MOTION.xCon.Execute_HOME		:= FALSE;
+		GVL_MOTION.xcCon.Execute_HOME		:= FALSE;
+		GVL_MOTION.xCon.Execute_HALT		:= FALSE;
+		GVL_MOTION.xcCon.Execute_HALT		:= FALSE;
+		GVL_MOTION.xCon.Execute_RES 		:= TRUE;
+		IF NOT GVL_MOTION.xOut.AxisCoupled THEN
+			GVL_MOTION.xcCon.Execute_RES	:= TRUE;
+		END_IF
+		GVL_MOTION.yCon.Execute_HOME		:= FALSE;
+		GVL_MOTION.yCon.Execute_HALT		:= FALSE;
+		GVL_MOTION.yCon.Execute_RES 		:= TRUE;
+		GVL_MOTION.zCon.Execute_HOME		:= FALSE;
+		GVL_MOTION.zCon.Execute_HALT		:= FALSE;
+		GVL_MOTION.zCon.Execute_RES 		:= TRUE;
 		resetstate							:= 1;
 	END_IF	
 	1:
-		GVL_MOTION.xCon.ExecuteRevUncouple	:= TRUE;
-		resetstate							:= 2;
-	2:
-		GVL_MOTION.xCon.ExecuteRevUncouple	:= FALSE;
-		GVL_MOTION.RevCouplePrep			:= FALSE;
-		resetstate							:= 3;
-	3:
-		GVL_MOTION.xCon.ExecuteUncouple		:= TRUE;
-		resetstate							:= 4;
-	4:
-		GVL_MOTION.xCon.Execute_HOME				:= FALSE;
-		GVL_MOTION.xCon.Execute_REV_HOME			:= FALSE;
-		GVL_MOTION.xCon.Execute_HALT				:= FALSE;
-		GVL_MOTION.xCon.Execute_RES 				:= TRUE;
-		GVL_MOTION.xCon.Execute_C_RES				:= TRUE;
-		GVL_MOTION.yCon.Execute_HOME				:= FALSE;
-		GVL_MOTION.yCon.Execute_HALT				:= FALSE;
-		GVL_MOTION.yCon.Execute_RES 				:= TRUE;
-		GVL_MOTION.zCon.Execute_HOME				:= FALSE;
-		GVL_MOTION.zCon.Execute_HALT				:= FALSE;
-		GVL_MOTION.zCon.Execute_RES 				:= TRUE;
-		resetstate							:= 5;
-	5:
-		GVL_MOTION.xCon.Execute_RES 				:= FALSE;
-		GVL_MOTION.yCon.Execute_RES 				:= FALSE;
-		GVL_MOTION.zCon.Execute_RES 				:= FALSE;
+		GVL_MOTION.xCon.Execute_RES 		:= FALSE;
+		GVL_MOTION.xcCon.Execute_RES		:= FALSE;
+		GVL_MOTION.yCon.Execute_RES 		:= FALSE;
+		GVL_MOTION.zCon.Execute_RES 		:= FALSE;
 		resetstate							:= 0;
 END_CASE]]></ST>
     </Implementation>
     <LineIds Name="ResetAxes">
-      <LineId Id="1" Count="38" />
+      <LineId Id="1" Count="3" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="45" Count="4" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="51" Count="4" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="2" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="36" Count="3" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -377,8 +377,8 @@ CASE GVL_MOTION.InstructionState OF
 		ELSE
 			dataclr															:= FALSE;
 			GVL_DAQ.DAQ_CTR_INT.Keyence_Done								:= FALSE;
-			GVL_DAQ.DAQ_CTR_INT.Keyence_Done								:= FALSE;
-			GVL_DAQ.DAQ_CTR_INT.Keyence_Done								:= FALSE;
+			GVL_DAQ.DAQ_CTR_INT.Massa_Done									:= FALSE;
+			GVL_DAQ.DAQ_CTR_INT.Sonar_Done									:= FALSE;
 			IF GVL_MOTION.CurInstruction < (GVL_MOTION.ScriptEnd - 1) THEN
 				GVL_MOTION.CurInstruction 									:= GVL_MOTION.CurInstruction + 1; //queue next instruction
 					

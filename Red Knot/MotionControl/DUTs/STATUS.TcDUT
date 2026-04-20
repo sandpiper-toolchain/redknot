@@ -4,8 +4,9 @@
     <Declaration><![CDATA[TYPE STATUS :
 STRUCT
 	MoveActive		:BOOL;
-	
 	eStop			:BOOL;
+	
+	Rack_Err		:BOOL	:= FALSE;
 	Script_Open_Err	:BOOL	:= FALSE;	
 	Script_Read_Err	:BOOL	:= FALSE;
 	Move_Rel_Err	:BOOL 	:= FALSE;
@@ -31,8 +32,9 @@ STRUCT
 	zPosOut			:LREAL;
 	zVelOut			:LREAL;
 	
-	HardStopLocations		:ARRAY[0..2] OF LREAL; //no offsets applied
-	
+	HardStopLocations	:ARRAY[0..2] 	  OF LREAL; //no offsets applied
+	KEYENCE_OFFSETS		:ARRAY[0..2]	  OF LREAL	:= [53.52,108.41,23.9];
+	MASSA_OFFSETS		:ARRAY[0..2]	  OF LREAL	:= [36,31,-116.11];
 	
 	
 END_STRUCT

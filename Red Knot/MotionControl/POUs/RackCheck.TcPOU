@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="RackCheck" Id="{22d0ff74-206c-40d3-9ed1-5e22a161a0d6}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM RackCheck
+VAR
+	state		:INT	:= 0;
+	tempX1		:LREAL;
+	tempX2		:LREAL;
+	compare		:LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE state OF
+	0: //direction of motion unknown
+		IF GVL_MOTION.NPNX THEN
+			tempX1								:= GVL_MOTION.xOut.PositionOut;
+			state								:= 1;
+		ELSIF GVL_MOTION.NPNXC THEN	
+			tempX1								:= GVL_MOTION.xOut.PositionOut;
+			state								:= 2;
+		END_IF
+		
+	1:
+		IF GVL_MOTION.NPNXC THEN
+			tempX2	:= GVL_MOTION.xOut.PositionOut;
+			compare	:= tempX1 - tempX2;
+			IF compare > 5 THEN //XC ahead, negative motion
+				GVL_MOTION.STATUS.Rack_Err		:= TRUE;
+				state							:= 3;
+			ELSIF compare < -5 THEN //X ahead, positive motion
+				GVL_MOTION.STATUS.Rack_Err		:= TRUE;
+				state							:= 3;
+			ELSE
+				state							:= 0;	
+			END_IF
+		END_IF	
+		
+	2:
+		IF GVL_MOTION.NPNX THEN
+			tempX2								:= GVL_MOTION.xOut.PositionOut;
+			compare								:= tempX2 - tempX1;
+			IF compare > 5 THEN //XC ahead, positive motion
+				GVL_MOTION.STATUS.Rack_Err		:= TRUE;
+				state							:= 3;
+			ELSIF compare < -5 THEN //X ahead, negative motion
+				GVL_MOTION.STATUS.Rack_Err		:= TRUE;
+				state							:= 3;
+			ELSE
+				state							:= 0;	
+			END_IF
+		END_IF
+		
+	3: //move X relative by compare
+		IF GVL_MOTION.EXT_CTR.CMDFIXRACK AND NOT GVL_MOTION.EXT_CTR.CMDRUN THEN
+			GVL_MOTION.xCon.SetPosition			:= compare;
+			GVL_MOTION.xCon.ExecuteUncouple		:= TRUE;
+			IF NOT GVL_MOTION.xOut.AxisCoupled THEN
+				GVL_MOTION.EXT_CTR.CMDFIXRACK	:= FALSE;
+				GVL_MOTION.xCon.Execute_MREL	:= TRUE;
+				state							:= 4;
+			END_IF
+		END_IF
+	
+	4:
+		IF GVL_MOTION.xOut.MoveDone THEN
+			GVL_MOTION.xCon.Execute_MREL	:= FALSE;
+			GVL_MOTION.STATUS.Rack_Err		:= FALSE;
+			state							:= 0;
+		END_IF
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="RackCheck">
+      <LineId Id="1" Count="57" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

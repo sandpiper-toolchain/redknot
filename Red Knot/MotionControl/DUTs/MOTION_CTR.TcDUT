@@ -11,13 +11,13 @@ STRUCT
 	CMDSETZLIM				:BOOL	:= FALSE; //this will set the safe lower limit of z to where it is currently positioned
 	CMDFINDSTOPS			:BOOL	:= FALSE; //run find stops routine
 	CMDLOOP					:BOOL	:= FALSE; //sets script to run indefinitely and forces separate data files for each script run
+	CMDCOUPLE				:BOOL	:= FALSE; //cycle between couple and uncouple x axes
+	CMDFIXRACK				:BOOL	:= FALSE; //fix rack if rack error is detected. 
 	AXESHALT				:BOOL	:= FALSE; //pause motion during script run if true. set to false to continue motion
 	AXESEN					:BOOL	:= FALSE; //sends enable signal to all axes
-	(*deactivate daq trigger, reset home and hardstop states,  *)
-	AXESRESET				:BOOL	:= FALSE; //sends reset signal to each axis sequentially. ResetAxes program has some coupling logic to ensure both x axes reset
+	AXESRESET				:BOOL	:= FALSE; //reset each axis, reset home and hardstop states
 	CMDSCRIPTWRITE			:BOOL	:= FALSE; //write script to file based on script name entered
 	CMDSCRIPTREAD			:BOOL	:= FALSE; //read script from file based on script name
-	(*maybe make new struct for script data *)
 	SCRIPTITERATIONS		:INT	:= 1; //number of times a script will be executed in a run
 	SCRIPTNAME				:T_MaxString; //name of script for data and script files.
 	BASINNAME				:T_MaxString; //name of basin, and folder for all associated data and scripts

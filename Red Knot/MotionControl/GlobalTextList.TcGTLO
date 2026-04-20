@@ -331,6 +331,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"1527"</v>
+              <v n="TextDefault">"Fix Rack"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"862"</v>
               <v n="TextDefault">"GroupBox"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -586,6 +591,16 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"787"</v>
+              <v n="TextDefault">"Rack Error"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1800"</v>
+              <v n="TextDefault">"Rackk Error"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"438"</v>
               <v n="TextDefault">"Read Script (data/basin/script)"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -608,6 +623,11 @@
             <o>
               <v n="TextID">"572"</v>
               <v n="TextDefault">"RESET ALL AXES"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"489"</v>
+              <v n="TextDefault">"Reset CSV Write"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

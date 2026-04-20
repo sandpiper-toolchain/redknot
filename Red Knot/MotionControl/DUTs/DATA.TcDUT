@@ -3,8 +3,14 @@
   <DUT Name="DATA" Id="{7f06caa7-3f3a-4ab5-bf19-77f210b3a779}">
     <Declaration><![CDATA[TYPE DATA :
 STRUCT
-	MASSA_TEMP		:INT;
-	KEYENCE_TEMP	:INT;
+	DATA_INDEX		:UDINT;
+	PASS_INDEX		:INT;
+	TIMESTAMP		:STRING;
+	MASSA			:LREAL;
+	KEYENCE			:LREAL;
+	X				:LREAL;
+	Y				:LREAL;
+	Z				:LREAL;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

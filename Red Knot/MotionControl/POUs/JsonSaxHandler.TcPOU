@@ -70,6 +70,18 @@ END_VAR
 			GVL_MOTION.TEST_CTR.CMDSCRIPTWRITE := value;
 		ELSIF tempkey = 'CMDSCRIPTREAD' THEN
 			GVL_MOTION.TEST_CTR.CMDSCRIPTREAD := value;	
+		ELSIF tempkey = 'XJOGFW' THEN
+			GVL_MOTION.EXT_CTR.XJOGFW := value;
+		ELSIF tempkey = 'XJOGBW' THEN
+			GVL_MOTION.EXT_CTR.XJOGBW := value;
+		ELSIF tempkey = 'YJOGFW' THEN
+			GVL_MOTION.EXT_CTR.YJOGFW := value;
+		ELSIF tempkey = 'YJOGBW' THEN
+			GVL_MOTION.EXT_CTR.YJOGBW := value;
+		ELSIF tempkey = 'ZJOGFW' THEN
+			GVL_MOTION.EXT_CTR.ZJOGFW := value;
+		ELSIF tempkey = 'ZJOGBW' THEN
+			GVL_MOTION.EXT_CTR.ZJOGBW := value;	
 		END_IF		
 	ELSIF label = 'DAQ/CTR' THEN
 		IF tempkey = 'CMDDATACLR' THEN
@@ -438,6 +450,7 @@ METHOD TcRelease : UDINT
       <LineId Id="29" Count="1" />
       <LineId Id="14" Count="7" />
       <LineId Id="31" Count="3" />
+      <LineId Id="52" Count="11" />
       <LineId Id="51" Count="0" />
       <LineId Id="35" Count="0" />
       <LineId Id="37" Count="4" />

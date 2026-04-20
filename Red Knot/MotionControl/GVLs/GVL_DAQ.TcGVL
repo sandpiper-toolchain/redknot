@@ -18,11 +18,15 @@ VAR_GLOBAL PERSISTENT
 	 used to populate INDEX_COLLECTOR*)
 	PASS_INDEX			:INT	:= 0;
 	
-	CSV_ROW				:UDINT := 0;
-	CSV_PASS_COMPARE	:UDINT := 0;
+	CSV_ROW				:UDINT 	:= 0;
+	CSV_PASS_COMPARE	:UDINT 	:= 0;
 END_VAR
 
 VAR_GLOBAL
+	//set on acquisition trigger to send one line of data over MQTT 
+	DREADY				:BOOL	:= FALSE;
+	MASSA_TEMP			:INT;
+	KEYENCE_TEMP		:INT;
 	(*stored during state 0,
 	 stores DATA_INDEX corresponding to data pass IE - INDEX_COLLECTOR[data pass]*)
 	INDEX_COLLECTOR		:ARRAY[0..999] OF UDINT;
@@ -31,6 +35,7 @@ VAR_GLOBAL
 	
 	//buffer size - 200 meters worth of 1mm increments
 	
+	KSM					:ARRAY[0..199999] OF STRING(3);
 	TIMESTAMP			:ARRAY[0..199999] OF STRING; //15MB - 80byte default element size
 	MASSA				:ARRAY[0..199999] OF LREAL; //1.5MB - 64bit element size
 	KEYENCE				:ARRAY[0..199999] OF LREAL; //1.5MB - 64bit element size
@@ -38,8 +43,12 @@ VAR_GLOBAL
 	Y					:ARRAY[0..199999] OF LREAL; //1.5MB - 64bit element size
 	Z					:ARRAY[0..199999] OF LREAL;	//1.5MB - 64bit element size
 	
+	//z offsets should be calculated from bottom of z stage at home position
 	KEYENCE_OFFSETS		:ARRAY[0..2]	  OF LREAL	:= [53.52,108.41,23.9];
 	MASSA_OFFSETS		:ARRAY[0..2]	  OF LREAL	:= [36,31,-116.11];
+	
+	cpptest AT %I*			:UDINT := 8;
+	test2 AT %I*			:STRING := 'testing';
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
