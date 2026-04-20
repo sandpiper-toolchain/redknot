@@ -4,9 +4,14 @@
     <Declaration><![CDATA[//variables must be referenced GVL_MOTION.etc b/c of attribute
 {attribute 'qualified_only'}
 VAR_GLOBAL PERSISTENT
+	//npn switch variables
+	NPNX					:BOOL;
+	NPNXC					:BOOL;	
+
 	//motor control signals
 	
 	xCon					:CTR_SIGNALS_INTERNAL;
+	xcCon					:CTR_SIGNALS_INTERNAL;
 	yCon					:CTR_SIGNALS_INTERNAL;	
 	zCon					:CTR_SIGNALS_INTERNAL;
 	
@@ -76,8 +81,8 @@ VAR_GLOBAL PERSISTENT
 	
 	HomingState				:INT						:= 0;
 	RevCouplePrep			:BOOL						:= FALSE;
-	
-	CARRIAGE_OFFSETS		:ARRAY[0..2] OF LREAL		:= [84.25,62.5,193.7];
+	//193.7mm from rail to top of y stage - 141mm from top of y to bottom of z stage at zero position
+	CARRIAGE_OFFSETS		:ARRAY[0..2] OF LREAL		:= [84.25,62.5,52.7];
 END_VAR
 
 VAR_GLOBAL

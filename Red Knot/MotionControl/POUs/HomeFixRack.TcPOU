@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="HomeFixRack" Id="{0ace2282-e317-48b6-8041-385070526869}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM HomeFixRack
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE GVL_MOTION.HomingState OF
+	0:
+	GVL_MOTION.zCon.Execute_HOME			:= TRUE;
+	GVL_MOTION.HomingState					:= 1;
+	
+	1:
+	IF GVL_MOTION.zHomeStatus.Done THEN
+		GVL_MOTION.zCon.Execute_HOME		:= FALSE;
+		GVL_MOTION.yCon.Execute_HOME		:= TRUE;
+		GVL_MOTION.HomingState				:= 2;
+	END_IF
+	
+	2:
+	IF GVL_MOTION.yHomeStatus.Done THEN
+		GVL_MOTION.yCon.Execute_HOME		:= FALSE;
+		IF NOT GVL_MOTION.xOut.AxisCoupled THEN
+			GVL_MOTION.xCon.ExecuteUncouple	:= FALSE;
+			GVL_MOTION.xCon.ExecuteCouple	:= TRUE;
+		END_IF
+		GVL_MOTION.HomingState				:= 3;
+	END_IF
+	
+	3:
+	IF GVL_MOTION.xOut.AxisCoupled THEN
+		GVL_MOTION.xJogBW					:= TRUE;
+		GVL_MOTION.HomingState				:= 4;
+	END_IF
+	
+	4:
+	IF GVL_MOTION.xCon.LimNeg OR GVL_MOTION.xcCon.LimNeg THEN
+		GVL_MOTION.xJogBW					:= FALSE;
+		GVL_MOTION.xCon.SetPosition			:= 5;
+		GVL_MOTION.xCon.SetVelocity			:= 50;
+		
+		GVL_MOTION.HomingState				:= 5;
+	
+	END_IF
+	
+	5:
+		GVL_MOTION.xCon.Execute_MREL		:= TRUE;
+		GVL_MOTION.HomingState				:= 6;	
+	6:
+	IF GVL_MOTION.xOut.MoveDone THEN
+		GVL_MOTION.xCon.Execute_MREL		:= FALSE;
+		GVL_MOTION.xCon.ExecuteCouple		:= FALSE;
+		GVL_MOTION.xCon.ExecuteUncouple 	:= TRUE;
+		GVL_MOTION.HomingState				:= 7;
+	END_IF
+	
+	7:
+	IF NOT GVL_MOTION.xOut.AxisCoupled THEN
+		GVL_MOTION.xCon.Execute_HOME		:= TRUE; 
+		GVL_MOTION.HomingState				:= 8;
+	END_IF
+	
+	8:
+	IF GVL_MOTION.xHomeStatus.Done THEN
+		GVL_MOTION.xCon.Execute_HOME		:= FALSE;
+		GVL_MOTION.xcCon.Execute_HOME		:= TRUE;
+ 		GVL_MOTION.HomingState				:= 9;
+	END_IF
+	
+	9:
+	IF GVL_MOTION.xcHomeStatus.Done THEN
+		GVL_MOTION.xcCon.Execute_HOME		:= FALSE;
+		GVL_MOTION.xCon.ExecuteUncouple 	:= FALSE;
+		GVL_MOTION.HomingState				:= 10;
+	END_IF
+	
+	10:
+	GVL_MOTION.HomingState					:= 0;
+	GVL_MOTION.xCon.ExecuteCouple			:= TRUE;
+	GVL_MOTION.HomeDone						:= TRUE;
+	GVL_MOTION.EXT_CTR.CMDHOME				:= FALSE;
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="HomeFixRack">
+      <LineId Id="1" Count="74" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

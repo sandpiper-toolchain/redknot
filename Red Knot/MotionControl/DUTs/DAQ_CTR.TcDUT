@@ -8,6 +8,7 @@ STRUCT
 	//controls whether data is appended to current file or not
 	CMDDATAAPEND	:BOOL;
 	CMDDATAWRITE	:BOOL;
+	CMDCSVRESET		:BOOL;
 	DAQRES			:INT := 1; //acquire every x mm or seconds (default 1)
 END_STRUCT
 END_TYPE

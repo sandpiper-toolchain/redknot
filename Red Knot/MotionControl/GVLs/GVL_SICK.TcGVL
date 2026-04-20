@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <GVL Name="GVL_SICK" Id="{f7d82ed7-93ca-4fbd-91f5-cda0a024e728}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	//outgoing
+	init	AT %I* :UDINT		:= 8;
+	
+	//incoming
+	init_done	AT %I* :UDINT	:= 0;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

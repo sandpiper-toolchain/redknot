@@ -7,13 +7,9 @@ VAR
 	xAxisCoupled			:AXIS_REF;
 	yAxis					:AXIS_REF;
 	zAxis					:AXIS_REF;
-	
-	xAxisControl			:AxisControlLogic;
-	yAxisControl			:AxisControlLogic;
-	zAxisControl			:AxisControlLogic;
-	
+		
 	xAxisFunctions			:AxisFunctionBlocks;  //xCon, xOut
-	xCoupledFunctions		:AxisCoupledFBs; //xCon, xCOut
+	xCoupledFunctions		:AxisFunctionBlocks; //xCon, xCOut
 	yAxisFunctions			:AxisFunctionBlocks;
 	zAxisFunctions			:AxisFunctionBlocks; 
 	
@@ -22,12 +18,14 @@ VAR
 	InfoData1T6Ch1 AT %I*	:UINT;
 	InfoData1T6Ch2 AT %I*	:UINT;
 	
-	PositionT5Ch1 AT %I*    :UINT;
-	
 	EL3174Ch1I AT %I*		:INT; //current or voltage input
-	xPos					:LREAL;
 	
-	tStart					:TIME; (* Time program start *)	 
+	couplestate				:INT := 0;
+	
+	xPos					:LREAL;
+	cpptest AT %I*			:UDINT := 8;
+	NOTmidpointX			:BOOL;
+	NOTmidpointXc			:BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -36,19 +34,21 @@ END_VAR
 //200000 element data arrays. modify in GVL_DAQ
 
 //digital io assignments
-GVL_MOTION.xCon.LimPos						:= InfoData1T5Ch1.0;
+//CURRENTLY NO X LIMPOS
+GVL_MOTION.xcCon.LimNeg						:= InfoData1T5Ch1.0;
 GVL_MOTION.xCon.LimNeg				 		:= InfoData1T5Ch1.1;
 GVL_MOTION.STATUS.eStop   					:= InfoData1T5Ch2.0;
-//Input										:= InfoData1T5Ch2.1; unused
+GVL_MOTION.NPNX								:= NOT(InfoData1T5Ch2.1); 
+
 GVL_MOTION.yCon.LimNeg				 		:= InfoData1T6Ch1.0;
 GVL_MOTION.yCon.LimPos				 		:= InfoData1T6Ch1.1;
 GVL_MOTION.zCon.LimNeg 				 		:= InfoData1T6Ch2.0;
-//Input										:= InfoData1T6Ch2.1; unused
+GVL_MOTION.NPNXC							:= NOT(InfoData1T6Ch2.1); 
 
 //increasing jog speed may cause axis to lock up if it crashes into end stop
 //zCon speed is very slow because heavy keyence mast makes lock up more likely
 IF NOT GVL_MOTION.EXT_CTR.CMDFINDSTOPS THEN
-	GVL_MOTION.xCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
+	GVL_MOTION.xCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
 	GVL_MOTION.yCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
 	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
 END_IF
@@ -64,14 +64,26 @@ MQTTCOMM();
 
 //coupled axis assignments, modify as needed for additional coupled axes
 //xAxis
-IF NOT GVL_MOTION.RevCouplePrep THEN
-	GVL_MOTION.xCon.AxisToCouple 			:= xAxisCoupled;
-ELSE
-	GVL_MOTION.xCon.AxisToCouple 			:= xAxis;
+GVL_MOTION.xCon.AxisToCouple 			:= xAxisCoupled;
+
+IF GVL_MOTION.EXT_CTR.CMDCOUPLE THEN
+	GVL_MOTION.EXT_CTR.CMDCOUPLE	:= FALSE;
+	CASE couplestate OF
+		0: 
+		GVL_MOTION.xCon.ExecuteUncouple	:= FALSE;
+		GVL_MOTION.xCon.ExecuteCouple	:= TRUE;
+		couplestate						:= 1;
+		1:
+		GVL_MOTION.xCon.ExecuteCouple	:= FALSE;
+		GVL_MOTION.xCon.ExecuteUncouple	:= TRUE;
+		couplestate						:= 0;
+	END_CASE
+
 END_IF
 
 IF GVL_MOTION.EXT_CTR.CMDHOME THEN
-	HomingRoutine();
+	//HomingRoutine();
+	HomeFixRack();
 END_IF
 
 IF GVL_MOTION.EXT_CTR.CMDFINDSTOPS THEN
@@ -80,10 +92,9 @@ END_IF
 
 ResetAxes();
 
+//RackCheck();
+
 //axis control signals currently tied to VISU
-xAxisControl(control:=GVL_MOTION.xCon);
-yAxisControl(control:=GVL_MOTION.yCon);
-zAxisControl(control:=GVL_MOTION.zCon);
 zAxisMoreLogic();
 
 //axis functions
@@ -92,7 +103,7 @@ xAxisFunctions(Axis:=xAxis,
 			   Output:=GVL_MOTION.xOut,
 			   HomeStatus:=GVL_MOTION.xHomeStatus);	
 xCoupledFunctions(Axis:=xAxisCoupled,
-				  Control:=GVL_MOTION.xCon,
+				  Control:=GVL_MOTION.xcCon,
 				  Output:=GVL_MOTION.xCOut,
 				  HomeStatus:=GVL_MOTION.xCHomeStatus);
 yAxisFunctions(Axis:=yAxis,
@@ -103,8 +114,7 @@ zAxisFunctions(Axis:=zAxis,
 			   Control:=GVL_MOTION.zCon,
 			   Output:=GVL_MOTION.zOut,
 			   HomeStatus:=GVL_MOTION.zHomeStatus);		
-  
-
+ 
 //command queue logic						 
 IF GVL_MOTION.EXT_CTR.CMDADD THEN
 	AddCommand(); //toggler
@@ -119,12 +129,6 @@ END_IF
 IF GVL_MOTION.EXT_CTR.CMDRUN THEN
 	RunCommands(); //toggler
 ELSE
-	GVL_MOTION.xCon.Execute_MABS			:= FALSE;
-	GVL_MOTION.xCon.Execute_MREL			:= FALSE;	
-	GVL_MOTION.yCon.Execute_MABS			:= FALSE;
-	GVL_MOTION.yCon.Execute_MREL			:= FALSE;	
-	GVL_MOTION.zCon.Execute_MABS			:= FALSE;	
-	GVL_MOTION.zCon.Execute_MREL			:= FALSE;
 	GVL_MOTION.CurInstruction				:= 0;
 	GVL_MOTION.InstructionState				:= 0;
 END_IF
@@ -142,7 +146,7 @@ END_IF
 //program to create basin coordinates
 CreateBasin();
 
-GVL_MOTION.BasinInstr	:= GVL_MOTION.BasinState;
+GVL_MOTION.BasinInstr						:= GVL_MOTION.BasinState;
 
 GVL_MOTION.NextInstruction					:= GVL_MOTION.CurInstruction + 1;
 
@@ -185,17 +189,37 @@ IF GVL_MOTION.EXT_CTR.USEBASINCOORDINATES AND GVL_MOTION.STATUS.BasinSet THEN
 ELSE
 	GVL_MOTION.STATUS.xPosOut				:= GVL_MOTION.xOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[0];
 	GVL_MOTION.STATUS.yPosOut				:= GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1];
-	
 END_IF											   
 
 
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="232" Count="45" />
+      <LineId Id="232" Count="4" />
+      <LineId Id="439" Count="0" />
+      <LineId Id="237" Count="3" />
+      <LineId Id="422" Count="0" />
+      <LineId Id="241" Count="23" />
+      <LineId Id="266" Count="0" />
+      <LineId Id="424" Count="0" />
+      <LineId Id="423" Count="0" />
+      <LineId Id="425" Count="0" />
+      <LineId Id="428" Count="1" />
+      <LineId Id="432" Count="6" />
+      <LineId Id="430" Count="0" />
+      <LineId Id="427" Count="0" />
+      <LineId Id="426" Count="0" />
+      <LineId Id="270" Count="2" />
+      <LineId Id="440" Count="0" />
+      <LineId Id="273" Count="4" />
       <LineId Id="361" Count="0" />
       <LineId Id="360" Count="0" />
-      <LineId Id="278" Count="58" />
+      <LineId Id="442" Count="0" />
+      <LineId Id="441" Count="0" />
+      <LineId Id="278" Count="1" />
+      <LineId Id="283" Count="19" />
+      <LineId Id="304" Count="13" />
+      <LineId Id="324" Count="12" />
       <LineId Id="384" Count="0" />
       <LineId Id="383" Count="0" />
       <LineId Id="386" Count="0" />
@@ -232,7 +256,6 @@ END_IF
       <LineId Id="395" Count="0" />
       <LineId Id="399" Count="0" />
       <LineId Id="401" Count="0" />
-      <LineId Id="398" Count="0" />
       <LineId Id="397" Count="0" />
       <LineId Id="366" Count="1" />
       <LineId Id="364" Count="0" />
