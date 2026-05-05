@@ -25,8 +25,6 @@ END_VAR
 VAR_GLOBAL
 	//set on acquisition trigger to send one line of data over MQTT 
 	DREADY				:BOOL	:= FALSE;
-	MASSA_TEMP			:INT;
-	KEYENCE_TEMP		:INT;
 	(*stored during state 0,
 	 stores DATA_INDEX corresponding to data pass IE - INDEX_COLLECTOR[data pass]*)
 	INDEX_COLLECTOR		:ARRAY[0..999] OF UDINT;

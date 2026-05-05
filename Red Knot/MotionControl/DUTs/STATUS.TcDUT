@@ -32,6 +32,9 @@ STRUCT
 	zPosOut			:LREAL;
 	zVelOut			:LREAL;
 	
+	MASSA_TEMP		:LREAL;
+	KEYENCE_TEMP	:LREAL;
+	
 	HardStopLocations	:ARRAY[0..2] 	  OF LREAL; //no offsets applied
 	KEYENCE_OFFSETS		:ARRAY[0..2]	  OF LREAL	:= [53.52,108.41,23.9];
 	MASSA_OFFSETS		:ARRAY[0..2]	  OF LREAL	:= [36,31,-116.11];

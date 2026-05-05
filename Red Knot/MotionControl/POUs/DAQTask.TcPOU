@@ -31,9 +31,9 @@ timeasstring := SYSTEMTIME_TO_STRING(fbtime.systemTime);
 //calculate distance from massa sensor to surface (mm) and assign to temp variable
 //out of range is represented by zero in temp variable
 IF EL3174.MDP5001_300_Input.MDP5001_300_AI_Standard_Channel_1_Value = 0 THEN
-	GVL_DAQ.MASSA_TEMP	:= 0;
+	GVL_MOTION.STATUS.MASSA_TEMP	:= 0;
 ELSE
-	GVL_DAQ.MASSA_TEMP	:= EL3174.MDP5001_300_Input.MDP5001_300_AI_Standard_Channel_1_Value * 2743/32767 + 101;
+	GVL_MOTION.STATUS.MASSA_TEMP	:= EL3174.MDP5001_300_Input.MDP5001_300_AI_Standard_Channel_1_Value * 2743/32767 + 101;
 END_IF
 
 
@@ -42,9 +42,9 @@ END_IF
 //keyence set to high precision mode - 250mm to 450mm range.
 //TODO measure range of motion for z axis
 IF EL3174.MDP5001_300_Input.MDP5001_300_AI_Standard_Channel_2_Value = 32767 THEN
-	GVL_DAQ.KEYENCE_TEMP 	:= 0;
+	GVL_MOTION.STATUS.KEYENCE_TEMP	:= 0;
 ELSE
-	GVL_DAQ.KEYENCE_TEMP	:= EL3174.MDP5001_300_Input.MDP5001_300_AI_Standard_Channel_2_Value * 100/32767 + 350;
+	GVL_MOTION.STATUS.KEYENCE_TEMP	:= EL3174.MDP5001_300_Input.MDP5001_300_AI_Standard_Channel_2_Value * 100/32767 + 350;
 END_IF
 
 
@@ -70,8 +70,8 @@ IF GVL_DAQ.DAQ_CTR_INT.Activate_Trigger <> DataTrigger.none THEN
 				GVL_DAQ.Y[GVL_DAQ.DATA_INDEX] 			:= GVL_MOTION.STATUS.yPosOut;
 				GVL_DAQ.Z[GVL_DAQ.DATA_INDEX] 			:= GVL_MOTION.STATUS.zPosOut;
 				
-				GVL_DAQ.KEYENCE[GVL_DAQ.DATA_INDEX]		:= GVL_DAQ.KEYENCE_TEMP;
-				GVL_DAQ.MASSA[GVL_DAQ.DATA_INDEX]		:= GVL_DAQ.MASSA_TEMP;
+				GVL_DAQ.KEYENCE[GVL_DAQ.DATA_INDEX]		:= GVL_MOTION.STATUS.KEYENCE_TEMP;
+				GVL_DAQ.MASSA[GVL_DAQ.DATA_INDEX]		:= GVL_MOTION.STATUS.MASSA_TEMP;
 				
 				GVL_DAQ.DATA.DATA_INDEX					:= GVL_DAQ.DATA_INDEX;
 				GVL_DAQ.DATA.PASS_INDEX					:= GVL_DAQ.PASS_INDEX;
@@ -108,8 +108,8 @@ IF GVL_DAQ.DAQ_CTR_INT.Activate_Trigger <> DataTrigger.none THEN
 				GVL_DAQ.Y[GVL_DAQ.DATA_INDEX] 			:= GVL_MOTION.STATUS.yPosOut;
 				GVL_DAQ.Z[GVL_DAQ.DATA_INDEX] 			:= GVL_MOTION.STATUS.zPosOut;
 				
-				GVL_DAQ.KEYENCE[GVL_DAQ.DATA_INDEX]		:= GVL_DAQ.KEYENCE_TEMP;
-				GVL_DAQ.MASSA[GVL_DAQ.DATA_INDEX]		:= GVL_DAQ.MASSA_TEMP;
+				GVL_DAQ.KEYENCE[GVL_DAQ.DATA_INDEX]		:= GVL_MOTION.STATUS.KEYENCE_TEMP;
+				GVL_DAQ.MASSA[GVL_DAQ.DATA_INDEX]		:= GVL_MOTION.STATUS.MASSA_TEMP;
 				
 				GVL_DAQ.DATA.DATA_INDEX					:= GVL_DAQ.DATA_INDEX;
 				GVL_DAQ.DATA.PASS_INDEX					:= GVL_DAQ.PASS_INDEX;
@@ -146,8 +146,8 @@ IF GVL_DAQ.DAQ_CTR_INT.Activate_Trigger <> DataTrigger.none THEN
 				GVL_DAQ.Y[GVL_DAQ.DATA_INDEX] 			:= GVL_MOTION.STATUS.yPosOut;
 				GVL_DAQ.Z[GVL_DAQ.DATA_INDEX] 			:= GVL_MOTION.STATUS.zPosOut;
 				
-				GVL_DAQ.KEYENCE[GVL_DAQ.DATA_INDEX]		:= GVL_DAQ.KEYENCE_TEMP;
-				GVL_DAQ.MASSA[GVL_DAQ.DATA_INDEX]		:= GVL_DAQ.MASSA_TEMP;
+				GVL_DAQ.KEYENCE[GVL_DAQ.DATA_INDEX]		:= GVL_MOTION.STATUS.KEYENCE_TEMP;
+				GVL_DAQ.MASSA[GVL_DAQ.DATA_INDEX]		:= GVL_MOTION.STATUS.MASSA_TEMP;
 				
 				GVL_DAQ.DATA.DATA_INDEX					:= GVL_DAQ.DATA_INDEX;
 				GVL_DAQ.DATA.PASS_INDEX					:= GVL_DAQ.PASS_INDEX;
@@ -184,8 +184,8 @@ IF GVL_DAQ.DAQ_CTR_INT.Activate_Trigger <> DataTrigger.none THEN
 				GVL_DAQ.Y[GVL_DAQ.DATA_INDEX] 			:= GVL_MOTION.STATUS.yPosOut;
 				GVL_DAQ.Z[GVL_DAQ.DATA_INDEX] 			:= GVL_MOTION.STATUS.zPosOut;
 				
-				GVL_DAQ.KEYENCE[GVL_DAQ.DATA_INDEX]		:= GVL_DAQ.KEYENCE_TEMP;
-				GVL_DAQ.MASSA[GVL_DAQ.DATA_INDEX]		:= GVL_DAQ.MASSA_TEMP;
+				GVL_DAQ.KEYENCE[GVL_DAQ.DATA_INDEX]		:= GVL_MOTION.STATUS.KEYENCE_TEMP;
+				GVL_DAQ.MASSA[GVL_DAQ.DATA_INDEX]		:= GVL_MOTION.STATUS.MASSA_TEMP;
 				
 				GVL_DAQ.DATA.DATA_INDEX					:= GVL_DAQ.DATA_INDEX;
 				GVL_DAQ.DATA.PASS_INDEX					:= GVL_DAQ.PASS_INDEX;
@@ -231,12 +231,15 @@ DAQPassTime();]]></ST>
       <LineId Id="81" Count="0" />
       <LineId Id="80" Count="0" />
       <LineId Id="82" Count="0" />
-      <LineId Id="67" Count="3" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="313" Count="0" />
+      <LineId Id="69" Count="1" />
       <LineId Id="46" Count="0" />
       <LineId Id="83" Count="1" />
       <LineId Id="73" Count="0" />
       <LineId Id="85" Count="2" />
-      <LineId Id="74" Count="1" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="314" Count="0" />
       <LineId Id="78" Count="1" />
       <LineId Id="72" Count="0" />
       <LineId Id="106" Count="1" />

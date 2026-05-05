@@ -7,11 +7,13 @@ VAR
 	xAxisCoupled			:AXIS_REF;
 	yAxis					:AXIS_REF;
 	zAxis					:AXIS_REF;
+	extra					:AXIS_REF;
 		
 	xAxisFunctions			:AxisFunctionBlocks;  //xCon, xOut
 	xCoupledFunctions		:AxisFunctionBlocks; //xCon, xCOut
 	yAxisFunctions			:AxisFunctionBlocks;
 	zAxisFunctions			:AxisFunctionBlocks; 
+	extraFunctions			:AxisFunctionBlocks;
 	
 	InfoData1T5Ch1 AT %I*	:UINT; //input address, any input
 	InfoData1T5Ch2 AT %I*	:UINT;
@@ -44,6 +46,10 @@ GVL_MOTION.yCon.LimNeg				 		:= InfoData1T6Ch1.0;
 GVL_MOTION.yCon.LimPos				 		:= InfoData1T6Ch1.1;
 GVL_MOTION.zCon.LimNeg 				 		:= InfoData1T6Ch2.0;
 GVL_MOTION.NPNXC							:= NOT(InfoData1T6Ch2.1); 
+
+//TESTING
+ GVL_MOTION.xtraCon.Enable	:= TRUE;
+ GVL_MOTION.HomeDone		:= TRUE;
 
 //increasing jog speed may cause axis to lock up if it crashes into end stop
 //zCon speed is very slow because heavy keyence mast makes lock up more likely
@@ -92,7 +98,7 @@ END_IF
 
 ResetAxes();
 
-//RackCheck();
+RackCheck();
 
 //axis control signals currently tied to VISU
 zAxisMoreLogic();
@@ -113,8 +119,13 @@ yAxisFunctions(Axis:=yAxis,
 zAxisFunctions(Axis:=zAxis,
 			   Control:=GVL_MOTION.zCon,
 			   Output:=GVL_MOTION.zOut,
-			   HomeStatus:=GVL_MOTION.zHomeStatus);		
+			   HomeStatus:=GVL_MOTION.zHomeStatus);	
+extraFunctions(Axis:=extra,
+				Control:=GVL_MOTION.xtraCon,
+				Output:=GVL_MOTION.xtraOut,
+				HomeStatus:=GVL_MOTION.xtraHomeStatus);	
  
+
 //command queue logic						 
 IF GVL_MOTION.EXT_CTR.CMDADD THEN
 	AddCommand(); //toggler
@@ -199,7 +210,11 @@ END_IF
       <LineId Id="439" Count="0" />
       <LineId Id="237" Count="3" />
       <LineId Id="422" Count="0" />
-      <LineId Id="241" Count="23" />
+      <LineId Id="241" Count="3" />
+      <LineId Id="451" Count="1" />
+      <LineId Id="450" Count="0" />
+      <LineId Id="453" Count="0" />
+      <LineId Id="245" Count="19" />
       <LineId Id="266" Count="0" />
       <LineId Id="424" Count="0" />
       <LineId Id="423" Count="0" />
@@ -217,7 +232,8 @@ END_IF
       <LineId Id="442" Count="0" />
       <LineId Id="441" Count="0" />
       <LineId Id="278" Count="1" />
-      <LineId Id="283" Count="19" />
+      <LineId Id="283" Count="18" />
+      <LineId Id="443" Count="5" />
       <LineId Id="304" Count="13" />
       <LineId Id="324" Count="12" />
       <LineId Id="384" Count="0" />

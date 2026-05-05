@@ -4,10 +4,10 @@
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
 	//outgoing
-	init	AT %I* :UDINT		:= 8;
+	init	AT %I* :LREAL		:= 8;
 	
 	//incoming
-	init_done	AT %I* :UDINT	:= 0;
+	init_done	AT %I* :UDINT	:= 2;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
