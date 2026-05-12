@@ -44,7 +44,10 @@ END_IF
 IF EL3174.MDP5001_300_Input.MDP5001_300_AI_Standard_Channel_2_Value = 32767 THEN
 	GVL_MOTION.STATUS.KEYENCE_TEMP	:= 32767;
 ELSE
-	GVL_MOTION.STATUS.KEYENCE_TEMP	:= EL3174.MDP5001_300_Input.MDP5001_300_AI_Standard_Channel_2_Value * 100/32767 + 350;
+	//90mm from top of x rail to desk
+	//add extra 103mm offset
+	GVL_MOTION.STATUS.KEYENCE_TEMP	:= (GVL_MOTION.STATUS.zPosOut + GVL_DAQ.KEYENCE_OFFSETS[2] + 90 + 103) -
+	(EL3174.MDP5001_300_Input.MDP5001_300_AI_Standard_Channel_2_Value * 100/32767 + 350);
 END_IF
 
 
@@ -240,7 +243,11 @@ DAQPassTime();]]></ST>
       <LineId Id="85" Count="2" />
       <LineId Id="74" Count="0" />
       <LineId Id="314" Count="0" />
-      <LineId Id="78" Count="1" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="316" Count="0" />
+      <LineId Id="315" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="317" Count="0" />
       <LineId Id="72" Count="0" />
       <LineId Id="106" Count="1" />
       <LineId Id="71" Count="0" />

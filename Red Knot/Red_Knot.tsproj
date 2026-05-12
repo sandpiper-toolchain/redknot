@@ -2069,7 +2069,7 @@ External Setpoint Generation:
 					<Name>xAxis</Name>
 					<AxisPara>
 						<Dynamic Acceleration="1356.33" Deceleration="1356.33" Jerk="4068.99"/>
-						<Velo RefSearch="12" RefSync="9" SlowManual="50" FastManual="100" Fast="904.22" Maximum="904.22"/>
+						<Velo RefSearch="10" RefSync="9" SlowManual="25" FastManual="100" Fast="904.22" Maximum="904.22"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="19">
@@ -2356,7 +2356,7 @@ External Setpoint Generation:
 					<Name>xAxisCoupled</Name>
 					<AxisPara>
 						<Dynamic Acceleration="1356.33" Deceleration="1356.33" Jerk="4068.99"/>
-						<Velo RefSearch="9.0422" RefSync="9.0422" SlowManual="45.211" FastManual="271.266" Fast="904.22" Maximum="904.22"/>
+						<Velo RefSearch="10" RefSync="9.0422" SlowManual="45.211" FastManual="271.266" Fast="904.22" Maximum="904.22"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="19">
@@ -2477,6 +2477,7 @@ External Setpoint Generation:
 					</Drive>
 					<Controller Name="Ctrl" CtrType="1">
 						<CtrPara PriorControlFactor="1">
+							<PosDiffControl Range="10"/>
 							<Observer BandWidth="20"/>
 						</CtrPara>
 					</Controller>
@@ -2642,7 +2643,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{35F1EE57-8B64-404F-9A2B-38524D23373E}" Name="MotionControl" PrjFilePath="MotionControl\MotionControl.plcproj" TmcFilePath="MotionControl\MotionControl.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{3F567A7C-6D05-E032-570E-DF83BF50158A}" TmcPath="MotionControl\MotionControl.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{B935BA8E-5032-B0D9-01AE-4D84BB0EE428}" TmcPath="MotionControl\MotionControl.tmc">
 					<Name>MotionControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" ContextId="2" AreaNo="33">

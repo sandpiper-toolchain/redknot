@@ -63,6 +63,12 @@ FunctionBlockMisc();
 //mqtt communication functions for external control/gui
 MQTTCOMM();
 
+//need to reimplement
+GVL_MOTION.HardStopLocations[0] := 485;
+GVL_MOTION.HardStopLocations[1] := 455;
+GVL_MOTION.HardStopLocations[2] := 120;
+GVL_MOTION.STATUS.HardStopLoc	:= TRUE;
+
 
 //coupled axis assignments, modify as needed for additional coupled axes
 //xAxis
@@ -94,7 +100,7 @@ END_IF
 
 ResetAxes();
 
-RackCheck();
+//RackCheck();
 
 //axis control signals currently tied to VISU
 zAxisMoreLogic();
@@ -202,7 +208,12 @@ END_IF
       <LineId Id="439" Count="0" />
       <LineId Id="237" Count="3" />
       <LineId Id="422" Count="0" />
-      <LineId Id="241" Count="23" />
+      <LineId Id="241" Count="19" />
+      <LineId Id="451" Count="0" />
+      <LineId Id="450" Count="0" />
+      <LineId Id="449" Count="0" />
+      <LineId Id="452" Count="2" />
+      <LineId Id="261" Count="3" />
       <LineId Id="266" Count="0" />
       <LineId Id="424" Count="0" />
       <LineId Id="423" Count="0" />
