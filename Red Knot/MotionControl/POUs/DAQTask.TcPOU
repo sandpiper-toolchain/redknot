@@ -42,7 +42,7 @@ END_IF
 //keyence set to high precision mode - 250mm to 450mm range.
 //TODO measure range of motion for z axis
 IF EL3174.MDP5001_300_Input.MDP5001_300_AI_Standard_Channel_2_Value = 32767 THEN
-	GVL_MOTION.STATUS.KEYENCE_TEMP	:= 0;
+	GVL_MOTION.STATUS.KEYENCE_TEMP	:= 32767;
 ELSE
 	GVL_MOTION.STATUS.KEYENCE_TEMP	:= EL3174.MDP5001_300_Input.MDP5001_300_AI_Standard_Channel_2_Value * 100/32767 + 350;
 END_IF

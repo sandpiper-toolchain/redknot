@@ -12,9 +12,11 @@
   <ItemGroup>
     <Content Include="Term 5 %28EL7062%29.tcdmdrv">
       <SubType>Content</SubType>
+      <IoItemPathName>TIID^Device 1 (EtherCAT)^Term 4 (EK1200)^Term 5 (EL7062)</IoItemPathName>
     </Content>
     <Content Include="Term 6 %28EL7062%29.tcdmdrv">
       <SubType>Content</SubType>
+      <IoItemPathName>TIID^Device 1 (EtherCAT)^Term 4 (EK1200)^Term 6 (EL7062)</IoItemPathName>
     </Content>
   </ItemGroup>
 </Project>
