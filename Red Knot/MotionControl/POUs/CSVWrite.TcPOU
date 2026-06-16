@@ -58,6 +58,9 @@ IF GVL_DAQ.EXT_CTR.CMDCSVRESET THEN
 	step								:= 0;
 	headerstep							:= 0;
 	datastep							:= 0;
+	datawrite							:= FALSE;
+	scriptwrite							:= FALSE;
+	index								:= 0;
 	GVL_DAQ.CSV_ROW						:= 0;
 	GVL_DAQ.CSV_PASS_COMPARE			:= 0;
 END_IF
@@ -65,11 +68,13 @@ END_IF
 IF GVL_DAQ.EXT_CTR.CMDDATAWRITE OR GVL_DAQ.DAQ_CTR_INT.CMDDATAWRITE THEN //should be int ctr signal
 	GVL_DAQ.EXT_CTR.CMDDATAWRITE		:= FALSE; //for testing only
 	GVL_DAQ.DAQ_CTR_INT.CMDDATAWRITE	:= FALSE;
+	GVL_DAQ.DAQ_CTR_INT.Data_Done		:= FALSE;
 	bWrite								:= TRUE;
 END_IF
 
 IF GVL_MOTION.EXT_CTR.CMDSCRIPTWRITE THEN
 	GVL_MOTION.EXT_CTR.CMDSCRIPTWRITE	:= FALSE;
+	scriptwrite							:= FALSE;
 	GVL_DAQ.DAQ_CTR_INT.CSVWriteMode	:= CSVWriteMode.script;
 	bWrite								:= TRUE;
 END_IF
@@ -725,16 +730,21 @@ END_CASE
       <LineId Id="850" Count="0" />
       <LineId Id="852" Count="0" />
       <LineId Id="857" Count="1" />
-      <LineId Id="854" Count="2" />
+      <LineId Id="854" Count="0" />
+      <LineId Id="860" Count="1" />
+      <LineId Id="859" Count="0" />
+      <LineId Id="855" Count="1" />
       <LineId Id="851" Count="0" />
       <LineId Id="280" Count="0" />
       <LineId Id="3" Count="0" />
       <LineId Id="125" Count="0" />
       <LineId Id="761" Count="0" />
+      <LineId Id="862" Count="0" />
       <LineId Id="5" Count="1" />
       <LineId Id="755" Count="0" />
       <LineId Id="757" Count="0" />
       <LineId Id="760" Count="0" />
+      <LineId Id="864" Count="0" />
       <LineId Id="758" Count="1" />
       <LineId Id="756" Count="0" />
       <LineId Id="7" Count="3" />

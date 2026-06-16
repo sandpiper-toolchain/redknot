@@ -716,6 +716,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"1734"</v>
+              <v n="TextDefault">"Set X"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"53"</v>
               <v n="TextDefault">"set x acc"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -736,6 +741,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"717"</v>
+              <v n="TextDefault">"Set Y"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"1043"</v>
               <v n="TextDefault">"set y acc"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -753,6 +763,11 @@
             <o>
               <v n="TextID">"486"</v>
               <v n="TextDefault">"Set Y Zero"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"983"</v>
+              <v n="TextDefault">"Set Z"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -793,6 +808,11 @@
             <o>
               <v n="TextID">"838"</v>
               <v n="TextDefault">"STOP MOTION"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"474"</v>
+              <v n="TextDefault">"Test for sick (ADS)"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
