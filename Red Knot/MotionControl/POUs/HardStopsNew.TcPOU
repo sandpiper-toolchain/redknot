@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="HardStopsNew" Id="{c9599794-ad3c-4980-94ba-9df8f734ac75}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM HardStopsNew
+VAR PERSISTENT
+	state	:INT 	:= 0;
+	xPrev	:LREAL	:= 0;
+	yPrev	:LREAL	:= 0;
+	zPrev	:LREAL	:= 0;
+END_VAR
+VAR
+	init	:BOOL	:= FALSE;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF GVL_MOTION.EXT_CTR.CMDFINDSTOPS OR GVL_MOTION.EXT_CTR.AXESRESET OR GVL_MOTION.EXT_CTR.SETXPOS OR GVL_MOTION.EXT_CTR.SETXPOS OR GVL_MOTION.EXT_CTR.SETXPOS THEN
+	init										:= FALSE;
+END_IF
+
+
+IF GVL_MOTION.EXT_CTR.CMDFINDSTOPS THEN
+	CASE state OF
+		0:
+		GVL_MOTION.xJogFw					:= TRUE;
+		state								:= 1;
+		
+		1:
+		IF GVL_MOTION.NPNX OR GVL_MOTION.NPNXC THEN
+			GVL_MOTION.xJogFw				:= FALSE;
+			GVL_MOTION.STATUS.xHSdistance	:= 0;
+			GVL_MOTION.yJogFw				:= TRUE;
+			state							:= 2;
+		END_IF
+		
+		2:
+		IF GVL_MOTION.yCon.LimPos THEN
+			GVL_MOTION.yJogFw				:= FALSE;
+			GVL_MOTION.STATUS.yHSdistance	:= 0;
+			GVL_MOTION.zJogFw				:= TRUE;
+			state							:= 3;
+		END_IF
+		
+		3:
+		IF GVL_MOTION.zCon.LimNeg THEN
+			GVL_MOTION.zJogFw				:= FALSE;
+			GVL_MOTION.STATUS.zHSdistance	:= 0;
+			GVL_MOTION.STATUS.HardStopLoc	:= TRUE;
+			GVL_MOTION.EXT_CTR.CMDFINDSTOPS	:= FALSE;
+			state							:= 0;
+		END_IF
+	END_CASE
+	
+ELSE
+	 //calculate distance from each hard stop
+	IF GVL_MOTION.STATUS.HardStopLoc THEN
+		IF NOT init THEN
+			xPrev 									:= GVL_MOTION.xOut.PositionOut;
+			yPrev 									:= GVL_MOTION.yOut.PositionOut;
+			zPrev									:= GVL_MOTION.zOut.PositionOut;
+			init									:= TRUE;
+		END_IF
+		
+		GVL_MOTION.STATUS.xHSdistance				:= GVL_MOTION.STATUS.xHSdistance + xPrev - GVL_MOTION.xOut.PositionOut;
+		GVL_MOTION.STATUS.yHSdistance				:= GVL_MOTION.STATUS.yHSdistance + yPrev - GVL_MOTION.yOut.PositionOut;
+		GVL_MOTION.STATUS.zHSdistance				:= GVL_MOTION.STATUS.zHSdistance + zPrev - GVL_MOTION.zOut.PositionOut;
+		
+		xPrev 										:= GVL_MOTION.xOut.PositionOut;
+		yPrev 										:= GVL_MOTION.yOut.PositionOut;
+		zPrev										:= GVL_MOTION.zOut.PositionOut;
+	END_IF
+END_IF
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="HardStopsNew">
+      <LineId Id="1" Count="58" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

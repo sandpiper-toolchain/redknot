@@ -32,6 +32,10 @@ STRUCT
 	zPosOut			:LREAL;
 	zVelOut			:LREAL;
 	
+	xHSdistance		:LREAL;
+	yHSdistance		:LREAL;
+	zHSdistance		:LREAL;
+	
 	MASSA_TEMP		:LREAL;
 	KEYENCE_TEMP	:LREAL;
 	

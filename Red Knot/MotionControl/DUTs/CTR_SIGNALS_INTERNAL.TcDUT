@@ -16,6 +16,7 @@ STRUCT
 	JogFw					:BOOL;
 	JogBw					:BOOL;
 	JogMode					:E_JogMode;
+	SetLocation				:INT;
 	SetPosition				:LREAL;
 	SetVelocity				:LREAL;
 	SetAccel				:LREAL;

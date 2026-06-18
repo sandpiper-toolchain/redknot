@@ -115,6 +115,9 @@
     <Compile Include="POUs\HardStops.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\HardStopsNew.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\HomeFixRack.TcPOU">
       <SubType>Code</SubType>
     </Compile>

@@ -15,6 +15,7 @@ VAR
 	IBuffEcho		:STRING(255) := 'MOTION/INSTR_ECHO';
 	sPayloadPub 	:STRING(1000);
 	fbTimer 		:TON 		 := (PT:=T#1S);
+	HBtimer 		:TON 		 := (PT:=T#3S);
 	found 			:UDINT;	
 	
    (* received message *)
@@ -39,7 +40,6 @@ VAR
 	
 	ok				:BOOL;
 	error			:HRESULT;
-	test			:MOTION_CTR;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -82,7 +82,7 @@ IF fbMqttClient.bConnected THEN
         SubIBuff := fbMqttClient.Subscribe(sTopic:='MOTION/INSTR_BUFFER', eQoS:=TcIotMqttQos.AtMostOnceDelivery);
     END_IF	
     fbTimer(IN:=TRUE);
-	//wait for trigger
+	//wait for trigger from daqtask - instantaneous data ready to transmit
 	IF GVL_DAQ.DREADY THEN
 		GVL_DAQ.DREADY			:= FALSE;
 		fbJson.ResetDocument();
@@ -166,6 +166,21 @@ IF fbMqttClient.bConnected THEN
 			bRetain:= TRUE, bQueue:= FALSE );	
 			
     END_IF
+END_IF
+
+HBtimer(IN:=TRUE); //3 second timer. set heartbeat false. control continuously sets heartbeat true, after 3 cycles disable sensitive motion controls
+IF GVL_MOTION.TEST_CTR.HEARTBEAT THEN
+	GVL_MOTION.TEST_CTR.HEARTBEAT	:= FALSE;
+	HBtimer(IN:=FALSE);
+	HBtimer(IN:=TRUE);
+END_IF
+IF HBtimer.Q THEN
+	GVL_MOTION.TEST_CTR.XJOGFW	:= FALSE;	
+	GVL_MOTION.TEST_CTR.XJOGBW	:= FALSE;
+	GVL_MOTION.TEST_CTR.YJOGFW	:= FALSE;
+	GVL_MOTION.TEST_CTR.YJOGBW	:= FALSE;
+	GVL_MOTION.TEST_CTR.ZJOGFW	:= FALSE;
+	GVL_MOTION.TEST_CTR.ZJOGBW	:= FALSE;	
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="MQTTCOMM">
@@ -233,6 +248,14 @@ END_IF]]></ST>
       <LineId Id="160" Count="0" />
       <LineId Id="139" Count="0" />
       <LineId Id="26" Count="1" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="227" Count="1" />
+      <LineId Id="230" Count="1" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="235" Count="4" />
+      <LineId Id="233" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>

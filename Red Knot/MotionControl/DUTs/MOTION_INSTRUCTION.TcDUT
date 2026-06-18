@@ -12,6 +12,7 @@ STRUCT
 	Acq_Keyence				:BOOL	:= FALSE;
 	Acq_Massa				:BOOL	:= FALSE;
 	Acq_Sonar				:BOOL	:= FALSE;
+	Acq_SICK				:BOOL	:= FALSE;
 	SetXPosition			:REAL;
 	SetXVelocity			:INT;
 	SetXAccel				:INT;

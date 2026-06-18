@@ -30,6 +30,13 @@ STRUCT
 	YJOGBW					:BOOL	:= FALSE;
 	ZJOGFW					:BOOL	:= FALSE;
 	ZJOGBW					:BOOL	:= FALSE;
+	HEARTBEAT				:BOOL	:= FALSE; //check in MQTTCOM to keep jog commands online
+	SETXPOS					:BOOL	:= FALSE;
+	POSX					:INT	:= 0;
+	SETYPOS					:BOOL	:= FALSE;
+	POSY					:INT	:= 0;
+	SETZPOS					:BOOL	:= FALSE;
+	POSZ					:INT	:= 0;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

@@ -13,13 +13,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//require safe z limit, home complete, x axes coupled, hard stops located
-IF (NOT GVL_MOTION.zSafeSet) OR (NOT GVL_MOTION.HomeDone)
-OR (NOT GVL_MOTION.xOut.AxisCoupled) OR (NOT GVL_MOTION.STATUS.HardStopLoc)
-OR (NOT GVL_MOTION.STATUS.BasinSet) THEN
-	GVL_MOTION.CurInstruction												:= 0;
-	GVL_MOTION.EXT_CTR.CMDRUN												:= FALSE;	//maybe change this to internal variable
-END_IF
+      <ST><![CDATA[
 
 //script exits: state 0,1,3
 CASE GVL_MOTION.InstructionState OF
@@ -433,12 +427,6 @@ CASE GVL_MOTION.InstructionState OF
 END_CASE]]></ST>
     </Implementation>
     <LineIds Name="RunCommands">
-      <LineId Id="571" Count="0" />
-      <LineId Id="566" Count="0" />
-      <LineId Id="773" Count="0" />
-      <LineId Id="1052" Count="0" />
-      <LineId Id="568" Count="0" />
-      <LineId Id="570" Count="0" />
       <LineId Id="569" Count="0" />
       <LineId Id="578" Count="0" />
       <LineId Id="567" Count="0" />

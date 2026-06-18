@@ -7,13 +7,11 @@ VAR
 	xAxisCoupled			:AXIS_REF;
 	yAxis					:AXIS_REF;
 	zAxis					:AXIS_REF;
-	extra					:AXIS_REF;
 		
 	xAxisFunctions			:AxisFunctionBlocks;  //xCon, xOut
 	xCoupledFunctions		:AxisFunctionBlocks; //xCon, xCOut
 	yAxisFunctions			:AxisFunctionBlocks;
 	zAxisFunctions			:AxisFunctionBlocks; 
-	extraFunctions			:AxisFunctionBlocks;
 	
 	InfoData1T5Ch1 AT %I*	:UINT; //input address, any input
 	InfoData1T5Ch2 AT %I*	:UINT;
@@ -25,7 +23,7 @@ VAR
 	couplestate				:INT := 0;
 	
 	xPos					:LREAL;
-	cpptest AT %I*			:UDINT := 8;
+	
 	NOTmidpointX			:BOOL;
 	NOTmidpointXc			:BOOL;
 END_VAR
@@ -51,9 +49,28 @@ GVL_MOTION.NPNXC							:= NOT(InfoData1T6Ch2.1);
 //zCon speed is very slow because heavy keyence mast makes lock up more likely
 IF NOT GVL_MOTION.EXT_CTR.CMDFINDSTOPS THEN
 	GVL_MOTION.xCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
-	GVL_MOTION.yCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
+	GVL_MOTION.yCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
 	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
 END_IF
+
+//axis functions
+xAxisFunctions(Axis:=xAxis,
+			   Control:=GVL_MOTION.xCon,
+			   Output:=GVL_MOTION.xOut,
+			   HomeStatus:=GVL_MOTION.xHomeStatus);	
+xCoupledFunctions(Axis:=xAxisCoupled,
+				  Control:=GVL_MOTION.xcCon,
+				  Output:=GVL_MOTION.xCOut,
+				  HomeStatus:=GVL_MOTION.xCHomeStatus);
+yAxisFunctions(Axis:=yAxis,
+			   Control:=GVL_MOTION.yCon,
+			   Output:=GVL_MOTION.yOut,
+			   HomeStatus:=GVL_MOTION.yHomeStatus);
+zAxisFunctions(Axis:=zAxis,
+			   Control:=GVL_MOTION.zCon,
+			   Output:=GVL_MOTION.zOut,
+			   HomeStatus:=GVL_MOTION.zHomeStatus);	
+
 //alternative position read
 //xPos 										:= xAxis.NcToPlc.ActPos;
 	
@@ -62,13 +79,6 @@ FunctionBlockMisc();
 
 //mqtt communication functions for external control/gui
 MQTTCOMM();
-
-//need to reimplement
-GVL_MOTION.HardStopLocations[0] := 485;
-GVL_MOTION.HardStopLocations[1] := 455;
-GVL_MOTION.HardStopLocations[2] := 120;
-GVL_MOTION.STATUS.HardStopLoc	:= TRUE;
-
 
 //coupled axis assignments, modify as needed for additional coupled axes
 //xAxis
@@ -94,36 +104,15 @@ IF GVL_MOTION.EXT_CTR.CMDHOME THEN
 	HomeFixRack();
 END_IF
 
-IF GVL_MOTION.EXT_CTR.CMDFINDSTOPS THEN
-	HardStops();
-END_IF
 
 ResetAxes();
 
+//routine to check both sides of x at midpoint. if offset an error light turns on and a button can correct the offset
 //RackCheck();
 
 //axis control signals currently tied to VISU
 zAxisMoreLogic();
-
-//axis functions
-xAxisFunctions(Axis:=xAxis,
-			   Control:=GVL_MOTION.xCon,
-			   Output:=GVL_MOTION.xOut,
-			   HomeStatus:=GVL_MOTION.xHomeStatus);	
-xCoupledFunctions(Axis:=xAxisCoupled,
-				  Control:=GVL_MOTION.xcCon,
-				  Output:=GVL_MOTION.xCOut,
-				  HomeStatus:=GVL_MOTION.xCHomeStatus);
-yAxisFunctions(Axis:=yAxis,
-			   Control:=GVL_MOTION.yCon,
-			   Output:=GVL_MOTION.yOut,
-			   HomeStatus:=GVL_MOTION.yHomeStatus);
-zAxisFunctions(Axis:=zAxis,
-			   Control:=GVL_MOTION.zCon,
-			   Output:=GVL_MOTION.zOut,
-			   HomeStatus:=GVL_MOTION.zHomeStatus);	
  
-
 //command queue logic						 
 IF GVL_MOTION.EXT_CTR.CMDADD THEN
 	AddCommand(); //toggler
@@ -134,7 +123,16 @@ END_IF
 IF GVL_MOTION.EXT_CTR.CMDDEL THEN
 	DeleteLastInstruction();
 END_IF
-//TODO check script against hard stops before running
+
+//require safe z limit, home complete, x axes coupled, hard stops located
+//check before RunCommands is executed
+IF (NOT GVL_MOTION.zSafeSet) OR (NOT GVL_MOTION.HomeDone)
+OR (NOT GVL_MOTION.xOut.AxisCoupled) OR (NOT GVL_MOTION.STATUS.HardStopLoc)
+OR (NOT GVL_MOTION.STATUS.BasinSet) THEN
+	GVL_MOTION.CurInstruction				:= 0;
+	GVL_MOTION.EXT_CTR.CMDRUN				:= FALSE;	//maybe change this to internal variable
+END_IF
+
 IF GVL_MOTION.EXT_CTR.CMDRUN THEN
 	RunCommands(); //toggler
 ELSE
@@ -200,20 +198,44 @@ ELSE
 	GVL_MOTION.STATUS.yPosOut				:= GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1];
 END_IF											   
 
+IF GVL_MOTION.EXT_CTR.SETXPOS THEN
+	GVL_MOTION.EXT_CTR.SETXPOS				:= FALSE;
+	GVL_MOTION.xCon.Execute_SPOS			:= TRUE;
+END_IF
+IF GVL_MOTION.EXT_CTR.SETYPOS THEN
+	GVL_MOTION.EXT_CTR.SETYPOS				:= FALSE;
+	GVL_MOTION.yCon.Execute_SPOS			:= TRUE;
+END_IF
+IF GVL_MOTION.EXT_CTR.SETZPOS THEN
+	GVL_MOTION.EXT_CTR.SETZPOS				:= FALSE;
+	GVL_MOTION.zCon.Execute_SPOS			:= TRUE;
+END_IF
 
-]]></ST>
+//need to reimplement
+//GVL_MOTION.HardStopLocations[0] := 485;
+//GVL_MOTION.HardStopLocations[1] := 455;
+//GVL_MOTION.HardStopLocations[2] := 120;
+//GVL_MOTION.STATUS.HardStopLoc	:= TRUE;
+
+
+ HardStopsNew();
+
+
+//needs to come after set position or axis reset is executed
+//HardStopsNew();]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="232" Count="4" />
       <LineId Id="439" Count="0" />
       <LineId Id="237" Count="3" />
       <LineId Id="422" Count="0" />
-      <LineId Id="241" Count="19" />
-      <LineId Id="451" Count="0" />
-      <LineId Id="450" Count="0" />
-      <LineId Id="449" Count="0" />
-      <LineId Id="452" Count="2" />
-      <LineId Id="261" Count="3" />
+      <LineId Id="241" Count="11" />
+      <LineId Id="471" Count="0" />
+      <LineId Id="473" Count="15" />
+      <LineId Id="472" Count="0" />
+      <LineId Id="470" Count="0" />
+      <LineId Id="253" Count="7" />
+      <LineId Id="262" Count="2" />
       <LineId Id="266" Count="0" />
       <LineId Id="424" Count="0" />
       <LineId Id="423" Count="0" />
@@ -225,15 +247,23 @@ END_IF
       <LineId Id="426" Count="0" />
       <LineId Id="270" Count="2" />
       <LineId Id="440" Count="0" />
-      <LineId Id="273" Count="4" />
+      <LineId Id="273" Count="0" />
+      <LineId Id="277" Count="0" />
       <LineId Id="361" Count="0" />
       <LineId Id="360" Count="0" />
+      <LineId Id="503" Count="0" />
       <LineId Id="442" Count="0" />
       <LineId Id="441" Count="0" />
       <LineId Id="278" Count="1" />
-      <LineId Id="283" Count="18" />
-      <LineId Id="447" Count="1" />
-      <LineId Id="304" Count="13" />
+      <LineId Id="283" Count="0" />
+      <LineId Id="447" Count="0" />
+      <LineId Id="304" Count="9" />
+      <LineId Id="455" Count="0" />
+      <LineId Id="457" Count="0" />
+      <LineId Id="463" Count="0" />
+      <LineId Id="458" Count="4" />
+      <LineId Id="456" Count="0" />
+      <LineId Id="314" Count="3" />
       <LineId Id="324" Count="12" />
       <LineId Id="384" Count="0" />
       <LineId Id="383" Count="0" />
@@ -273,6 +303,18 @@ END_IF
       <LineId Id="401" Count="0" />
       <LineId Id="397" Count="0" />
       <LineId Id="366" Count="1" />
+      <LineId Id="489" Count="0" />
+      <LineId Id="491" Count="0" />
+      <LineId Id="490" Count="0" />
+      <LineId Id="493" Count="2" />
+      <LineId Id="492" Count="0" />
+      <LineId Id="497" Count="2" />
+      <LineId Id="496" Count="0" />
+      <LineId Id="504" Count="0" />
+      <LineId Id="506" Count="7" />
+      <LineId Id="505" Count="0" />
+      <LineId Id="502" Count="0" />
+      <LineId Id="500" Count="0" />
       <LineId Id="364" Count="0" />
     </LineIds>
   </POU>
