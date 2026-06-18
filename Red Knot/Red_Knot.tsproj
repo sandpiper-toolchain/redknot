@@ -2643,16 +2643,9 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{35F1EE57-8B64-404F-9A2B-38524D23373E}" Name="MotionControl" PrjFilePath="MotionControl\MotionControl.plcproj" TmcFilePath="MotionControl\MotionControl.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{C230B17E-3083-DCF9-11FC-D927E65E5058}" TmcPath="MotionControl\MotionControl.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{F860ED32-3F88-E002-BFCB-34B0F83FD35C}" TmcPath="MotionControl\MotionControl.tmc">
 					<Name>MotionControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
-					<Vars VarGrpType="2" ContextId="2" AreaNo="33">
-						<Name>CSVTask Outputs</Name>
-						<Var>
-							<Name>GVL_MOTION.xtraCon.AxisToCouple.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-					</Vars>
 					<Vars VarGrpType="1" ContextId="2" AreaNo="32">
 						<Name>CSVTask Inputs</Name>
 						<Var>
@@ -2667,10 +2660,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_DAQ.test2</Name>
 							<Type>STRING(80)</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MOTION.xtraCon.AxisToCouple.NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_SICK.SCAN_DONE</Name>
@@ -5888,7 +5877,7 @@ Bit 8 - 15 : reserved]]></Comment>
 							<SyncMan>001000012600010001000000800000010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000800000010001001122010000</SyncMan>
 							<SyncMan>00120c002400010003000000000000000c00001224010000</SyncMan>
-							<SyncMan>001918002000010004000000000000001400001920010000</SyncMan>
+							<SyncMan>00191c002000010004000000000000001400001920010000</SyncMan>
 							<Fmmu>0000000000000000001200020100000001000000000000000000000000000000</Fmmu>
 							<Fmmu>0000000000000000001900010100000002000000000000000000000000000000</Fmmu>
 							<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
@@ -5973,7 +5962,7 @@ Bit 14 - 15 : reserved]]></Comment>
 									<Type>INT</Type>
 								</Entry>
 							</Pdo>
-							<Pdo Name="DRV Info data 1 Channel 1" Index="#x1a04" Flags="#x0000">
+							<Pdo Name="DRV Info data 1 Channel 1" Index="#x1a04" Flags="#x0000" SyncMan="3">
 								<Entry Name="Info data 1" BitLen="16" Index="#x6010" Sub="#x12">
 									<Type>UINT</Type>
 								</Entry>
@@ -6387,7 +6376,7 @@ Bit 14 - 15 : reserved]]></Comment>
 									<Type>INT</Type>
 								</Entry>
 							</Pdo>
-							<Pdo Name="DRV Info data 1 Channel 2" Index="#x1a84" Flags="#x0000">
+							<Pdo Name="DRV Info data 1 Channel 2" Index="#x1a84" Flags="#x0000" SyncMan="3">
 								<Entry Name="Info data 1" BitLen="16" Index="#x6110" Sub="#x12">
 									<Type>UINT</Type>
 								</Entry>
@@ -7609,6 +7598,10 @@ Bit1: Value smaller than Limit2]]></Comment>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 4 (EK1200)^Term 5 (EL7062)">
 				<Link VarA="PlcTask Inputs^MAIN.InfoData1T5Ch1" VarB="DRV Info data 1 Channel 1^Info data 1"/>
 				<Link VarA="PlcTask Inputs^MAIN.InfoData1T5Ch2" VarB="DRV Info data 1 Channel 2^Info data 1"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 4 (EK1200)^Term 6 (EL7062)">
+				<Link VarA="PlcTask Inputs^MAIN.InfoData1T6Ch1" VarB="DRV Info data 1 Channel 1^Info data 1"/>
+				<Link VarA="PlcTask Inputs^MAIN.InfoData1T6Ch2" VarB="DRV Info data 1 Channel 2^Info data 1"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 4 (EK1200)^Term 8 (EL3174-0090)">
 				<Link VarA="DAQ Inputs^DAQTask.EL3174.MDP5001_300_Input^MDP5001_300_AI_Standard_Channel_1_Status" VarB="AI Standard Channel 1^Status"/>

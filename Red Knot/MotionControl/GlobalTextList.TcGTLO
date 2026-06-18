@@ -521,6 +521,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"254"</v>
+              <v n="TextDefault">"Note: carriage offsets added to these values"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"320"</v>
               <v n="TextDefault">"Number of Script Runs"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -786,6 +791,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"604"</v>
+              <v n="TextDefault">"SICK"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"697"</v>
               <v n="TextDefault">"Sonar"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -891,6 +901,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"1675"</v>
+              <v n="TextDefault">"X Dist to HS"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"1001"</v>
               <v n="TextDefault">"X Max"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -981,6 +996,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"1458"</v>
+              <v n="TextDefault">"Y Dist to HS"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"1376"</v>
               <v n="TextDefault">"Y Max"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -1048,6 +1068,11 @@
             <o>
               <v n="TextID">"343"</v>
               <v n="TextDefault">"z beh"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1751"</v>
+              <v n="TextDefault">"Z Dist to HS"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
