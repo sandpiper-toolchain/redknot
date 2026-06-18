@@ -1555,7 +1555,7 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000001}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..0] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000001}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..0] OF BIT</Name>
 			<BitSize>1</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -1573,7 +1573,7 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000005}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..4] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000005}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..4] OF BIT</Name>
 			<BitSize>5</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -2028,7 +2028,7 @@ External Setpoint Generation:
 	</ImageDatas>
 	<Project ProjectGUID="{3341E311-E9ED-4CA1-8760-253F2F924762}" Target64Bit="true" AutoPrioManagement="true" ShowHideConfigurations="#x2c6">
 		<System>
-			<Settings MaxCpus="4" NonWinCpus="2" MaxStackSize="512">
+			<Settings MaxCpus="4" NonWinCpus="2" MaxStackSize="4096">
 				<Cpu CpuId="2" CpuMemorySize="#x400000"/>
 				<Cpu CpuId="3" BaseTime="5000" CpuMemorySize="#x400000"/>
 				<IoIdleTask Priority="12"/>
@@ -2643,15 +2643,11 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{35F1EE57-8B64-404F-9A2B-38524D23373E}" Name="MotionControl" PrjFilePath="MotionControl\MotionControl.plcproj" TmcFilePath="MotionControl\MotionControl.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{B935BA8E-5032-B0D9-01AE-4D84BB0EE428}" TmcPath="MotionControl\MotionControl.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{C230B17E-3083-DCF9-11FC-D927E65E5058}" TmcPath="MotionControl\MotionControl.tmc">
 					<Name>MotionControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" ContextId="2" AreaNo="33">
 						<Name>CSVTask Outputs</Name>
-						<Var>
-							<Name>MAIN.extra.PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
 						<Var>
 							<Name>GVL_MOTION.xtraCon.AxisToCouple.PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
@@ -2660,17 +2656,9 @@ External Setpoint Generation:
 					<Vars VarGrpType="1" ContextId="2" AreaNo="32">
 						<Name>CSVTask Inputs</Name>
 						<Var>
-							<Name>MAIN.extra.NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
 							<Name>MAIN.EL3174Ch1I</Name>
 							<Comment><![CDATA[current or voltage input]]></Comment>
 							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.cpptest</Name>
-							<Type>UDINT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_DAQ.cpptest</Name>
@@ -2685,13 +2673,21 @@ External Setpoint Generation:
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
-							<Name>GVL_SICK.init</Name>
+							<Name>GVL_SICK.SCAN_DONE</Name>
 							<Comment><![CDATA[outgoing]]></Comment>
-							<Type>LREAL</Type>
+							<Type>UDINT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_SICK.init_done</Name>
+							<Name>GVL_SICK.SWATH_CNT</Name>
+							<Type>UDINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_SICK.INIT_DONE</Name>
 							<Comment><![CDATA[incoming]]></Comment>
+							<Type>UDINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_SICK.DATA_DONE</Name>
 							<Type>UDINT</Type>
 						</Var>
 					</Vars>
@@ -2842,7 +2838,7 @@ External Setpoint Generation:
 			</Project>
 		</Plc>
 		<Io AddIoDescToArchive="true">
-			<Device Id="1" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="10.1.181.57.2.1" RemoteName="Device 1 (EtherCAT)" InfoImageId="3">
+			<Device Id="1" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="160.94.187.159.2.1" RemoteName="Device 1 (EtherCAT)" InfoImageId="3">
 				<Name>Device 1 (EtherCAT)</Name>
 				<AddressInfo>
 					<Ccat>
@@ -5050,6 +5046,32 @@ Bit 8 - 15 : reserved]]></Comment>
 								<OrderCode>EL7062</OrderCode>
 								<Name>Term 6 (EL7062)</Name>
 								<ProductRevision>EL7062-0000-0016</ProductRevision>
+								<WatchLog UpdateIntervalInMs="500">
+									<WatchLogItem>
+										<WatchLogParaCoE Index="4120" SubIndex="2"/>
+										<Alias>Type</Alias>
+									</WatchLogItem>
+									<WatchLogItem>
+										<WatchLogParaCoE Index="4120" SubIndex="4"/>
+										<Alias>Serial Nr</Alias>
+									</WatchLogItem>
+									<WatchLogItem>
+										<WatchLogParaCoE Index="4322" SubIndex="1"/>
+										<Alias>BIC</Alias>
+									</WatchLogItem>
+									<WatchLogItem>
+										<WatchLogParaCoE Index="4106" SubIndex="0"/>
+										<Alias>Firmware version</Alias>
+									</WatchLogItem>
+									<WatchLogItem>
+										<WatchLogParaCoE Index="63744" SubIndex="18"/>
+										<Alias>DC link voltage</Alias>
+									</WatchLogItem>
+									<WatchLogItem>
+										<WatchLogParaCoE Index="63744" SubIndex="17"/>
+										<Alias>Amplifier temperature</Alias>
+									</WatchLogItem>
+								</WatchLog>
 								<Inverter>
 									<Device>
 										<Name>DMInverterTypeDevice</Name>
@@ -5083,8 +5105,6 @@ Bit 8 - 15 : reserved]]></Comment>
 													<GroupType>AS20xx</GroupType>
 													<ElectricMotorType>AS2021-0Dx0</ElectricMotorType>
 													<MotorfeedbackType>Unkn#TTL-1024I-5V</MotorfeedbackType>
-													<MotorbrakeType/>
-													<AssemblyType/>
 													<VendorName>BECKHOFF</VendorName>
 													<IsAc>false</IsAc>
 													<ConstructType>4</ConstructType>
@@ -5298,32 +5318,26 @@ Bit 8 - 15 : reserved]]></Comment>
 														<Data type="int8" unitSiNumerator="second">2</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>PowerManagement_DelayTimeAfterPowerUp</Name>
 														<Data type="real64" unitSiNumerator="second">0.8</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>RelativePositonData_ResolutionPerRotation</Name>
 														<Data type="int32">1024</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>AbsolutePositionData_ResolutionSinglePos</Name>
 														<Data type="int16">0</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>AbsolutePositionData_ResolutionMultiPos</Name>
 														<Data type="int16">0</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>AbsolutePositionData_NumberOfClockCyclesForSinglePos</Name>
 														<Data type="int16">0</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>AbsolutePositionData_NumberOfClockCyclesForMultiPos</Name>
 														<Data type="int16">0</Data>
 													</Parameter>
@@ -5478,8 +5492,6 @@ Bit 8 - 15 : reserved]]></Comment>
 													<GroupType>AS20xx</GroupType>
 													<ElectricMotorType>AS2021-0Dx0</ElectricMotorType>
 													<MotorfeedbackType>Unkn#TTL-1024I-5V</MotorfeedbackType>
-													<MotorbrakeType/>
-													<AssemblyType/>
 													<VendorName>BECKHOFF</VendorName>
 													<IsAc>false</IsAc>
 													<ConstructType>4</ConstructType>
@@ -5693,32 +5705,26 @@ Bit 8 - 15 : reserved]]></Comment>
 														<Data type="int8" unitSiNumerator="second">2</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>PowerManagement_DelayTimeAfterPowerUp</Name>
 														<Data type="real64" unitSiNumerator="second">0.8</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>RelativePositonData_ResolutionPerRotation</Name>
 														<Data type="int32">1024</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>AbsolutePositionData_ResolutionSinglePos</Name>
 														<Data type="int16">0</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>AbsolutePositionData_ResolutionMultiPos</Name>
 														<Data type="int16">0</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>AbsolutePositionData_NumberOfClockCyclesForSinglePos</Name>
 														<Data type="int16">0</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>AbsolutePositionData_NumberOfClockCyclesForMultiPos</Name>
 														<Data type="int16">0</Data>
 													</Parameter>
@@ -5856,6 +5862,24 @@ Bit 8 - 15 : reserved]]></Comment>
 												</Filter>
 											</Controller>
 										</Block>
+										<WatchLog ChnId="1" UpdateIntervalInMs="500">
+											<WatchLogItem>
+												<WatchLogParaCoE Index="24848" SubIndex="1"/>
+												<Alias>Status word</Alias>
+											</WatchLogItem>
+											<WatchLogItem>
+												<WatchLogParaCoE Index="28944" SubIndex="3"/>
+												<Alias>Actual operation mode</Alias>
+											</WatchLogItem>
+											<WatchLogItem>
+												<WatchLogParaCoE Index="24848" SubIndex="7"/>
+												<Alias>Actual velocity</Alias>
+											</WatchLogItem>
+											<WatchLogItem>
+												<WatchLogParaCoE Index="24848" SubIndex="8"/>
+												<Alias>Actual torque</Alias>
+											</WatchLogItem>
+										</WatchLog>
 									</Channel>
 								</Inverter>
 							</TcDMDrive>
@@ -5863,8 +5887,8 @@ Bit 8 - 15 : reserved]]></Comment>
 						<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="47" FoeType="1" VendorId="#x00000002" ProductCode="#x1b963052" RevisionNo="#x00100000" BIC="1P271797SBTN999kriaa1KEL7062                        Q1    2P362502030016" InfoDataAddr="true" InfoDataSoeDS401="true" InfoDataDcTimes="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" SdoUploadWithMaxLength="true" CreateDeviceDataType="true" DeviceDataTypePerChannel="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL7062-0000 2Ch. Stepper motor output stage (48V, 3A)" Desc="EL7062" PortABoxInfo="#x01000005">
 							<SyncMan>001000012600010001000000800000010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000800000010001001122010000</SyncMan>
-							<SyncMan>001210002400010003000000000000000c00001224010000</SyncMan>
-							<SyncMan>001928002000010004000000000000001400001920010000</SyncMan>
+							<SyncMan>00120c002400010003000000000000000c00001224010000</SyncMan>
+							<SyncMan>001918002000010004000000000000001400001920010000</SyncMan>
 							<Fmmu>0000000000000000001200020100000001000000000000000000000000000000</Fmmu>
 							<Fmmu>0000000000000000001900010100000002000000000000000000000000000000</Fmmu>
 							<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
@@ -5949,7 +5973,7 @@ Bit 14 - 15 : reserved]]></Comment>
 									<Type>INT</Type>
 								</Entry>
 							</Pdo>
-							<Pdo Name="DRV Info data 1 Channel 1" Index="#x1a04" Flags="#x0000" SyncMan="3">
+							<Pdo Name="DRV Info data 1 Channel 1" Index="#x1a04" Flags="#x0000">
 								<Entry Name="Info data 1" BitLen="16" Index="#x6010" Sub="#x12">
 									<Type>UINT</Type>
 								</Entry>
@@ -5964,7 +5988,7 @@ Bit 14 - 15 : reserved]]></Comment>
 									<Type>DINT</Type>
 								</Entry>
 							</Pdo>
-							<Pdo Name="FB Touch probe status Channel 1" Index="#x1a07" Flags="#x0010" SyncMan="3">
+							<Pdo Name="FB Touch probe status Channel 1" Index="#x1a07" Flags="#x0010">
 								<Entry Name="Touch probe status__TP1 Enable" BitLen="1" Index="#x6001" Sub="#x01">
 									<Type>BIT</Type>
 								</Entry>
@@ -5996,7 +6020,7 @@ Bit 14 - 15 : reserved]]></Comment>
 									<Type>BIT</Type>
 								</Entry>
 							</Pdo>
-							<Pdo Name="FB Touch probe 1 pos position Channel 1" Index="#x1a08" Flags="#x0010" SyncMan="3">
+							<Pdo Name="FB Touch probe 1 pos position Channel 1" Index="#x1a08" Flags="#x0010">
 								<Entry Name="TP1 Pos position" BitLen="32" Index="#x6001" Sub="#x11">
 									<Type>UDINT</Type>
 								</Entry>
@@ -6363,7 +6387,7 @@ Bit 14 - 15 : reserved]]></Comment>
 									<Type>INT</Type>
 								</Entry>
 							</Pdo>
-							<Pdo Name="DRV Info data 1 Channel 2" Index="#x1a84" Flags="#x0000" SyncMan="3">
+							<Pdo Name="DRV Info data 1 Channel 2" Index="#x1a84" Flags="#x0000">
 								<Entry Name="Info data 1" BitLen="16" Index="#x6110" Sub="#x12">
 									<Type>UINT</Type>
 								</Entry>
@@ -6378,7 +6402,7 @@ Bit 14 - 15 : reserved]]></Comment>
 									<Type>DINT</Type>
 								</Entry>
 							</Pdo>
-							<Pdo Name="FB Touch probe status Channel 2" Index="#x1a87" Flags="#x0010" SyncMan="3">
+							<Pdo Name="FB Touch probe status Channel 2" Index="#x1a87" Flags="#x0010">
 								<Entry Name="Touch probe status__TP1 Enable" BitLen="1" Index="#x6101" Sub="#x01">
 									<Type>BIT</Type>
 								</Entry>
@@ -6410,7 +6434,7 @@ Bit 14 - 15 : reserved]]></Comment>
 									<Type>BIT</Type>
 								</Entry>
 							</Pdo>
-							<Pdo Name="FB Touch probe 1 pos position Channel 2" Index="#x1a88" Flags="#x0010" SyncMan="3">
+							<Pdo Name="FB Touch probe 1 pos position Channel 2" Index="#x1a88" Flags="#x0010">
 								<Entry Name="TP1 Pos position" BitLen="32" Index="#x6101" Sub="#x11">
 									<Type>UDINT</Type>
 								</Entry>
@@ -6785,7 +6809,7 @@ Bit 8 - 15 : reserved]]></Comment>
 									<Type>UDINT</Type>
 								</Entry>
 							</Pdo>
-							<Pdo Name="FB Touch probe control Channel 1" Index="#x1607" InOut="1" Flags="#x0010" SyncMan="2">
+							<Pdo Name="FB Touch probe control Channel 1" Index="#x1607" InOut="1" Flags="#x0010">
 								<Entry Name="Touch probe function__TP1 Enable" BitLen="1" Index="#x7001" Sub="#x01">
 									<Type>BIT</Type>
 								</Entry>
@@ -7015,7 +7039,7 @@ Bit 8 - 15 : reserved]]></Comment>
 									<Type>UDINT</Type>
 								</Entry>
 							</Pdo>
-							<Pdo Name="FB Touch probe control Channel 2" Index="#x1687" InOut="1" Flags="#x0010" SyncMan="2">
+							<Pdo Name="FB Touch probe control Channel 2" Index="#x1687" InOut="1" Flags="#x0010">
 								<Entry Name="Touch probe function__TP1 Enable" BitLen="1" Index="#x7101" Sub="#x01">
 									<Type>BIT</Type>
 								</Entry>
@@ -7558,28 +7582,9 @@ Bit1: Value smaller than Limit2]]></Comment>
 				<Link VarA="Drive^Outputs^Out^nCtrl2" VarB="DRV Controlword Channel 1^Controlword" Size="8" OffsB="8"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="DRV Target position Channel 1^Target position"/>
 				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="FB Position Channel 1^Position"/>
-				<Link VarA="Enc^Inputs^In^nDataIn3" VarB="FB Touch probe 1 pos position Channel 1^TP1 Pos position"/>
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
-				<Link VarA="Enc^Inputs^In^nState5" VarB="FB Touch probe status Channel 1^Touch probe status^TP1 Enable"/>
-				<Link VarA="Enc^Inputs^In^nState5" VarB="FB Touch probe status Channel 1^Touch probe status^TP1 Input" Size="1" OffsA="7"/>
-				<Link VarA="Enc^Inputs^In^nState5" VarB="FB Touch probe status Channel 1^Touch probe status^TP1 Neg value stored" Size="1" OffsA="2"/>
-				<Link VarA="Enc^Inputs^In^nState5" VarB="FB Touch probe status Channel 1^Touch probe status^TP1 Pos value stored" Size="1" OffsA="1"/>
-				<Link VarA="Enc^Inputs^In^nState6" VarB="FB Touch probe status Channel 1^Touch probe status^TP2 Enable"/>
-				<Link VarA="Enc^Inputs^In^nState6" VarB="FB Touch probe status Channel 1^Touch probe status^TP2 Input" Size="1" OffsA="7"/>
-				<Link VarA="Enc^Inputs^In^nState6" VarB="FB Touch probe status Channel 1^Touch probe status^TP2 Neg value stored" Size="1" OffsA="2"/>
-				<Link VarA="Enc^Inputs^In^nState6" VarB="FB Touch probe status Channel 1^Touch probe status^TP2 Pos value stored" Size="1" OffsA="1"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl5" VarB="FB Touch probe control Channel 1^Touch probe function^TP1 Continous" Size="1" OffsA="1"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl5" VarB="FB Touch probe control Channel 1^Touch probe function^TP1 Enable"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl5" VarB="FB Touch probe control Channel 1^Touch probe function^TP1 Enable neg edge" Size="1" OffsA="5"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl5" VarB="FB Touch probe control Channel 1^Touch probe function^TP1 Enable pos edge" Size="1" OffsA="4"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl5" VarB="FB Touch probe control Channel 1^Touch probe function^TP1 Trigger mode" Size="2" OffsA="2"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl6" VarB="FB Touch probe control Channel 1^Touch probe function^TP2 Continous" Size="1" OffsA="1"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl6" VarB="FB Touch probe control Channel 1^Touch probe function^TP2 Enable"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl6" VarB="FB Touch probe control Channel 1^Touch probe function^TP2 Enable neg edge" Size="1" OffsA="5"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl6" VarB="FB Touch probe control Channel 1^Touch probe function^TP2 Enable pos edge" Size="1" OffsA="4"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl6" VarB="FB Touch probe control Channel 1^Touch probe function^TP2 Trigger mode" Size="2" OffsA="2"/>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^zAxis">
@@ -7595,38 +7600,15 @@ Bit1: Value smaller than Limit2]]></Comment>
 				<Link VarA="Drive^Outputs^Out^nCtrl2" VarB="DRV Controlword Channel 2^Controlword" Size="8" OffsB="8"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="DRV Target position Channel 2^Target position"/>
 				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="FB Position Channel 2^Position"/>
-				<Link VarA="Enc^Inputs^In^nDataIn3" VarB="FB Touch probe 1 pos position Channel 2^TP1 Pos position"/>
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
-				<Link VarA="Enc^Inputs^In^nState5" VarB="FB Touch probe status Channel 2^Touch probe status^TP1 Enable"/>
-				<Link VarA="Enc^Inputs^In^nState5" VarB="FB Touch probe status Channel 2^Touch probe status^TP1 Input" Size="1" OffsA="7"/>
-				<Link VarA="Enc^Inputs^In^nState5" VarB="FB Touch probe status Channel 2^Touch probe status^TP1 Neg value stored" Size="1" OffsA="2"/>
-				<Link VarA="Enc^Inputs^In^nState5" VarB="FB Touch probe status Channel 2^Touch probe status^TP1 Pos value stored" Size="1" OffsA="1"/>
-				<Link VarA="Enc^Inputs^In^nState6" VarB="FB Touch probe status Channel 2^Touch probe status^TP2 Enable"/>
-				<Link VarA="Enc^Inputs^In^nState6" VarB="FB Touch probe status Channel 2^Touch probe status^TP2 Input" Size="1" OffsA="7"/>
-				<Link VarA="Enc^Inputs^In^nState6" VarB="FB Touch probe status Channel 2^Touch probe status^TP2 Neg value stored" Size="1" OffsA="2"/>
-				<Link VarA="Enc^Inputs^In^nState6" VarB="FB Touch probe status Channel 2^Touch probe status^TP2 Pos value stored" Size="1" OffsA="1"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl5" VarB="FB Touch probe control Channel 2^Touch probe function^TP1 Continous" Size="1" OffsA="1"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl5" VarB="FB Touch probe control Channel 2^Touch probe function^TP1 Enable"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl5" VarB="FB Touch probe control Channel 2^Touch probe function^TP1 Enable neg edge" Size="1" OffsA="5"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl5" VarB="FB Touch probe control Channel 2^Touch probe function^TP1 Enable pos edge" Size="1" OffsA="4"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl5" VarB="FB Touch probe control Channel 2^Touch probe function^TP1 Trigger mode" Size="2" OffsA="2"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl6" VarB="FB Touch probe control Channel 2^Touch probe function^TP2 Continous" Size="1" OffsA="1"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl6" VarB="FB Touch probe control Channel 2^Touch probe function^TP2 Enable"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl6" VarB="FB Touch probe control Channel 2^Touch probe function^TP2 Enable neg edge" Size="1" OffsA="5"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl6" VarB="FB Touch probe control Channel 2^Touch probe function^TP2 Enable pos edge" Size="1" OffsA="4"/>
-				<Link VarA="Enc^Outputs^Out^nCtrl6" VarB="FB Touch probe control Channel 2^Touch probe function^TP2 Trigger mode" Size="2" OffsA="2"/>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TIPC^MotionControl^MotionControl Instance">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 4 (EK1200)^Term 5 (EL7062)">
 				<Link VarA="PlcTask Inputs^MAIN.InfoData1T5Ch1" VarB="DRV Info data 1 Channel 1^Info data 1"/>
 				<Link VarA="PlcTask Inputs^MAIN.InfoData1T5Ch2" VarB="DRV Info data 1 Channel 2^Info data 1"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 4 (EK1200)^Term 6 (EL7062)">
-				<Link VarA="PlcTask Inputs^MAIN.InfoData1T6Ch1" VarB="DRV Info data 1 Channel 1^Info data 1"/>
-				<Link VarA="PlcTask Inputs^MAIN.InfoData1T6Ch2" VarB="DRV Info data 1 Channel 2^Info data 1"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 4 (EK1200)^Term 8 (EL3174-0090)">
 				<Link VarA="DAQ Inputs^DAQTask.EL3174.MDP5001_300_Input^MDP5001_300_AI_Standard_Channel_1_Status" VarB="AI Standard Channel 1^Status"/>
