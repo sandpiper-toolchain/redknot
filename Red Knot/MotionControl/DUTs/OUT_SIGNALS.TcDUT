@@ -10,8 +10,8 @@ STRUCT
 	PositionOut				:LREAL;
 	HaltDone				:BOOL;
 	AxisCoupled				:BOOL;
+	SetPosDone				:BOOL;
 END_STRUCT
-END_TYPE
-]]></Declaration>
+END_TYPE]]></Declaration>
   </DUT>
 </TcPlcObject>

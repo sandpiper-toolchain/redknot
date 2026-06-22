@@ -131,6 +131,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"687"</v>
+              <v n="TextDefault">"Axis to Trigger On (NO SICK)"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"1705"</v>
               <v n="TextDefault">"Basin Control"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -793,6 +798,16 @@
             <o>
               <v n="TextID">"604"</v>
               <v n="TextDefault">"SICK"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1746"</v>
+              <v n="TextDefault">"SICK (X axis)"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"718"</v>
+              <v n="TextDefault">"SICK (x axis)"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
