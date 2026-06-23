@@ -224,6 +224,7 @@ IF GVL_MOTION.EXT_CTR.CMDRUN THEN
 ELSE
 	GVL_MOTION.CurInstruction				:= 0;
 	GVL_MOTION.InstructionState				:= 0;
+	GVL_SICK.SICK_setup						:= FALSE;
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
@@ -276,7 +277,9 @@ END_IF]]></ST>
       <LineId Id="458" Count="4" />
       <LineId Id="456" Count="0" />
       <LineId Id="314" Count="3" />
-      <LineId Id="324" Count="2" />
+      <LineId Id="324" Count="1" />
+      <LineId Id="696" Count="0" />
+      <LineId Id="326" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

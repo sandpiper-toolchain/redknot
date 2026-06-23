@@ -10,6 +10,8 @@ VAR
 	(*set to true during daq instruction when future daq instructions are detected. delay daq execution until last daq instruction in script*)
 	DAQ_HOLD	:BOOL	:= FALSE;
 	dataclr		:BOOL	:= FALSE;
+	
+	SICK_CPP	:NT_StartProcess; //run SICK_Control CPP 
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -110,7 +112,9 @@ CASE GVL_MOTION.InstructionState OF
 						GVL_MOTION.xCon.Execute_MABS						:= TRUE;
 						GVL_MOTION.yCon.Execute_MABS						:= TRUE;
 						GVL_MOTION.zCon.Execute_MABS						:= TRUE;
-						IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none THEN
+						IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none
+						OR GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_SICK
+						THEN
 							GVL_DAQ.INDEX_COLLECTOR[GVL_DAQ.PASS_INDEX]		:= GVL_DAQ.DATA_INDEX;
 							GVL_DAQ.DAQ_CTR_INT.Measure_Run_Time			:= TRUE; //start time collection for DAQ pass
 							GVL_MOTION.InstructionState 					:= 3;
@@ -166,7 +170,9 @@ CASE GVL_MOTION.InstructionState OF
 						GVL_MOTION.xCon.Execute_MREL						:= TRUE;
 						GVL_MOTION.yCon.Execute_MREL						:= TRUE;
 						GVL_MOTION.zCon.Execute_MREL						:= TRUE;
-						IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none THEN
+						IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none
+						OR GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_SICK 
+						THEN
 							GVL_DAQ.INDEX_COLLECTOR[GVL_DAQ.PASS_INDEX]		:= GVL_DAQ.DATA_INDEX;
 							GVL_DAQ.DAQ_CTR_INT.Measure_Run_Time			:= TRUE; //start time collection for DAQ pass
 							GVL_MOTION.InstructionState 					:= 3;
@@ -269,6 +275,8 @@ CASE GVL_MOTION.InstructionState OF
 			DataTrigger.x: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger				:= 1;
 			DataTrigger.y: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger				:= 2;
 			DataTrigger.z: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger				:= 3;
+			DataTrigger.timed: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger			:= 4;
+			
 				
 		END_CASE
 		
@@ -276,7 +284,9 @@ CASE GVL_MOTION.InstructionState OF
 			GVL_MOTION.xCon.Execute_MABS 									:= TRUE;
 			GVL_MOTION.yCon.Execute_MABS 									:= TRUE;		
 			GVL_MOTION.zCon.Execute_MABS 									:= TRUE;
-			IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none THEN
+			IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none
+			OR GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_SICK
+			THEN
 				GVL_MOTION.InstructionState 								:= 3;
 			ELSE
 				GVL_MOTION.InstructionState 								:= 1;	
@@ -317,6 +327,24 @@ CASE GVL_MOTION.InstructionState OF
 		GVL_MOTION.InstructionState 										:= 2;
 		
 	END_IF
+	
+	//call SICK cpp program
+	//need to reset GVL_DAQ.PASS_INDEX outside of ClearData() for sick
+	// SICK_setup reset in MAIN
+	IF NOT GVL_SICK.SICK_setup THEN
+		GVL_SICK.SICK_setup													:= TRUE;
+		//need to set basin/script as string
+		GVL_SICK.SWATH_CNT													:= TO_UDINT(GVL_DAQ.PASS_INDEX);
+		GVL_SICK.BASIN														:= GVL_MOTION.Basin;
+		GVL_SICK.SCRIPT														:= GVL_MOTION.EXT_CTR.SCRIPTNAME;
+		
+		//Release seems to skip over while loop waiting for SCAN_DONE 
+		//must be called from its own directory to load icx params
+		SICK_CPP( PATHSTR:= 'C:\SICK_Control\Debug\SICK_Control.exe', DIRNAME:= 'C:\SICK_Control\Debug', START:= TRUE);
+		SICK_CPP( START:= FALSE);
+		
+		//still need init_done and data_done controls
+	END_IF
 
 	//motion complete
 	IF GVL_MOTION.xOut.MoveDone AND GVL_MOTION.yOut.MoveDone AND GVL_MOTION.zOut.MoveDone THEN
@@ -334,48 +362,48 @@ CASE GVL_MOTION.InstructionState OF
 			t2(IN := TRUE, PT := T#1MS);
 			IF t2.Q THEN
 				GVL_DAQ.PASS_INDEX											:= GVL_DAQ.PASS_INDEX + 1;
-				GVL_MOTION.xCon.Execute_MABS 									:= FALSE;
-				GVL_MOTION.yCon.Execute_MABS 									:= FALSE;
-				GVL_MOTION.zCon.Execute_MABS 									:= FALSE;
-				GVL_MOTION.xCon.Execute_MREL 									:= FALSE;
-				GVL_MOTION.yCon.Execute_MREL 									:= FALSE;	
-				GVL_MOTION.zCon.Execute_MREL 									:= FALSE;
+				GVL_MOTION.xCon.Execute_MABS 								:= FALSE;
+				GVL_MOTION.yCon.Execute_MABS 								:= FALSE;
+				GVL_MOTION.zCon.Execute_MABS 								:= FALSE;
+				GVL_MOTION.xCon.Execute_MREL 								:= FALSE;
+				GVL_MOTION.yCon.Execute_MREL 								:= FALSE;	
+				GVL_MOTION.zCon.Execute_MREL 								:= FALSE;
 				timer(IN := FALSE);
 				t2(IN := FALSE);
 				FOR index := GVL_MOTION.NextInstruction TO GVL_MOTION.ScriptEnd - 1 DO
 					IF GVL_MOTION.Script[index].DataTrigger <> DataTrigger.none THEN
-						DAQ_HOLD												:= TRUE;
+						DAQ_HOLD											:= TRUE;
 					END_IF
 					
 				END_FOR
 				IF NOT DAQ_HOLD THEN
-					GVL_MOTION.InstructionState 								:= 4;
-					DAQ_HOLD													:= FALSE;
+					GVL_MOTION.InstructionState 							:= 4;
+					DAQ_HOLD												:= FALSE;
 				ELSE	
-					DAQ_HOLD													:= FALSE;
+					DAQ_HOLD												:= FALSE;
 					IF GVL_MOTION.CurInstruction < (GVL_MOTION.ScriptEnd - 1) THEN
-						GVL_MOTION.CurInstruction 									:= GVL_MOTION.CurInstruction + 1; //queue next instruction
+						GVL_MOTION.CurInstruction 							:= GVL_MOTION.CurInstruction + 1; //queue next instruction
 						
-						GVL_MOTION.InstructionState 								:= 0;
+						GVL_MOTION.InstructionState 						:= 0;
 					ELSE
-						GVL_MOTION.CurInstruction 									:= 0;
+						GVL_MOTION.CurInstruction 							:= 0;
 						
-						GVL_MOTION.InstructionState 								:= 0;
+						GVL_MOTION.InstructionState 						:= 0;
 						IF NOT GVL_MOTION.EXT_CTR.CMDLOOP THEN
 							IF GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.SCRIPTITERATIONS THEN
-								GVL_MOTION.RUN_INDEX								:= 1;
-								//GVL_DAQ.PASS_INDEX									:= 0;
-								GVL_MOTION.EXT_CTR.CMDRUN 							:= FALSE;	 //command list executed
+								GVL_MOTION.RUN_INDEX						:= 1;
+								//GVL_DAQ.PASS_INDEX						:= 0;
+								GVL_MOTION.EXT_CTR.CMDRUN 					:= FALSE;	 //command list executed
 							ELSE
 								//append mode - keep incrementing PASS_INDEX until all script runs are complete
 								IF NOT GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
-									//GVL_DAQ.PASS_INDEX								:= 0;
+									//GVL_DAQ.PASS_INDEX					:= 0;
 								END_IF
-								GVL_MOTION.RUN_INDEX								:= GVL_MOTION.RUN_INDEX + 1;	
+								GVL_MOTION.RUN_INDEX						:= GVL_MOTION.RUN_INDEX + 1;	
 							END_IF
 							
 						ELSE
-							GVL_MOTION.RUN_INDEX									:= GVL_MOTION.RUN_INDEX + 1;
+							GVL_MOTION.RUN_INDEX							:= GVL_MOTION.RUN_INDEX + 1;
 						END_IF
 						
 					END_IF
@@ -429,7 +457,7 @@ CASE GVL_MOTION.InstructionState OF
 					ELSE
 						//append mode - keep incrementing PASS_INDEX until all script runs are complete
 						IF NOT GVL_DAQ.EXT_CTR.CMDDATAAPEND THEN
-							//GVL_DAQ.PASS_INDEX								:= 0;
+							//GVL_DAQ.PASS_INDEX							:= 0;
 						END_IF
 							GVL_MOTION.RUN_INDEX							:= GVL_MOTION.RUN_INDEX + 1;	
 					END_IF
@@ -459,7 +487,7 @@ CASE GVL_MOTION.InstructionState OF
 	ELSE
 		t3(IN := TRUE, PT := T#1MS);
 		IF t3.Q THEN
-			GVL_MOTION.InstructionState 										:= 4;
+			GVL_MOTION.InstructionState 									:= 4;
 			t3(IN := FALSE);	
 		END_IF
 	END_IF
@@ -537,6 +565,7 @@ END_CASE]]></ST>
       <LineId Id="1053" Count="0" />
       <LineId Id="216" Count="2" />
       <LineId Id="653" Count="0" />
+      <LineId Id="1108" Count="1" />
       <LineId Id="747" Count="0" />
       <LineId Id="848" Count="0" />
       <LineId Id="215" Count="0" />
@@ -571,6 +600,7 @@ END_CASE]]></ST>
       <LineId Id="1058" Count="2" />
       <LineId Id="1057" Count="0" />
       <LineId Id="694" Count="3" />
+      <LineId Id="1106" Count="1" />
       <LineId Id="748" Count="0" />
       <LineId Id="849" Count="0" />
       <LineId Id="698" Count="3" />
@@ -633,14 +663,19 @@ END_CASE]]></ST>
       <LineId Id="72" Count="0" />
       <LineId Id="88" Count="1" />
       <LineId Id="731" Count="0" />
-      <LineId Id="725" Count="5" />
+      <LineId Id="725" Count="4" />
+      <LineId Id="1105" Count="0" />
+      <LineId Id="1104" Count="0" />
+      <LineId Id="730" Count="0" />
       <LineId Id="724" Count="0" />
       <LineId Id="109" Count="0" />
       <LineId Id="73" Count="0" />
       <LineId Id="76" Count="0" />
       <LineId Id="125" Count="0" />
       <LineId Id="475" Count="0" />
-      <LineId Id="732" Count="3" />
+      <LineId Id="732" Count="0" />
+      <LineId Id="1110" Count="1" />
+      <LineId Id="733" Count="2" />
       <LineId Id="77" Count="0" />
       <LineId Id="736" Count="0" />
       <LineId Id="464" Count="0" />
@@ -662,6 +697,20 @@ END_CASE]]></ST>
       <LineId Id="713" Count="0" />
       <LineId Id="417" Count="0" />
       <LineId Id="195" Count="0" />
+      <LineId Id="1112" Count="1" />
+      <LineId Id="1117" Count="1" />
+      <LineId Id="1114" Count="1" />
+      <LineId Id="1119" Count="0" />
+      <LineId Id="1129" Count="0" />
+      <LineId Id="1120" Count="0" />
+      <LineId Id="1125" Count="0" />
+      <LineId Id="1128" Count="0" />
+      <LineId Id="1122" Count="0" />
+      <LineId Id="1126" Count="0" />
+      <LineId Id="1121" Count="0" />
+      <LineId Id="1124" Count="0" />
+      <LineId Id="1130" Count="1" />
+      <LineId Id="1116" Count="0" />
       <LineId Id="483" Count="0" />
       <LineId Id="421" Count="1" />
       <LineId Id="498" Count="0" />

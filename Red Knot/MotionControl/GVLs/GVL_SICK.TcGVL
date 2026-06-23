@@ -4,12 +4,17 @@
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
 	//outgoing
-	SCAN_DONE	AT %I* :UDINT	:= 0;
-	SWATH_CNT	AT %I* :UDINT	:= 0;
+	SCAN_DONE	AT %I*	:UDINT	:= 0;
+	SWATH_CNT	AT %I*	:UDINT	:= 0;
+	BASIN		AT %I*	:STRING;
+	SCRIPT		AT %I*	:STRING;	
 	
 	//incoming
-	INIT_DONE	AT %I* :UDINT	:= 0;
-	DATA_DONE	AT %I* :UDINT	:= 0;
+	INIT_DONE	AT %I*	:UDINT	:= 0;
+	DATA_DONE	AT %I*	:UDINT	:= 0;
+	
+	//internal
+	SICK_setup			:BOOL	:= FALSE;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
