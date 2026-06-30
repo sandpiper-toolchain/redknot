@@ -8,6 +8,9 @@ STRUCT
 	CMDDEL					:BOOL	:= FALSE; //delete instruction at end of script
 	CMDRUN					:BOOL	:= FALSE; //run script if all safety conditions are met (homed, hard stops located, x axes coupled, safe z set)
 	CMDHOME					:BOOL	:= FALSE; //run home routine
+	CMDHOMEX				:BOOL	:= FALSE;
+	CMDHOMEY				:BOOL	:= FALSE;
+	CMDHOMEZ				:BOOL	:= FALSE;
 	CMDSETZLIM				:BOOL	:= FALSE; //this will set the safe lower limit of z to where it is currently positioned
 	CMDFINDSTOPS			:BOOL	:= FALSE; //run find stops routine
 	CMDLOOP					:BOOL	:= FALSE; //sets script to run indefinitely and forces separate data files for each script run

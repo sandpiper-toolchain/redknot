@@ -45,8 +45,9 @@ END_VAR
 	END_IF
 	
 	5:
-		GVL_MOTION.xCon.Execute_MREL		:= TRUE;
-		GVL_MOTION.HomingState				:= 6;	
+	GVL_MOTION.xCon.Execute_MREL			:= TRUE;
+	GVL_MOTION.HomingState					:= 6;	
+	
 	6:
 	IF GVL_MOTION.xOut.MoveDone THEN
 		GVL_MOTION.xCon.Execute_MREL		:= FALSE;
@@ -78,12 +79,14 @@ END_VAR
 	10:
 	GVL_MOTION.HomingState					:= 0;
 	GVL_MOTION.xCon.ExecuteCouple			:= TRUE;
-	GVL_MOTION.HomeDone						:= TRUE;
+	GVL_MOTION.AxesLocated					:= TRUE;
 	GVL_MOTION.EXT_CTR.CMDHOME				:= FALSE;
 END_CASE]]></ST>
     </Implementation>
     <LineIds Name="HomeFixRack">
-      <LineId Id="1" Count="74" />
+      <LineId Id="1" Count="40" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="42" Count="33" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -66,7 +66,7 @@ GVL_MOTION.STATUS.yVelOut					:= GVL_MOTION.yOut.VelocityOut;
 GVL_MOTION.STATUS.zPosOut					:= GVL_MOTION.zOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[2];
 GVL_MOTION.STATUS.zVelOut					:= GVL_MOTION.zOut.VelocityOut;
 GVL_MOTION.STATUS.HardStopLocations			:= GVL_MOTION.HardStopLocations;
-GVL_MOTION.STATUS.HomeDone					:= GVL_MOTION.HomeDone;
+GVL_MOTION.STATUS.AxesLocated				:= GVL_MOTION.AxesLocated;
 GVL_MOTION.STATUS.zSafeSet					:= GVL_MOTION.zSafeSet;			
 GVL_MOTION.STATUS.HaltDone					:= GVL_MOTION.xOut.HaltDone;
 GVL_MOTION.STATUS.PowerError				:= GVL_MOTION.xOut.PowerError OR GVL_MOTION.yOut.PowerError	OR
@@ -183,23 +183,46 @@ IF GVL_MOTION.EXT_CTR.CMDHOME THEN
 	HomeFixRack();
 END_IF
 
+IF GVL_MOTION.EXT_CTR.CMDHOMEX THEN
+	HomeX();
+END_IF
+
+IF GVL_MOTION.EXT_CTR.CMDHOMEY THEN
+	HomeY();
+END_IF
+
+IF GVL_MOTION.EXT_CTR.CMDHOMEZ THEN
+	HomeFixRack();
+END_IF
+
 IF GVL_MOTION.EXT_CTR.SETXPOS THEN
 	GVL_MOTION.EXT_CTR.SETXPOS				:= FALSE;
 	GVL_MOTION.xCon.Execute_SPOS			:= TRUE;
 END_IF
+IF GVL_MOTION.xOut.SetPosDone THEN
+	GVL_MOTION.xCon.Execute_SPOS			:= FALSE;	
+END_IF
+
 IF GVL_MOTION.EXT_CTR.SETYPOS THEN
 	GVL_MOTION.EXT_CTR.SETYPOS				:= FALSE;
 	GVL_MOTION.yCon.Execute_SPOS			:= TRUE;
 END_IF
+IF GVL_MOTION.yOut.SetPosDone THEN
+	GVL_MOTION.yCon.Execute_SPOS			:= FALSE;	
+END_IF
+
 IF GVL_MOTION.EXT_CTR.SETZPOS THEN
 	GVL_MOTION.EXT_CTR.SETZPOS				:= FALSE;
 	GVL_MOTION.zCon.Execute_SPOS			:= TRUE;
 END_IF
+IF GVL_MOTION.zOut.SetPosDone THEN
+	GVL_MOTION.zCon.Execute_SPOS			:= FALSE;	
+END_IF
  
 //needs to come after set position or axis reset is executed
- HardStopsNew();
+//HardStopsNew();
 
-//command queue logic						 
+//script control logic						 
 IF GVL_MOTION.EXT_CTR.CMDADD THEN
 	AddCommand(); //toggler
 END_IF
@@ -212,8 +235,8 @@ END_IF
 
 //require safe z limit, home complete, x axes coupled, hard stops located, basin set
 //check before RunCommands is executed
-IF (NOT GVL_MOTION.zSafeSet) OR (NOT GVL_MOTION.HomeDone)
-OR (NOT GVL_MOTION.xOut.AxisCoupled) OR (NOT GVL_MOTION.STATUS.HardStopLoc)
+IF (NOT GVL_MOTION.zSafeSet) OR (NOT GVL_MOTION.AxesLocated)
+OR (NOT GVL_MOTION.xOut.AxisCoupled) //OR (NOT GVL_MOTION.STATUS.HardStopLoc)
 OR (NOT GVL_MOTION.STATUS.BasinSet) THEN
 	GVL_MOTION.CurInstruction				:= 0;
 	GVL_MOTION.EXT_CTR.CMDRUN				:= FALSE;	//maybe change this to internal variable
@@ -225,6 +248,7 @@ ELSE
 	GVL_MOTION.CurInstruction				:= 0;
 	GVL_MOTION.InstructionState				:= 0;
 	GVL_SICK.SICK_setup						:= FALSE;
+	GVL_SICK.SCAN_DONE						:= 0;
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
@@ -264,8 +288,23 @@ END_IF]]></ST>
       <LineId Id="592" Count="0" />
       <LineId Id="583" Count="2" />
       <LineId Id="582" Count="0" />
-      <LineId Id="598" Count="11" />
+      <LineId Id="711" Count="2" />
+      <LineId Id="710" Count="0" />
+      <LineId Id="715" Count="2" />
+      <LineId Id="714" Count="0" />
+      <LineId Id="719" Count="2" />
+      <LineId Id="718" Count="0" />
+      <LineId Id="598" Count="4" />
+      <LineId Id="697" Count="0" />
+      <LineId Id="699" Count="2" />
+      <LineId Id="603" Count="3" />
+      <LineId Id="704" Count="1" />
+      <LineId Id="703" Count="0" />
+      <LineId Id="702" Count="0" />
+      <LineId Id="607" Count="2" />
       <LineId Id="597" Count="0" />
+      <LineId Id="707" Count="1" />
+      <LineId Id="706" Count="0" />
       <LineId Id="447" Count="0" />
       <LineId Id="612" Count="0" />
       <LineId Id="611" Count="0" />
@@ -279,6 +318,7 @@ END_IF]]></ST>
       <LineId Id="314" Count="3" />
       <LineId Id="324" Count="1" />
       <LineId Id="696" Count="0" />
+      <LineId Id="709" Count="0" />
       <LineId Id="326" Count="0" />
     </LineIds>
   </POU>

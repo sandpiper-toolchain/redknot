@@ -4,14 +4,16 @@
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
 	//outgoing
-	SCAN_DONE	AT %I*	:UDINT	:= 0;
-	SWATH_CNT	AT %I*	:UDINT	:= 0;
+	SCAN_DONE	AT %I*	:UDINT	:= 0; //send 1 to cpp when scan motion complete
+	SWATH_CNT	AT %I*	:UDINT	:= 0; //numbering for scans
+	SCAN_HEIGHT	AT %I*	:UDINT	:= 0; //# profiles per buffer. 1-65535
+	CNT_PER_REV	AT %I*	:UDINT	:= 0; //# encoder cnts before trigger 1-65535
 	BASIN		AT %I*	:STRING;
 	SCRIPT		AT %I*	:STRING;	
 	
 	//incoming
-	INIT_DONE	AT %I*	:UDINT	:= 0;
-	DATA_DONE	AT %I*	:UDINT	:= 0;
+	INIT_DONE	AT %I*	:UDINT	:= 0; //cpp sets to 1 when ready to start scan
+	DATA_DONE	AT %I*	:UDINT	:= 0; //cpp sets to 1 when data is processed and script can proceed
 	
 	//internal
 	SICK_setup			:BOOL	:= FALSE;

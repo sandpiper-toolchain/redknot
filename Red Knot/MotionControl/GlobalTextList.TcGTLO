@@ -401,6 +401,16 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"846"</v>
+              <v n="TextDefault">"Home Y"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"185"</v>
+              <v n="TextDefault">"Home Z"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"689"</v>
               <v n="TextDefault">"Homing Routine"</v>
               <l n="LanguageTexts" t="ArrayList" />

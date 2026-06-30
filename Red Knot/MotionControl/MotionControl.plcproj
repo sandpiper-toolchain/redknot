@@ -121,7 +121,13 @@
     <Compile Include="POUs\HomeFixRack.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\HomingRoutine.TcPOU">
+    <Compile Include="POUs\HomeX.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\HomeY.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\HomeZ.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\JsonSaxHandler.TcPOU">

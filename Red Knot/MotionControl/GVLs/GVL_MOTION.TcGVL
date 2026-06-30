@@ -55,12 +55,10 @@ VAR_GLOBAL PERSISTENT
 	xCOut					:OUT_SIGNALS;
 	yOut					:OUT_SIGNALS;	
 	zOut					:OUT_SIGNALS;
-	xtraOut					:OUT_SIGNALS;
 	xHomeStatus				:MOTION_FB_STATUS;
 	xCHomeStatus			:MOTION_FB_STATUS;
 	yHomeStatus				:MOTION_FB_STATUS;
 	zHomeStatus				:MOTION_FB_STATUS;
-	xtraHomeStatus			:MOTION_FB_STATUS;
 	
 	CurInstruction			:INT						:= 0; //current instruction
 	NextInstruction			:INT; //only for display
@@ -89,7 +87,10 @@ VAR_GLOBAL PERSISTENT
 END_VAR
 
 VAR_GLOBAL
-	HomeDone				:BOOL						:= FALSE;
+	AxesLocated				:BOOL						:= FALSE;
+	xLocated				:BOOL						:= FALSE;
+	yLocated				:BOOL						:= FALSE;
+	zLocated				:BOOL						:= FALSE;
 	zSafeSet				:BOOL						:= FALSE;							
 END_VAR]]></Declaration>
   </GVL>

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="HomeY" Id="{7c5c1c76-32bb-41cd-a301-41d8089fc2c6}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM HomeY
+VAR
+	state	:INT	:= 0;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE state OF
+	0:
+	GVL_MOTION.yCon.Execute_HOME		:= TRUE;
+	state								:= 1;
+	
+	1:
+	IF GVL_MOTION.yHomeStatus.Done THEN
+		GVL_MOTION.yCon.Execute_HOME	:= FALSE;
+		GVL_MOTION.yLocated				:= TRUE;
+		state							:= 0;
+		GVL_MOTION.EXT_CTR.CMDHOMEY		:= FALSE;
+	END_IF
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="HomeY">
+      <LineId Id="1" Count="12" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
