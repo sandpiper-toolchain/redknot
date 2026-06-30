@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="CreateBasin" Id="{d0232615-ad9b-44bb-bd96-662b703124b8}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM CreateBasin
 VAR
@@ -19,7 +19,7 @@ END_VAR
 		GVL_MOTION.EXT_CTR.BASINCTR			:= FALSE;
 		GVL_MOTION.STATUS.BasinSet			:= FALSE;
 		GVL_MOTION.STATUS.Basin_Set_Err		:= FALSE;
-		IF GVL_MOTION.STATUS.HardStopLoc AND GVL_MOTION.EXT_CTR.BASINNAME <> '' THEN
+		IF GVL_MOTION.EXT_CTR.BASINNAME <> '' THEN
 			GVL_MOTION.Basin.xMin			:= GVL_MOTION.CARRIAGE_OFFSETS[0];
 			GVL_MOTION.Basin.xMax			:= GVL_MOTION.HardStopLocations[0] + GVL_MOTION.CARRIAGE_OFFSETS[0];
 			GVL_MOTION.Basin.yMin			:= GVL_MOTION.CARRIAGE_OFFSETS[1];
@@ -81,8 +81,5 @@ END_VAR
 	
 END_CASE]]></ST>
     </Implementation>
-    <LineIds Name="CreateBasin">
-      <LineId Id="1" Count="72" />
-    </LineIds>
   </POU>
 </TcPlcObject>

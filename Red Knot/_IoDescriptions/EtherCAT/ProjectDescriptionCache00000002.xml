@@ -6,6 +6,7 @@
 		<ImageData16x14>424de6000000000000007600000028000000100000000e000000010004000000000070000000120b0000120b0000100000001000000000000000000080000080000000808000800000008000800080800000c0c0c000808080000000ff0000ff000000ffff00ff000000ff00ff00ffff0000ffffff009d9dd99dd9ddd9dd9d9d9dd9d9ddd9dd999d9dd9d999d9999d9d9dd9d9ddd9dd9d9dd99dd999d999dddddddddddddddd88888888888888888888888888888888dddddddddddddddd999d999dd99dd9d99d9d9ddd9dd9d9d999dd999d9dddd99d9d9d9ddd9dd9d99d999d999dd99dd9d9</ImageData16x14>
 	</Vendor>
 	<Descriptions>
+		<Images/>
 		<Groups>
 			<Group SortOrder="391">
 				<Type>SystemBk</Type>
@@ -15,15 +16,15 @@
 			</Group>
 			<Group SortOrder="330">
 				<Type>AnaIn</Type>
-				<Name LcId="1031">Analoge Eingangsklemmen (EL3xxx)</Name>
-				<Name LcId="1033">Analog Input Terminals (EL3xxx)</Name>
+				<Name LcId="1031">Analoge Eingangsklemmen (ED3xxx, EL3xxx)</Name>
+				<Name LcId="1033">Analog Input Terminals (ED3xxx, EL3xxx)</Name>
 				<ImageData16x14>424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData16x14>
 			</Group>
 			<Group SortOrder="370">
 				<Type>DriveAxisTerminals</Type>
-				<Name LcId="1031">Antriebs- und Achsklemmen (EL7xxx)</Name>
-				<Name LcId="1033">Drive and Axis Terminals (EL7xxx)</Name>
-				<ImageData16x14>424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ff808080808080808080808080808080808080808080808080808080808080808080808080ff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0000000c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffc0c0c0c0c0c0000000000000000000000000000000000000000000c0c0c0c0c0c0808080007fff007fff007fff007fffc0c0c0c0c0c00000000000000000000000000000000000000000000000ffc0c0c0808080007fff007fff007fff007fffc0c0c0c0c0c0000000000000000000000000000000000000000000c0c0c0c0c0c0808080007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0000000c0c0c0c0c0c0000000c0c0c0c0c0c0808080007fff007fff007fff007fffc0c0c0c0c0c0000000000000000000000000c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080</ImageData16x14>
+				<Name LcId="1031">Antriebs- und Achsklemmen (ED7xxx, EL7xxx)</Name>
+				<Name LcId="1033">Drive and Axis Terminals (ED7xxx, EL7xxx)</Name>
+				<ImageData16x14>424dd6020000000000003600000028000000100000000e0000000100180000000000a002000000000000000000000000000000000000ff00ffff00ffff00ffff00ff808080808080808080808080808080808080808080808080808080808080808080808080ff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0000000c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffc0c0c0c0c0c0000000000000000000000000000000000000000000c0c0c0c0c0c0808080007fff007fff007fff007fffc0c0c0c0c0c00000000000000000000000000000000000000000000000ffc0c0c0808080007fff007fff007fff007fffc0c0c0c0c0c0000000000000000000000000000000000000000000c0c0c0c0c0c0808080007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0000000c0c0c0c0c0c0000000c0c0c0c0c0c0808080007fff007fff007fff007fffc0c0c0c0c0c0000000000000000000000000c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080</ImageData16x14>
 			</Group>
 			<Group SortOrder="390">
 				<Type>System</Type>
@@ -608,253 +609,6 @@ Bit1: Value smaller than Limit2</Comment>
 						<ProfileNo>5001</ProfileNo>
 						<AddInfo>750</AddInfo>
 					</ChannelInfo>
-					<DiagMessages>
-						<DiagMessage>
-							<TextId>#x4101</TextId>
-							<MessageText LcId="1031">Verstärker-Übertemperatur</MessageText>
-							<MessageText LcId="1033">Amplifier-Overtemperature</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x4102</TextId>
-							<MessageText LcId="1031">PDO-Konfiguration ist zur gewählten Betriebsart nicht kompatibel</MessageText>
-							<MessageText LcId="1033">PDO-configuration is incompatible to the selected mode of operation</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x4103</TextId>
-							<MessageText LcId="1031">Unterspannung Us</MessageText>
-							<MessageText LcId="1033">Undervoltage Us</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x4104</TextId>
-							<MessageText LcId="1031">Überspannung Us</MessageText>
-							<MessageText LcId="1033">Overvoltage Us</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x410b</TextId>
-							<MessageText LcId="1031">Ausmaskierter Fehler erkannt</MessageText>
-							<MessageText LcId="1033">Error detected, but disabled by suppression mask</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x4400</TextId>
-							<MessageText LcId="1031">Abgleichsdaten fehlerhaft/nicht vorhanden</MessageText>
-							<MessageText LcId="1033">Calibration data corrupted or missing</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x4411</TextId>
-							<MessageText LcId="1031">Unterspannung DC-Zwischenkreis</MessageText>
-							<MessageText LcId="1033">DC-Link undervoltage</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x4412</TextId>
-							<MessageText LcId="1031">Überspannung DC-Zwischenkreis</MessageText>
-							<MessageText LcId="1033">DC-Link overvoltage</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x441e</TextId>
-							<MessageText LcId="1031">Ungültige Konfiguration der Touchprobe-Eingänge</MessageText>
-							<MessageText LcId="1033">Invalid configuration of touchprobe inputs</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x4424</TextId>
-							<MessageText LcId="1031">Ungültiger Wert für Modes of operation</MessageText>
-							<MessageText LcId="1033">Modes of operation invalid</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8103</TextId>
-							<MessageText LcId="1031">Unterspannung Us</MessageText>
-							<MessageText LcId="1033">Undervoltage Us</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8104</TextId>
-							<MessageText LcId="1031">Verstärker-Übertemperatur</MessageText>
-							<MessageText LcId="1033">Amplifier-Overtemperature</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8105</TextId>
-							<MessageText LcId="1031">PD-Watchdog</MessageText>
-							<MessageText LcId="1033">PD-Watchdog</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8144</TextId>
-							<MessageText LcId="1031">Hardwarefehler (%d)</MessageText>
-							<MessageText LcId="1033">Hardware fault (%d)</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x817f</TextId>
-							<MessageText LcId="1031">Fehler: 0x%X, 0x%X, 0x%X</MessageText>
-							<MessageText LcId="1033">Error: 0x%X, 0x%X, 0x%X</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x81b0</TextId>
-							<MessageText LcId="1031">Inhalt von PDO 0x%X ist ungÃ¼ltig: Eintrag 0x%X:%X kann nicht verwendet werden</MessageText>
-							<MessageText LcId="1033">Content of PDO 0x%X is invalid: Item 0x%X:%X cannot be mapped</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x81b1</TextId>
-							<MessageText LcId="1031">Inhalt von PDO 0x%X ist ungÃ¼ltig: Eintrag 0x%X:%X hat eine falsche Lä®§e (%d Bit)</MessageText>
-							<MessageText LcId="1033">Content of PDO 0x%X is invalid: Item 0x%X:%X has an unsupported length (%d bit)</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8404</TextId>
-							<MessageText LcId="1031">Motor-Überstrom</MessageText>
-							<MessageText LcId="1033">Overcurrent</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8406</TextId>
-							<MessageText LcId="1031">Unterspannung DC-Zwischenkreis</MessageText>
-							<MessageText LcId="1033">Undervoltage DC-Link</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8407</TextId>
-							<MessageText LcId="1031">Überspannung DC-Zwischenkreis</MessageText>
-							<MessageText LcId="1033">Overvoltage DC-Link</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x840a</TextId>
-							<MessageText LcId="1031">Summenstrom überschritten</MessageText>
-							<MessageText LcId="1033">Overall current threshold exceeded</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x840b</TextId>
-							<MessageText LcId="1031">Kommutierungsfehler</MessageText>
-							<MessageText LcId="1033">Commutation error</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x840c</TextId>
-							<MessageText LcId="1031">Kabelbruch Motoranschluss</MessageText>
-							<MessageText LcId="1033">Motor not connected</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x840f</TextId>
-							<MessageText LcId="1031">Der konfigurierte Commutation Type erfordert einen Encoder, aber die Feedback-Schnittstelle ist deaktiviert.</MessageText>
-							<MessageText LcId="1033">Configured Commutation Type requires an encoder, but the feedback interface is disabled.</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8415</TextId>
-							<MessageText LcId="1031">Ungültiger Modulo-Bereich</MessageText>
-							<MessageText LcId="1033">Invalid modulo range</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8417</TextId>
-							<MessageText LcId="1031">Maximale Drehfeldfrequenz überschritten</MessageText>
-							<MessageText LcId="1033">Maximum rotating field velocity exceeded</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x841f</TextId>
-							<MessageText LcId="1031">Drehmomentbegrenzung zu gering</MessageText>
-							<MessageText LcId="1033">Torque limitation too low</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8420</TextId>
-							<MessageText LcId="1031">Teach-In Prozess %d fehlgeschlagen</MessageText>
-							<MessageText LcId="1033">Teach-In Process (%d) failed</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8421</TextId>
-							<MessageText LcId="1031">Teach-In Prozess Timeout (Zwischenkreis, ...)</MessageText>
-							<MessageText LcId="1033">Teach-In Process Timeout (DC-Link, ...)</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8422</TextId>
-							<MessageText LcId="1031">Antriebs-Konfiguration fehlt</MessageText>
-							<MessageText LcId="1033">Drive configuration missing</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8423</TextId>
-							<MessageText LcId="1031">Prozessdatenformat ungültig (Anzahl Singleturnbits+Multiturnbits != 32)</MessageText>
-							<MessageText LcId="1033">Invalid process data format (number of singleturn bits+multiturn bits != 32)</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8441</TextId>
-							<MessageText LcId="1031">Maximaler Schleppfehlerabstand überschritten</MessageText>
-							<MessageText LcId="1033">Maximum following error distance exceeded</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8442</TextId>
-							<MessageText LcId="1031">Encoder-Auflösung nicht ausreichend</MessageText>
-							<MessageText LcId="1033">Encoder-Resolution insufficient</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8443</TextId>
-							<MessageText LcId="1031">Kombination aus Mode of Operation und Commutation Type ist nicht zulässig</MessageText>
-							<MessageText LcId="1033">Combination of Mode of Operation and Commutation Type is invalid</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8449</TextId>
-							<MessageText LcId="1031">Sollposition außerhalb des Modulobereichs</MessageText>
-							<MessageText LcId="1033">Target position not in modulo range</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8450</TextId>
-							<MessageText LcId="1031">Ungültiger Start-Typ 0x%x</MessageText>
-							<MessageText LcId="1033">Invalid start type 0x%x</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8451</TextId>
-							<MessageText LcId="1031">Ungültiger Endschalter Zustand</MessageText>
-							<MessageText LcId="1033">Invalid limit switch level</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8452</TextId>
-							<MessageText LcId="1031">Antriebsfehler während der Positionierung</MessageText>
-							<MessageText LcId="1033">Drive error during positioning</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8453</TextId>
-							<MessageText LcId="1031">Latch-Einheit wird von mehreren Modulen zeitgleich genutzt</MessageText>
-							<MessageText LcId="1033">Latch unit will be used by multiple modules</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8454</TextId>
-							<MessageText LcId="1031">Antrieb nicht in Regelung</MessageText>
-							<MessageText LcId="1033">Drive not in control</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8455</TextId>
-							<MessageText LcId="1031">Ungültiger Wert für "Target acceleration"</MessageText>
-							<MessageText LcId="1033">Invalid value for "Target acceleration"</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8456</TextId>
-							<MessageText LcId="1031">Ungültiger Wert für "Target deceleration"</MessageText>
-							<MessageText LcId="1033">Invalid value for "Target deceleration"</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8457</TextId>
-							<MessageText LcId="1031">Ungültiger Wert für "Target velocity"</MessageText>
-							<MessageText LcId="1033">Invalid value for "Target velocity"</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8458</TextId>
-							<MessageText LcId="1031">Ungültiger Wert für "Target position"</MessageText>
-							<MessageText LcId="1033">Invalid value for "Target position"</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x8459</TextId>
-							<MessageText LcId="1031">Emergency Stop ist aktiv</MessageText>
-							<MessageText LcId="1033">Emergency stop active</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x845a</TextId>
-							<MessageText LcId="1031">Target position ist größer als der Modulofaktor</MessageText>
-							<MessageText LcId="1033">Target position exceeds Modulofactor</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x845b</TextId>
-							<MessageText LcId="1031">Antrieb darf nicht in Regelung sein</MessageText>
-							<MessageText LcId="1033">Drive must be disabled</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x845d</TextId>
-							<MessageText LcId="1031">Ungültiger Modulofaktor</MessageText>
-							<MessageText LcId="1033">Modulo factor invalid</MessageText>
-						</DiagMessage>
-						<DiagMessage>
-							<TextId>#x845e</TextId>
-							<MessageText LcId="1031">Ungültiges Zielpositionsfenster</MessageText>
-							<MessageText LcId="1033">Invalid target position window</MessageText>
-						</DiagMessage>
-					</DiagMessages>
 				</Profile>
 				<Fmmu>Outputs</Fmmu>
 				<Fmmu>Inputs</Fmmu>

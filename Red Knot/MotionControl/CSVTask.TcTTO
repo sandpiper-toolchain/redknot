@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <Task Name="CSVTask" Id="{2ce00ce6-909e-4cd6-889a-666ac7d4dd88}">
     <!--CycleTime in micro seconds.-->
     <CycleTime>1000</CycleTime>
-    <Priority>10</Priority>
+    <Priority>8</Priority>
     <PouCall>
       <Name>CSVWrite</Name>
     </PouCall>

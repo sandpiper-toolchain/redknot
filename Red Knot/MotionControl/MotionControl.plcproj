@@ -9,7 +9,7 @@
     <WriteProductVersion>true</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>MotionControl</Name>
-    <ProgramVersion>3.1.4026.18</ProgramVersion>
+    <ProgramVersion>3.1.4026.24</ProgramVersion>
     <Application>{17f40d5a-ff46-4566-b445-7d3a1f6da808}</Application>
     <TypeSystem>{f1289cf5-8958-4f56-a614-d8b5dcd558c2}</TypeSystem>
     <Implicit_Task_Info>{f3e6d22b-2b53-4e37-b6bd-a82db4f2acff}</Implicit_Task_Info>
@@ -23,9 +23,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CSVTask.TcTTO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DAQ.TcTTO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\BASIN.TcDUT">
@@ -103,19 +100,10 @@
     <Compile Include="POUs\DAQPassTime.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\DAQTask.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\DeleteLastInstruction.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\ClearScript.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\HardStops.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\HardStopsNew.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\HomeFixRack.TcPOU">

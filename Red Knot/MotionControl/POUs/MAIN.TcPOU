@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="MAIN" Id="{87b2b848-4606-4e60-8645-04a896b6e737}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
@@ -105,29 +105,11 @@ IF GVL_MOTION.EXT_CTR.CMDCOUPLE THEN
 		couplestate						:= 0;
 	END_CASE
 
-END_IF
-	
-//startup routine to retrieve position data if power unexpectedly lost
-IF NOT boot_done THEN
-	GVL_MOTION.EXT_CTR.POSX		:= TO_INT(GVL_MOTION.STATUS.xPosOut);
-	GVL_MOTION.EXT_CTR.POSY 	:= TO_INT(GVL_MOTION.STATUS.yPosOut);
-	GVL_MOTION.EXT_CTR.POSZ 	:= TO_INT(GVL_MOTION.STATUS.zPosOut);
-	GVL_MOTION.EXT_CTR.SETXPOS	:= TRUE;
-	GVL_MOTION.EXT_CTR.SETYPOS	:= TRUE;
-	GVL_MOTION.EXT_CTR.SETZPOS	:= TRUE;
-	IF GVL_MOTION.xOut.SetPosDone AND GVL_MOTION.yOut.SetPosDone AND GVL_MOTION.zOut.SetPosDone THEN
-		GVL_MOTION.EXT_CTR.SETXPOS	:= FALSE;
-		GVL_MOTION.EXT_CTR.SETYPOS	:= FALSE;
-		GVL_MOTION.EXT_CTR.SETZPOS	:= FALSE;
-		GVL_MOTION.EXT_CTR.POSX		:= 0;
-		GVL_MOTION.EXT_CTR.POSY		:= 0;
-		GVL_MOTION.EXT_CTR.POSZ		:= 0;
-		boot_done					:= TRUE;
-	END_IF
-END_IF				   						   
+END_IF		   						   
 
 //increasing jog speed may cause axis to lock up if it crashes into end stop
-IF NOT GVL_MOTION.EXT_CTR.CMDFINDSTOPS THEN
+//TODO IF inside basin THEN jog fast
+IF GVL_MOTION.EXT_CTR.CMDFINDSTOPS THEN
 	GVL_MOTION.xCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
 	GVL_MOTION.yCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
 	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
@@ -169,11 +151,6 @@ zAxisMoreLogic();
 //program to create basin coordinates
 CreateBasin();
 
-//stop data collection
-IF GVL_MOTION.STATUS.eStop THEN
-	GVL_DAQ.DAQ_CTR_INT.Activate_Trigger	:= DataTrigger.none;
-END_IF
-
 //clear all acquired data from memory
 IF GVL_DAQ.EXT_CTR.CMDDATACLR THEN
 	ClearData();
@@ -197,6 +174,7 @@ END_IF
 
 IF GVL_MOTION.EXT_CTR.SETXPOS THEN
 	GVL_MOTION.EXT_CTR.SETXPOS				:= FALSE;
+	GVL_MOTION.xCon.SetLocation				:= GVL_MOTION.EXT_CTR.POSX - TO_INT(GVL_MOTION.CARRIAGE_OFFSETS[0]);
 	GVL_MOTION.xCon.Execute_SPOS			:= TRUE;
 END_IF
 IF GVL_MOTION.xOut.SetPosDone THEN
@@ -205,6 +183,7 @@ END_IF
 
 IF GVL_MOTION.EXT_CTR.SETYPOS THEN
 	GVL_MOTION.EXT_CTR.SETYPOS				:= FALSE;
+	GVL_MOTION.yCon.SetLocation				:= GVL_MOTION.EXT_CTR.POSY - TO_INT(GVL_MOTION.CARRIAGE_OFFSETS[1]);
 	GVL_MOTION.yCon.Execute_SPOS			:= TRUE;
 END_IF
 IF GVL_MOTION.yOut.SetPosDone THEN
@@ -213,6 +192,7 @@ END_IF
 
 IF GVL_MOTION.EXT_CTR.SETZPOS THEN
 	GVL_MOTION.EXT_CTR.SETZPOS				:= FALSE;
+	GVL_MOTION.zCon.SetLocation				:= GVL_MOTION.EXT_CTR.POSZ - TO_INT(GVL_MOTION.CARRIAGE_OFFSETS[2]);
 	GVL_MOTION.zCon.Execute_SPOS			:= TRUE;
 END_IF
 IF GVL_MOTION.zOut.SetPosDone THEN
@@ -251,75 +231,5 @@ ELSE
 	GVL_SICK.SCAN_DONE						:= 0;
 END_IF]]></ST>
     </Implementation>
-    <LineIds Name="MAIN">
-      <LineId Id="232" Count="8" />
-      <LineId Id="422" Count="0" />
-      <LineId Id="241" Count="3" />
-      <LineId Id="614" Count="1" />
-      <LineId Id="613" Count="0" />
-      <LineId Id="576" Count="1" />
-      <LineId Id="575" Count="0" />
-      <LineId Id="617" Count="40" />
-      <LineId Id="616" Count="0" />
-      <LineId Id="678" Count="17" />
-      <LineId Id="677" Count="0" />
-      <LineId Id="659" Count="17" />
-      <LineId Id="245" Count="1" />
-      <LineId Id="248" Count="4" />
-      <LineId Id="471" Count="0" />
-      <LineId Id="473" Count="15" />
-      <LineId Id="472" Count="0" />
-      <LineId Id="539" Count="0" />
-      <LineId Id="256" Count="4" />
-      <LineId Id="581" Count="0" />
-      <LineId Id="361" Count="0" />
-      <LineId Id="360" Count="0" />
-      <LineId Id="503" Count="0" />
-      <LineId Id="442" Count="0" />
-      <LineId Id="441" Count="0" />
-      <LineId Id="278" Count="1" />
-      <LineId Id="283" Count="0" />
-      <LineId Id="579" Count="1" />
-      <LineId Id="578" Count="0" />
-      <LineId Id="587" Count="3" />
-      <LineId Id="586" Count="0" />
-      <LineId Id="591" Count="0" />
-      <LineId Id="593" Count="2" />
-      <LineId Id="592" Count="0" />
-      <LineId Id="583" Count="2" />
-      <LineId Id="582" Count="0" />
-      <LineId Id="711" Count="2" />
-      <LineId Id="710" Count="0" />
-      <LineId Id="715" Count="2" />
-      <LineId Id="714" Count="0" />
-      <LineId Id="719" Count="2" />
-      <LineId Id="718" Count="0" />
-      <LineId Id="598" Count="4" />
-      <LineId Id="697" Count="0" />
-      <LineId Id="699" Count="2" />
-      <LineId Id="603" Count="3" />
-      <LineId Id="704" Count="1" />
-      <LineId Id="703" Count="0" />
-      <LineId Id="702" Count="0" />
-      <LineId Id="607" Count="2" />
-      <LineId Id="597" Count="0" />
-      <LineId Id="707" Count="1" />
-      <LineId Id="706" Count="0" />
-      <LineId Id="447" Count="0" />
-      <LineId Id="612" Count="0" />
-      <LineId Id="611" Count="0" />
-      <LineId Id="610" Count="0" />
-      <LineId Id="304" Count="9" />
-      <LineId Id="455" Count="0" />
-      <LineId Id="457" Count="0" />
-      <LineId Id="463" Count="0" />
-      <LineId Id="458" Count="4" />
-      <LineId Id="456" Count="0" />
-      <LineId Id="314" Count="3" />
-      <LineId Id="324" Count="1" />
-      <LineId Id="696" Count="0" />
-      <LineId Id="709" Count="0" />
-      <LineId Id="326" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

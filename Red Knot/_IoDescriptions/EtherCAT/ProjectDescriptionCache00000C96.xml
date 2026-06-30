@@ -1,0 +1,922 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EtherCATInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="EtherCATInfo.xsd" Version="1.2">
+	<Vendor>
+		<Id>3222</Id>
+		<Name>Teknic, Inc.</Name>
+		<Comment><![CDATA[ClearPath EC]]></Comment>
+		<ImageData16x14>424de6000000000000007600000028000000100000000e000000010004000000000070000000120b0000120b000000000000000000000000000000008000008000000080800080000000800080008080000080808000c0c0c0000000ff0000ff000000ffff00ff000000ff00ff00ffff0000ffffff00dddddffffffdddddddddffffffffdddddddfffffff87fdddddfffffff8666fdddfff8fff866668fddff767f866668ffddf8666666667fffddff76666668ffffddfff766666fffffddffff866666ffffdddffff86666fffdddddffff8667ffdddddddffff88ffdddddddddffffffddddd</ImageData16x14>
+	</Vendor>
+	<Descriptions>
+		<Images/>
+		<Groups>
+			<Group>
+				<Type>ClearPath EC</Type>
+				<Name>ClearPath EC</Name>
+			</Group>
+		</Groups>
+		<Devices>
+			<Device Physics="YY">
+				<Type ProductCode="#x1" RevisionNo="#x2">ClearPath EtherCAT Integrated ServoMotor</Type>
+				<Name>ClearPath EC (CoE Rev 2)</Name>
+				<Info>
+					<Mailbox>
+						<Timeout>
+							<RequestTimeout>2000</RequestTimeout>
+							<ResponseTimeout>20000</ResponseTimeout>
+						</Timeout>
+					</Mailbox>
+					<Port>
+						<Type>MII</Type>
+						<Label>A</Label>
+					</Port>
+					<Port>
+						<Type>MII</Type>
+						<Label>B</Label>
+					</Port>
+					<VendorSpecific>
+						<TcSmExtension Guid="{35F950AC-C345-43FA-8AA9-F170E88E7EA0}"/>
+					</VendorSpecific>
+				</Info>
+				<GroupType>ClearPath EC</GroupType>
+				<Profile>
+					<ProfileNo>402</ProfileNo>
+					<DiagMessages>
+						<DiagMessage>
+							<TextId>#x6380</TextId>
+							<MessageText LcId="1033">Invalid EtherCAT Cycle Time - Must be a multiple of 62.5us</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#x6381</TextId>
+							<MessageText LcId="1033">SDO write failed - Probable cause: ClearView has Full Access of the drive</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xa000</TextId>
+							<MessageText LcId="1033">Transition 'Pre-Op' to 'Safe-Op' failed - Sync Manager length error</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xa001</TextId>
+							<MessageText LcId="1033">Transition 'Pre-Op' to 'Safe-Op' failed - Sync Manager address error</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xa002</TextId>
+							<MessageText LcId="1033">Transition 'Pre-Op' to 'Safe-Op' failed - Sync Manager settings error</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xa003</TextId>
+							<MessageText LcId="1033">Transition 'Pre-Op' to 'Safe-Op' failed - Sync Manager address ranges overlap</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xa011</TextId>
+							<MessageText LcId="1033">PDO mapping error - Unable to map object</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xa013</TextId>
+							<MessageText LcId="1033">PDO mapping error - Double mapping of object</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xa0ff</TextId>
+							<MessageText LcId="1033">Entered OP mode while the drive is in fault</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab02</TextId>
+							<MessageText LcId="1033">FW Problem: type 0 - Unit requires repair. Return to Teknic</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab03</TextId>
+							<MessageText LcId="1033">FW Problem: type 1 - Unit requires repair. Return to Teknic</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab04</TextId>
+							<MessageText LcId="1033">Stack Overflow Error - Unit requires repair. Return to Teknic</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab06</TextId>
+							<MessageText LcId="1033">Move Generator Problem - The move generator failed to initiate the move. Adjust your constraints and contact Teknic if the problem persists</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab08</TextId>
+							<MessageText LcId="1033">ESC EEPROM version mismatch - Load a compatible version of the ESC EEPROM file for this firmware</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab0b</TextId>
+							<MessageText LcId="1033">Internal Power Supply Problem - Unit requires repair. Return to Teknic</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab0d</TextId>
+							<MessageText LcId="1033">Non-Volatile memory dead - Unit requires repair. Return to Teknic</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab0e</TextId>
+							<MessageText LcId="1033">Flash has been corrupted - Unit requires repair. Return to Teknic</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab0f</TextId>
+							<MessageText LcId="1033">Firmware ROMsum error - Load config file compatible with motor's firmware version or reset motor to factory defaults</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab12</TextId>
+							<MessageText LcId="1033">ADC values saturated - Phase current beyond allowed ADC limit. Probable cause: incorrect tuning or wrong config file</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab1c</TextId>
+							<MessageText LcId="1033">E-Stop - ESC key or E-Stop button was pressed by the user in ClearView</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab1d</TextId>
+							<MessageText LcId="1033">Old config file version - Probable cause: Firmware updated after config file was loaded. Reset to factory defaults or load a new config file</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab1e</TextId>
+							<MessageText LcId="1033">CPU 2 failed to communicate; fully power-cycle the motor and contact Teknic if the problem persists</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab23</TextId>
+							<MessageText LcId="1033">Move canceled (Range) - Move target out of range. Confirm the move target is within defined software position limits</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab24</TextId>
+							<MessageText LcId="1033">RAS change rejected - Unexpected error</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab26</TextId>
+							<MessageText LcId="1033">Speed too high for RAS - Unexpected error</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab28</TextId>
+							<MessageText LcId="1033">Current sensor HW fault - Unit requires repair. Return to Teknic</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab29</TextId>
+							<MessageText LcId="1033">Move canceled (Limit Switch) - Limit switch activated</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab2a</TextId>
+							<MessageText LcId="1033">Move canceled (Soft Limit) - Target position violates software position limit settings</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab36</TextId>
+							<MessageText LcId="1033">D-Current Heater Error - Possible causes: too much shaft motion</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab3a</TextId>
+							<MessageText LcId="1033">Vector Refine Error - Contact Teknic if the problem persists</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab3c</TextId>
+							<MessageText LcId="1033">Encoder noise - Fully remove logic power and restart the motor. Contact Teknic if the problem persists</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab40</TextId>
+							<MessageText LcId="1033">Motor phase overload - Phase current beyond allowed ADC limit. Probable cause: Incorrect tuning or wrong config file</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab42</TextId>
+							<MessageText LcId="1033">Motor parameter error - Unit requires corrected factory settings. Contact Teknic</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab43</TextId>
+							<MessageText LcId="1033">Hard Stop gave way - Mechanical Hard Stop was detected during homing but it gave way before homing was completed</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab45</TextId>
+							<MessageText LcId="1033">Following error limit exceeded - Possible causes: incorrect tuning</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab47</TextId>
+							<MessageText LcId="1033">RMS torque limit exceeded - Possible causes: incorrect tuning</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab49</TextId>
+							<MessageText LcId="1033">Step input timing error - Possible causes: Step input pulse width too short</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab4c</TextId>
+							<MessageText LcId="1033">MagAlign distance error - Distance traveled does not match expected value. Possible cause: motor against an end stop</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab4d</TextId>
+							<MessageText LcId="1033">MagAlign direction error - Direction traveled is incorrect. Probable cause: external forces during MagAlign procedure</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab4e</TextId>
+							<MessageText LcId="1033">Sensorless startup error - Error during sensorless startup. Probable causes: external force or bus voltage too low during sensorless startup</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab50</TextId>
+							<MessageText LcId="1033">Excessive motor temp - Possible causes: Ambient temperature too high for motor load</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab52</TextId>
+							<MessageText LcId="1033">Excessive bus current - Probable causes: Incorrect tuning or wrong config file</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab53</TextId>
+							<MessageText LcId="1033">Max bus voltage exceeded - Probable cause: Large regenerated voltage upon deceleration. Lower velocity/acceleration or enable the Vector Regen Shunt (VRS) under the 'Details' menu in ClearView</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab54</TextId>
+							<MessageText LcId="1033">Bus voltage was lost or was too low</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab55</TextId>
+							<MessageText LcId="1033">Excessive bus current - Probable causes: Incorrect tuning or wrong config file</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab56</TextId>
+							<MessageText LcId="1033">Power Mismatched - Probable causes: AC power problem</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab57</TextId>
+							<MessageText LcId="1033">Encoder Index Problem - Fully remove logic power and restart the motor. Contact Teknic if the problem persists </MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab58</TextId>
+							<MessageText LcId="1033">Bus under Operating Voltage - Possible causes: Brown out</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab59</TextId>
+							<MessageText LcId="1033">Controller Disconnected - ClearView or EtherCAT master has disconnected unexpectedly and the abort connection option code triggered a Fault Reaction</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab5a</TextId>
+							<MessageText LcId="1033">Interlock Triggered - The input used as an Interlock has been triggered. The motor will stay disabled until the interlock input returns to its normal state</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xab5d</TextId>
+							<MessageText LcId="1033">Encoder Index Problem - Fully remove logic power and restart the motor. Contact Teknic if the problem persists</MessageText>
+						</DiagMessage>
+						<DiagMessage>
+							<TextId>#xac00</TextId>
+							<MessageText LcId="1033">Errors have been cleared</MessageText>
+						</DiagMessage>
+					</DiagMessages>
+				</Profile>
+				<Fmmu>Outputs</Fmmu>
+				<Fmmu>Inputs</Fmmu>
+				<Fmmu>MBoxState</Fmmu>
+				<Sm MinSize="34" MaxSize="562" DefaultSize="246" StartAddress="#x1000" ControlByte="#x26" Enable="1">MBoxOut</Sm>
+				<Sm MinSize="34" MaxSize="562" DefaultSize="246" StartAddress="#x1400" ControlByte="#x22" Enable="1">MBoxIn</Sm>
+				<Sm DefaultSize="10" StartAddress="#x1800" ControlByte="#x64" Enable="1">Outputs</Sm>
+				<Sm DefaultSize="16" StartAddress="#x1c00" ControlByte="#x20" Enable="1">Inputs</Sm>
+				<RxPdo>
+					<Index>#x1600</Index>
+					<Name>RxPDO 1</Name>
+					<Entry>
+						<Index>#x6040</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Controlword</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6060</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>8</BitLen>
+						<Name>Modes of Operation</Name>
+						<DataType>SINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x607a</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Target Position</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x60ff</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Target Velocity</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6071</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Target Torque</Name>
+						<DataType>INT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x60fe</Index>
+						<SubIndex>1</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Digital Outputs</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+				</RxPdo>
+				<RxPdo Sm="2">
+					<Index>#x1601</Index>
+					<Name>RxPDO 2</Name>
+					<Entry>
+						<Index>#x6040</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Controlword</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x607a</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Target Position</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x60fe</Index>
+						<SubIndex>1</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Digital Outputs</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+				</RxPdo>
+				<RxPdo>
+					<Index>#x1602</Index>
+					<Name>RxPDO 3</Name>
+					<Entry>
+						<Index>#x6040</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Controlword</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x60ff</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Target Velocity</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x60fe</Index>
+						<SubIndex>1</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Digital Outputs</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+				</RxPdo>
+				<RxPdo>
+					<Index>#x1603</Index>
+					<Name>RxPDO 4</Name>
+					<Entry>
+						<Index>#x6040</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Controlword</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6071</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Target Torque</Name>
+						<DataType>INT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x60fe</Index>
+						<SubIndex>1</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Digital Outputs</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+				</RxPdo>
+				<RxPdo>
+					<Index>#x1604</Index>
+					<Name>RxPDO 5</Name>
+					<Entry>
+						<Index>#x6040</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Controlword</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x607a</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Target Position</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6081</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Profile Velocity</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6083</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Profile Acceleration</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6084</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Profile Deceleration</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x60fe</Index>
+						<SubIndex>1</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Digital Outputs</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+				</RxPdo>
+				<RxPdo>
+					<Index>#x1605</Index>
+					<Name>RxPDO 6</Name>
+					<Entry>
+						<Index>#x6040</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Controlword</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x60ff</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Target Velocity</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6083</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Profile Acceleration</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6084</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Profile Deceleration</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x60fe</Index>
+						<SubIndex>1</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Digital Outputs</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+				</RxPdo>
+				<TxPdo>
+					<Index>#x1a00</Index>
+					<Name>TxPDO 1</Name>
+					<Entry>
+						<Index>#x6041</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Statusword</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6061</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>8</BitLen>
+						<Name>Modes of Operation Display</Name>
+						<DataType>SINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6064</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Position Actual Value</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x606c</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Velocity Actual Value</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6077</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Torque Actual Value</Name>
+						<DataType>INT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x60fd</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Digital Inputs</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x60f4</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Following Error Actual Value</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x603f</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Error Code</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+				</TxPdo>
+				<TxPdo Sm="3">
+					<Index>#x1a01</Index>
+					<Name>TxPDO 2</Name>
+					<Entry>
+						<Index>#x6041</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Statusword</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6064</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Position Actual Value</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x60f4</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Following Error Actual Value</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x60fd</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Digital Inputs</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x603f</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Error Code</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+				</TxPdo>
+				<TxPdo>
+					<Index>#x1a02</Index>
+					<Name>TxPDO 3</Name>
+					<Entry>
+						<Index>#x6041</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Statusword</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6064</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Position Actual Value</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x606c</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Velocity Actual Value</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x60fd</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Digital Inputs</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x603f</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Error Code</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+				</TxPdo>
+				<TxPdo>
+					<Index>#x1a03</Index>
+					<Name>TxPDO 4</Name>
+					<Entry>
+						<Index>#x6041</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Statusword</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6064</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Position Actual Value</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6077</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Torque Actual Value</Name>
+						<DataType>INT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x60fd</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Digital Inputs</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x603f</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Error Code</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+					<Entry>
+						<Index>#x0</Index>
+						<BitLen>0</BitLen>
+					</Entry>
+				</TxPdo>
+				<TxPdo>
+					<Index>#x1a04</Index>
+					<Name>TxPDO 5</Name>
+					<Entry>
+						<Index>#x603f</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Error Code</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6041</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Statusword</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6064</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Position Actual Value</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x2316</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Current Profile Position</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x2317</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Current Profile Velocity</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x2318</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Current Profile Acceleration</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x2319</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Current Profile Deceleration</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x60fd</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Digital Inputs</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+				</TxPdo>
+				<TxPdo>
+					<Index>#x1a05</Index>
+					<Name>TxPDO 6</Name>
+					<Entry>
+						<Index>#x603f</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Error Code</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6041</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>16</BitLen>
+						<Name>Statusword</Name>
+						<DataType>UINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x6064</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Position Actual Value</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x606c</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Velocity Actual Value</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x2317</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Current Profile Velocity</Name>
+						<DataType>DINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x2318</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Current Profile Acceleration</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x2319</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Current Profile Deceleration</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+					<Entry>
+						<Index>#x60fd</Index>
+						<SubIndex>0</SubIndex>
+						<BitLen>32</BitLen>
+						<Name>Digital Inputs</Name>
+						<DataType>UDINT</DataType>
+					</Entry>
+				</TxPdo>
+				<Mailbox DataLinkLayer="true">
+					<CoE SdoInfo="true" PdoAssign="true" PdoConfig="true" CompleteAccess="true" SegmentedSdo="true" DiagHistory="true"/>
+					<FoE/>
+				</Mailbox>
+				<Dc>
+					<OpMode>
+						<Name>Synchron</Name>
+						<Desc>FreeRun/SM-Synchron</Desc>
+						<AssignActivate>#x0</AssignActivate>
+						<ActivateAdditional>#x0</ActivateAdditional>
+						<CycleTimeSync0 Factor="1">0</CycleTimeSync0>
+						<ShiftTimeSync0>0</ShiftTimeSync0>
+						<CycleTimeSync1 Factor="1">0</CycleTimeSync1>
+						<ShiftTimeSync1>0</ShiftTimeSync1>
+					</OpMode>
+					<OpMode>
+						<Name>DC</Name>
+						<Desc>DC-Synchron</Desc>
+						<AssignActivate>#x300</AssignActivate>
+						<ActivateAdditional>#x0</ActivateAdditional>
+						<CycleTimeSync0 Factor="1">0</CycleTimeSync0>
+						<ShiftTimeSync0>0</ShiftTimeSync0>
+						<CycleTimeSync1 Factor="1">0</CycleTimeSync1>
+						<ShiftTimeSync1>0</ShiftTimeSync1>
+					</OpMode>
+				</Dc>
+				<Eeprom>
+					<ByteSize>4096</ByteSize>
+					<ConfigData>080e024ec4090000000000000000</ConfigData>
+					<BootStrap>0010000400140004</BootStrap>
+				</Eeprom>
+			</Device>
+		</Devices>
+	</Descriptions>
+</EtherCATInfo>
