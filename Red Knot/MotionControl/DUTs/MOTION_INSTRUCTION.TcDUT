@@ -1,18 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <DUT Name="MOTION_INSTRUCTION" Id="{9fd3883a-1252-4d24-bb11-8c78b46defc4}">
     <Declaration><![CDATA[TYPE MOTION_INSTRUCTION :
 STRUCT
 	(*motion type*)
 	MotionCommand 			:MotionType;
-	(*set z motion to manual or feedback based control*)
-	zType					:zBehavior;
-	(*which axis to trigger DAQ on. controls DAQTask outer loop*)
-	DataTrigger				:DataTrigger; 
-	Acq_Keyence				:BOOL	:= FALSE;
-	Acq_Massa				:BOOL	:= FALSE;
-	Acq_Sonar				:BOOL	:= FALSE;
-	Acq_SICK				:BOOL	:= FALSE;
 	SetXPosition			:REAL;
 	SetXVelocity			:INT;
 	SetXAccel				:INT;

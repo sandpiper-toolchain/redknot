@@ -34,9 +34,6 @@
     <Compile Include="DUTs\CSVWriteMode.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\DAQ_CTR_INTERNAL.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DUTs\DATA.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -55,33 +52,16 @@
     <Compile Include="DUTs\OUT_SIGNALS.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\DataTrigger.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\DAQ_CTR.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DUTs\MOTION_CTR.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\STATUS.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\zBehavior.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GVLs\GVL_DAQ.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
     <Compile Include="GVLs\GVL_MOTION.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
-    <Compile Include="GVLs\GVL_SICK.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
@@ -92,12 +72,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\ClearData.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\CreateBasin.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\DAQPassTime.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\DeleteLastInstruction.TcPOU">
