@@ -11,8 +11,8 @@ STRUCT
 	CMDHOMEX				:BOOL	:= FALSE;
 	CMDHOMEY				:BOOL	:= FALSE;
 	CMDHOMEZ				:BOOL	:= FALSE;
-	CMDSETZLIM				:BOOL	:= FALSE; //this will set the safe lower limit of z to where it is currently positioned
-	CMDFINDSTOPS			:BOOL	:= FALSE; //run find stops routine
+	//CMDSETZLIM				:BOOL	:= FALSE; //this will set the safe lower limit of z to where it is currently positioned
+	//CMDFINDSTOPS			:BOOL	:= FALSE; //run find stops routine
 	CMDLOOP					:BOOL	:= FALSE; //sets script to run indefinitely and forces separate data files for each script run
 	CMDCOUPLE				:BOOL	:= FALSE; //cycle between couple and uncouple x axes
 	CMDFIXRACK				:BOOL	:= FALSE; //fix rack if rack error is detected. 
@@ -24,7 +24,8 @@ STRUCT
 	SCRIPTITERATIONS		:INT	:= 1; //number of times a script will be executed in a run
 	SCRIPTNAME				:T_MaxString; //name of script for data and script files.
 	BASINNAME				:T_MaxString; //name of basin, and folder for all associated data and scripts
-	USEBASINCOORDINATES		:BOOL	:= FALSE; //use basin coordinate system in the interface and data output
+	
+	BASINCOORD				:BOOL	:= FALSE;
 	BASINCTR				:BOOL	:= FALSE;
 	DEFAULTBASIN			:BOOL	:= FALSE;
 	XJOGFW					:BOOL	:= FALSE;

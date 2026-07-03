@@ -3,86 +3,93 @@
   <POU Name="CreateBasin" Id="{d0232615-ad9b-44bb-bd96-662b703124b8}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM CreateBasin
 VAR
-	
+	state	:INT	:= 0;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[CASE GVL_MOTION.BasinState OF
+      <ST><![CDATA[CASE state OF
 	0: //x min
 	IF GVL_MOTION.EXT_CTR.BASINCTR THEN
 		GVL_MOTION.EXT_CTR.BASINCTR			:= FALSE;
 		GVL_MOTION.STATUS.BasinSet			:= FALSE;
 		GVL_MOTION.STATUS.Basin_Set_Err		:= FALSE;
-		GVL_MOTION.Basin.xMin				:= GVL_MOTION.xOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[0];
-		GVL_MOTION.BasinState				:= 1;
-	ELSIF GVL_MOTION.EXT_CTR.DEFAULTBASIN THEN
-		GVL_MOTION.EXT_CTR.BASINCTR			:= FALSE;
-		GVL_MOTION.STATUS.BasinSet			:= FALSE;
-		GVL_MOTION.STATUS.Basin_Set_Err		:= FALSE;
-		IF GVL_MOTION.STATUS.HardStopLoc AND GVL_MOTION.EXT_CTR.BASINNAME <> '' THEN
-			GVL_MOTION.Basin.xMin			:= GVL_MOTION.CARRIAGE_OFFSETS[0];
-			GVL_MOTION.Basin.xMax			:= GVL_MOTION.HardStopLocations[0] + GVL_MOTION.CARRIAGE_OFFSETS[0];
-			GVL_MOTION.Basin.yMin			:= GVL_MOTION.CARRIAGE_OFFSETS[1];
-			GVL_MOTION.Basin.yMax			:= GVL_MOTION.HardStopLocations[1] + GVL_MOTION.CARRIAGE_OFFSETS[1];
-			GVL_MOTION.Basin.Name			:= GVL_MOTION.EXT_CTR.BASINNAME;
-			GVL_MOTION.STATUS.BasinSet		:= TRUE;
+		IF GVL_MOTION.Basin.xMin >= GVL_MOTION.CARRIAGE_OFFSETS[0] THEN
+			state							:= 1;
 		ELSE
 			GVL_MOTION.STATUS.Basin_Set_Err	:= TRUE;	
 		END_IF
+		
+		
+	ELSIF GVL_MOTION.EXT_CTR.DEFAULTBASIN THEN
+		GVL_MOTION.EXT_CTR.DEFAULTBASIN		:= FALSE;
+		GVL_MOTION.STATUS.Basin_Set_Err		:= FALSE;
+		
+		GVL_MOTION.Basin.xMin				:= GVL_MOTION.CARRIAGE_OFFSETS[0];
+		GVL_MOTION.Basin.xMax				:= GVL_MOTION.STATUS.HardStopLocations[0];
+		GVL_MOTION.Basin.yMin				:= GVL_MOTION.CARRIAGE_OFFSETS[1];
+		GVL_MOTION.Basin.yMax				:= GVL_MOTION.STATUS.HardStopLocations[1];
+		GVL_MOTION.Basin.Name				:= 'Full_Area';
+		GVL_MOTION.STATUS.BasinSet			:= TRUE;
 	END_IF
 	
 	1: //x max
-	IF GVL_MOTION.EXT_CTR.BASINCTR THEN
-		GVL_MOTION.EXT_CTR.BASINCTR			:= FALSE;
-		IF GVL_MOTION.xOut.PositionOut > GVL_MOTION.Basin.xMin THEN
-			GVL_MOTION.Basin.xMax			:= GVL_MOTION.xOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[0];
-			GVL_MOTION.BasinState			:= 2;
+		IF GVL_MOTION.Basin.xMax <= GVL_MOTION.STATUS.HardStopLocations[0] THEN
+			state							:= 2;
 		ELSE
 			GVL_MOTION.STATUS.Basin_Set_Err	:= TRUE;
-			GVL_MOTION.BasinState			:= 0;
+			state							:= 0;
 		END_IF	
 		
-	END_IF
 	
 	2: //y min
-	IF GVL_MOTION.EXT_CTR.BASINCTR THEN
-		GVL_MOTION.EXT_CTR.BASINCTR			:= FALSE;
-		GVL_MOTION.Basin.yMin				:= GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1];
-		GVL_MOTION.BasinState				:= 3;
+	IF GVL_MOTION.Basin.yMin >= GVL_MOTION.CARRIAGE_OFFSETS[1] THEN
+		state								:= 3;
+	ELSE	
+		GVL_MOTION.STATUS.Basin_Set_Err		:= TRUE;
+		state								:= 0;
 	END_IF
 	
 	3: //y max
-	IF GVL_MOTION.EXT_CTR.BASINCTR THEN
-		GVL_MOTION.EXT_CTR.BASINCTR			:= FALSE;
-		IF GVL_MOTION.yOut.PositionOut > GVL_MOTION.Basin.yMin THEN
-			GVL_MOTION.Basin.yMax			:= GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1];
-			GVL_MOTION.BasinState			:= 4;
-		ELSE
-			GVL_MOTION.STATUS.Basin_Set_Err	:= TRUE;
-			GVL_MOTION.BasinState			:= 0;
-		END_IF	
-		
-	END_IF
+	IF GVL_MOTION.Basin.yMax <= GVL_MOTION.STATUS.HardStopLocations[1] THEN
+		state								:= 4;
+	ELSE
+		GVL_MOTION.STATUS.Basin_Set_Err		:= TRUE;
+		state								:= 0;
+	END_IF	
+
 	
 	4: //name
-	IF GVL_MOTION.EXT_CTR.BASINCTR THEN
-		GVL_MOTION.EXT_CTR.BASINCTR			:= FALSE;
-		IF GVL_MOTION.EXT_CTR.BASINNAME <> '' THEN
-			GVL_MOTION.Basin.Name			:= GVL_MOTION.EXT_CTR.BASINNAME;
-			GVL_MOTION.STATUS.BasinSet		:= TRUE;
-			GVL_MOTION.BasinState			:= 0;
-		ELSE
-			GVL_MOTION.STATUS.Basin_Set_Err	:= TRUE;
-			GVL_MOTION.BasinState			:= 0;
-		END_IF	
-		
-	END_IF
-	
-	
+	IF GVL_MOTION.EXT_CTR.BASINNAME <> '' THEN
+		GVL_MOTION.Basin.Name			:= GVL_MOTION.EXT_CTR.BASINNAME;
+		GVL_MOTION.STATUS.BasinSet		:= TRUE;
+	ELSE
+		GVL_MOTION.STATUS.Basin_Set_Err	:= TRUE;
+	END_IF	
+	state								:= 0;
 END_CASE]]></ST>
     </Implementation>
     <LineIds Name="CreateBasin">
-      <LineId Id="1" Count="72" />
+      <LineId Id="1" Count="5" />
+      <LineId Id="75" Count="1" />
+      <LineId Id="78" Count="1" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="7" Count="3" />
+      <LineId Id="12" Count="7" />
+      <LineId Id="23" Count="2" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="30" Count="5" />
+      <LineId Id="37" Count="2" />
+      <LineId Id="80" Count="1" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="43" Count="2" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="50" Count="5" />
+      <LineId Id="57" Count="1" />
+      <LineId Id="61" Count="2" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="72" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>

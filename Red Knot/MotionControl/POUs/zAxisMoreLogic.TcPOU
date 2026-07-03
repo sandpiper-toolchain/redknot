@@ -7,18 +7,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF GVL_MOTION.EXT_CTR.CMDSETZLIM THEN
-	GVL_MOTION.zSafePosition 		:= GVL_MOTION.zOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[2];
-	GVL_MOTION.zSafeSet 			:= TRUE;
-	GVL_MOTION.EXT_CTR.CMDSETZLIM	:= FALSE;
-END_IF
-
-// IF GVL_MOTION.EXT_CTR.AxesReset THEN
-// 	GVL_MOTION.zSafePosition 		:= 0;
-// 	GVL_MOTION.zSafeLimitIsSet 		:= FALSE;
-// END_IF
-
-//stop z from slamming into frame
+      <ST><![CDATA[//stop z from slamming into frame
 IF GVL_MOTION.zCon.LimNeg AND NOT GVL_MOTION.zCon.Execute_HOME AND NOT zHaltMem AND NOT GVL_MOTION.zSafeDisable THEN
 	zHaltMem								:= TRUE;
 	GVL_MOTION.zCon.Execute_HALT			:= TRUE;
@@ -31,10 +20,7 @@ IF NOT GVL_MOTION.zCon.LimNeg AND zHaltMem THEN
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="zAxisMoreLogic">
-      <LineId Id="1" Count="2" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="4" Count="5" />
-      <LineId Id="13" Count="10" />
+      <LineId Id="14" Count="9" />
       <LineId Id="12" Count="0" />
     </LineIds>
   </POU>

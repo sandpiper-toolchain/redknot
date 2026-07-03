@@ -11,14 +11,14 @@ STRUCT
 	Script_Read_Err		:BOOL	:= FALSE;
 	Move_Rel_Err		:BOOL 	:= FALSE;
 	Move_Abs_Err		:BOOL	:= FALSE;
-	//HS_Err				:BOOL	:= FALSE;
+	HS_Err				:BOOL	:= FALSE;
 	Basin_Exceed_Err	:BOOL	:= FALSE;
 	Basin_Set_Err		:BOOL	:= FALSE;
 	
 	AxesLocated			:BOOL	:= FALSE;
 	//HardStopLoc			:BOOL	:= FALSE; 
-	zSafeSet			:BOOL	:= FALSE;
-	BasinSet			:BOOL	:= FALSE;
+	//zSafeSet			:BOOL	:= FALSE;
+	//BasinSet			:BOOL	:= FALSE;
 	HaltDone			:BOOL	:= FALSE;
 	PowerError			:BOOL	:= FALSE;
 	
@@ -36,8 +36,8 @@ STRUCT
 	
 	MASSA_TEMP			:LREAL;
 	KEYENCE_TEMP		:LREAL;
-	
-	HardStopLocations	:ARRAY[0..2] 	  OF LREAL	:= [485,455,120]; //includes carriage offsets 
+	//includes carriage offsets, hardcoded
+	HardStopLocations	:ARRAY[0..2] 	  OF LREAL	:= [485,455,120]; 
 	KEYENCE_OFFSETS		:ARRAY[0..2]	  OF LREAL	:= [53.52,108.41,23.9];
 	MASSA_OFFSETS		:ARRAY[0..2]	  OF LREAL	:= [36,31,-116.11];
 	

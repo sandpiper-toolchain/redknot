@@ -41,7 +41,6 @@ GVL_MOTION.yCon.LimPos				 		:= InfoData1T6Ch1.1;
 GVL_MOTION.zCon.LimNeg 				 		:= InfoData1T6Ch2.0;
 GVL_MOTION.NPNXC							:= NOT(InfoData1T6Ch2.1); 
 
-GVL_MOTION.BasinInstr						:= GVL_MOTION.BasinState;
 GVL_MOTION.NextInstruction					:= GVL_MOTION.CurInstruction + 1;
 
 //alternative position read
@@ -65,35 +64,52 @@ GVL_MOTION.STATUS.yVelOut					:= GVL_MOTION.yOut.VelocityOut;
 
 GVL_MOTION.STATUS.zPosOut					:= GVL_MOTION.zOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[2];
 GVL_MOTION.STATUS.zVelOut					:= GVL_MOTION.zOut.VelocityOut;
-GVL_MOTION.STATUS.HardStopLocations			:= GVL_MOTION.HardStopLocations;
-GVL_MOTION.STATUS.AxesLocated				:= GVL_MOTION.AxesLocated;
-GVL_MOTION.STATUS.zSafeSet					:= GVL_MOTION.zSafeSet;			
+GVL_MOTION.STATUS.AxesLocated				:= GVL_MOTION.AxesLocated;			
 GVL_MOTION.STATUS.HaltDone					:= GVL_MOTION.xOut.HaltDone;
 GVL_MOTION.STATUS.PowerError				:= GVL_MOTION.xOut.PowerError OR GVL_MOTION.yOut.PowerError	OR
 											   GVL_MOTION.zOut.PowerError OR GVL_MOTION.xCOut.PowerError;	
 											   										   						   
-IF GVL_MOTION.EXT_CTR.USEBASINCOORDINATES AND GVL_MOTION.STATUS.BasinSet THEN
-	IF GVL_MOTION.xOut.PositionOut >= GVL_MOTION.Basin.xMin AND GVL_MOTION.xOut.PositionOut <= GVL_MOTION.Basin.xMax THEN
-		GVL_MOTION.STATUS.xPosOut			:= GVL_MOTION.xOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[0] - GVL_MOTION.Basin.xMin;
+IF GVL_MOTION.EXT_CTR.BASINCOORD THEN
+	IF 	GVL_MOTION.xOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[0] >= GVL_MOTION.Basin.xMin 
+	AND GVL_MOTION.xOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[0] <= GVL_MOTION.Basin.xMax 
+	THEN
+		GVL_MOTION.STATUS.xPosOut			:= GVL_MOTION.xOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[0];
+		GVL_MOTION.xCon.JogMode				:= MC_JOGMODE_STANDARD_FAST;
 	ELSE
 		GVL_MOTION.STATUS.xPosOut			:= -999999;
+		GVL_MOTION.xCon.JogMode				:= MC_JOGMODE_STANDARD_SLOW;
 	END_IF
 	
-	IF GVL_MOTION.yOut.PositionOut >= GVL_MOTION.Basin.yMin AND GVL_MOTION.yOut.PositionOut <= GVL_MOTION.Basin.yMax THEN
-		GVL_MOTION.STATUS.yPosOut			:= GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1] - GVL_MOTION.Basin.yMin;
+	IF  GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1] >= GVL_MOTION.Basin.yMin 
+	AND GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1] <= GVL_MOTION.Basin.yMax 
+	THEN
+		GVL_MOTION.STATUS.yPosOut			:= GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1];
+		GVL_MOTION.yCon.JogMode				:= MC_JOGMODE_STANDARD_FAST;
 	ELSE
 		GVL_MOTION.STATUS.yPosOut			:= -999999;
+		GVL_MOTION.yCon.JogMode				:= MC_JOGMODE_STANDARD_SLOW;
 	END_IF	
 ELSE
 	GVL_MOTION.STATUS.xPosOut				:= GVL_MOTION.xOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[0];
 	GVL_MOTION.STATUS.yPosOut				:= GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1];
-END_IF					
+	GVL_MOTION.xCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
+	GVL_MOTION.yCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
+END_IF		
+
+//increasing jog speed may cause axis to lock up if it crashes into end stop
+IF GVL_MOTION.STATUS.HardStopLocations[3] - GVL_MOTION.STATUS.zPosOut < 20
+OR GVL_MOTION.STATUS.zPosOut - GVL_MOTION.CARRIAGE_OFFSETS[3] < 20 
+THEN
+	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
+ELSE
+	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
+END_IF			
 
 //coupled axis assignments, modify as needed for additional coupled axes
 //xAxis
 GVL_MOTION.xCon.AxisToCouple 			:= xAxisCoupled;
 IF GVL_MOTION.EXT_CTR.CMDCOUPLE THEN
-	GVL_MOTION.EXT_CTR.CMDCOUPLE	:= FALSE;
+	GVL_MOTION.EXT_CTR.CMDCOUPLE		:= FALSE;
 	CASE couplestate OF
 		0: 
 		GVL_MOTION.xCon.ExecuteUncouple	:= FALSE;
@@ -105,33 +121,7 @@ IF GVL_MOTION.EXT_CTR.CMDCOUPLE THEN
 		couplestate						:= 0;
 	END_CASE
 
-END_IF
-	
-//startup routine to retrieve position data if power unexpectedly lost
-IF NOT boot_done THEN
-	GVL_MOTION.EXT_CTR.POSX		:= TO_INT(GVL_MOTION.STATUS.xPosOut);
-	GVL_MOTION.EXT_CTR.POSY 	:= TO_INT(GVL_MOTION.STATUS.yPosOut);
-	GVL_MOTION.EXT_CTR.POSZ 	:= TO_INT(GVL_MOTION.STATUS.zPosOut);
-	GVL_MOTION.EXT_CTR.SETXPOS	:= TRUE;
-	GVL_MOTION.EXT_CTR.SETYPOS	:= TRUE;
-	GVL_MOTION.EXT_CTR.SETZPOS	:= TRUE;
-	IF GVL_MOTION.xOut.SetPosDone AND GVL_MOTION.yOut.SetPosDone AND GVL_MOTION.zOut.SetPosDone THEN
-		GVL_MOTION.EXT_CTR.SETXPOS	:= FALSE;
-		GVL_MOTION.EXT_CTR.SETYPOS	:= FALSE;
-		GVL_MOTION.EXT_CTR.SETZPOS	:= FALSE;
-		GVL_MOTION.EXT_CTR.POSX		:= 0;
-		GVL_MOTION.EXT_CTR.POSY		:= 0;
-		GVL_MOTION.EXT_CTR.POSZ		:= 0;
-		boot_done					:= TRUE;
-	END_IF
-END_IF				   						   
-
-//increasing jog speed may cause axis to lock up if it crashes into end stop
-IF NOT GVL_MOTION.EXT_CTR.CMDFINDSTOPS THEN
-	GVL_MOTION.xCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
-	GVL_MOTION.yCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
-	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
-END_IF
+END_IF			   						   
 
 //axis function blocks
 xAxisFunctions(Axis:=xAxis,
@@ -167,7 +157,7 @@ ResetAxes();
 zAxisMoreLogic();
 
 //program to create basin coordinates
-CreateBasin();
+//CreateBasin();
 
 //stop data collection
 IF GVL_MOTION.STATUS.eStop THEN
@@ -192,12 +182,13 @@ IF GVL_MOTION.EXT_CTR.CMDHOMEY THEN
 END_IF
 
 IF GVL_MOTION.EXT_CTR.CMDHOMEZ THEN
-	HomeFixRack();
+	HomeZ();
 END_IF
 
 IF GVL_MOTION.EXT_CTR.SETXPOS THEN
 	GVL_MOTION.EXT_CTR.SETXPOS				:= FALSE;
 	GVL_MOTION.xCon.Execute_SPOS			:= TRUE;
+	GVL_MOTION.xLocated						:= TRUE;
 END_IF
 IF GVL_MOTION.xOut.SetPosDone THEN
 	GVL_MOTION.xCon.Execute_SPOS			:= FALSE;	
@@ -206,6 +197,7 @@ END_IF
 IF GVL_MOTION.EXT_CTR.SETYPOS THEN
 	GVL_MOTION.EXT_CTR.SETYPOS				:= FALSE;
 	GVL_MOTION.yCon.Execute_SPOS			:= TRUE;
+	GVL_MOTION.yLocated						:= TRUE;
 END_IF
 IF GVL_MOTION.yOut.SetPosDone THEN
 	GVL_MOTION.yCon.Execute_SPOS			:= FALSE;	
@@ -214,6 +206,7 @@ END_IF
 IF GVL_MOTION.EXT_CTR.SETZPOS THEN
 	GVL_MOTION.EXT_CTR.SETZPOS				:= FALSE;
 	GVL_MOTION.zCon.Execute_SPOS			:= TRUE;
+	GVL_MOTION.zLocated						:= TRUE;
 END_IF
 IF GVL_MOTION.zOut.SetPosDone THEN
 	GVL_MOTION.zCon.Execute_SPOS			:= FALSE;	
@@ -235,9 +228,9 @@ END_IF
 
 //require safe z limit, home complete, x axes coupled, hard stops located, basin set
 //check before RunCommands is executed
-IF (NOT GVL_MOTION.zSafeSet) OR (NOT GVL_MOTION.AxesLocated)
+IF (NOT GVL_MOTION.AxesLocated)
 OR (NOT GVL_MOTION.xOut.AxisCoupled) //OR (NOT GVL_MOTION.STATUS.HardStopLoc)
-OR (NOT GVL_MOTION.STATUS.BasinSet) THEN
+THEN
 	GVL_MOTION.CurInstruction				:= 0;
 	GVL_MOTION.EXT_CTR.CMDRUN				:= FALSE;	//maybe change this to internal variable
 END_IF
@@ -255,17 +248,30 @@ END_IF]]></ST>
       <LineId Id="232" Count="8" />
       <LineId Id="422" Count="0" />
       <LineId Id="241" Count="3" />
-      <LineId Id="614" Count="1" />
+      <LineId Id="615" Count="0" />
       <LineId Id="613" Count="0" />
       <LineId Id="576" Count="1" />
       <LineId Id="575" Count="0" />
-      <LineId Id="617" Count="40" />
+      <LineId Id="617" Count="18" />
+      <LineId Id="637" Count="0" />
+      <LineId Id="639" Count="5" />
+      <LineId Id="722" Count="1" />
+      <LineId Id="645" Count="0" />
+      <LineId Id="727" Count="0" />
+      <LineId Id="646" Count="1" />
+      <LineId Id="728" Count="0" />
+      <LineId Id="648" Count="2" />
+      <LineId Id="724" Count="1" />
+      <LineId Id="651" Count="0" />
+      <LineId Id="729" Count="0" />
+      <LineId Id="652" Count="1" />
+      <LineId Id="730" Count="0" />
+      <LineId Id="654" Count="3" />
+      <LineId Id="731" Count="1" />
       <LineId Id="616" Count="0" />
+      <LineId Id="738" Count="7" />
+      <LineId Id="737" Count="0" />
       <LineId Id="678" Count="17" />
-      <LineId Id="677" Count="0" />
-      <LineId Id="659" Count="17" />
-      <LineId Id="245" Count="1" />
-      <LineId Id="248" Count="4" />
       <LineId Id="471" Count="0" />
       <LineId Id="473" Count="15" />
       <LineId Id="472" Count="0" />
@@ -294,14 +300,19 @@ END_IF]]></ST>
       <LineId Id="714" Count="0" />
       <LineId Id="719" Count="2" />
       <LineId Id="718" Count="0" />
-      <LineId Id="598" Count="4" />
+      <LineId Id="598" Count="3" />
+      <LineId Id="746" Count="0" />
+      <LineId Id="602" Count="0" />
       <LineId Id="697" Count="0" />
       <LineId Id="699" Count="2" />
-      <LineId Id="603" Count="3" />
+      <LineId Id="603" Count="2" />
+      <LineId Id="747" Count="0" />
+      <LineId Id="606" Count="0" />
       <LineId Id="704" Count="1" />
       <LineId Id="703" Count="0" />
       <LineId Id="702" Count="0" />
       <LineId Id="607" Count="2" />
+      <LineId Id="748" Count="0" />
       <LineId Id="597" Count="0" />
       <LineId Id="707" Count="1" />
       <LineId Id="706" Count="0" />

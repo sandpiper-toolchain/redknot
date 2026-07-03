@@ -161,6 +161,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"2212"</v>
+              <v n="TextDefault">"Check Basin"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"1220"</v>
               <v n="TextDefault">"Clear Data"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -263,6 +268,11 @@
             <o>
               <v n="TextID">"1786"</v>
               <v n="TextDefault">"Delete Loaded Script"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"2046"</v>
+              <v n="TextDefault">"Display Basin Coordinates"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -803,6 +813,11 @@
             <o>
               <v n="TextID">"373"</v>
               <v n="TextDefault">"Set Zero"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"2121"</v>
+              <v n="TextDefault">"Show Basin Coordinates"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
