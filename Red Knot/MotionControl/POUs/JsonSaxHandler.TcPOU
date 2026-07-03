@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="JsonSaxHandler" Id="{fd22ba04-0d36-44e7-a81e-c59d3ac0f333}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'c++_compatible'}
 FUNCTION_BLOCK JsonSaxHandler IMPLEMENTS ITcJsonSaxHandler
@@ -54,10 +54,10 @@ END_VAR
 			GVL_MOTION.TEST_CTR.CMDRUN := value;
 		ELSIF tempkey = 'CMDHOME' THEN
 			GVL_MOTION.TEST_CTR.CMDHOME := value;
-		ELSIF tempkey = 'CMDSETZLIM' THEN
-			GVL_MOTION.TEST_CTR.CMDSETZLIM := value;
-		ELSIF tempkey = 'CMDFINDSTOPS' THEN
-			GVL_MOTION.TEST_CTR.CMDFINDSTOPS := value;				
+// 		ELSIF tempkey = 'CMDSETZLIM' THEN
+// 			GVL_MOTION.TEST_CTR.CMDSETZLIM := value;
+// 		ELSIF tempkey = 'CMDFINDSTOPS' THEN
+// 			GVL_MOTION.TEST_CTR.CMDFINDSTOPS := value;				
 		ELSIF tempkey = 'CMDLOOP' THEN
 			GVL_MOTION.TEST_CTR.CMDLOOP := value;	
 		ELSIF tempkey = 'AXESHALT' THEN
@@ -83,22 +83,22 @@ END_VAR
 		ELSIF tempkey = 'ZJOGBW' THEN
 			GVL_MOTION.EXT_CTR.ZJOGBW := value;	
 		END_IF		
-	ELSIF label = 'DAQ/CTR' THEN
-		IF tempkey = 'CMDDATACLR' THEN
-			GVL_DAQ.TEST_CTR.CMDDATACLR := value;	
-		ELSIF tempkey = 'CMDDATAAPEND' THEN
-			GVL_DAQ.TEST_CTR.CMDDATAAPEND := value;
-		ELSIF tempkey = 'CMDDATAWRITE' THEN
-			GVL_DAQ.TEST_CTR.CMDDATAWRITE := value;
-		END_IF	
-	ELSIF label = 'MOTION/INSTR_BUFFER' THEN
-		IF tempkey = 'Acq_Keyence' THEN
-			GVL_MOTION.TestBuffer.Acq_Keyence := value;
-		ELSIF tempkey = 'Acq_Massa' THEN
-			GVL_MOTION.TestBuffer.Acq_Massa := value;
-		ELSIF tempkey = 'Acq_Sonar' THEN
-			GVL_MOTION.TestBuffer.Acq_Sonar := value;
-		END_IF	
+// 	ELSIF label = 'DAQ/CTR' THEN
+// 		IF tempkey = 'CMDDATACLR' THEN
+// 			GVL_DAQ.TEST_CTR.CMDDATACLR := value;	
+// 		ELSIF tempkey = 'CMDDATAAPEND' THEN
+// 			GVL_DAQ.TEST_CTR.CMDDATAAPEND := value;
+// 		ELSIF tempkey = 'CMDDATAWRITE' THEN
+// 			GVL_DAQ.TEST_CTR.CMDDATAWRITE := value;
+// 		END_IF	
+// 	ELSIF label = 'MOTION/INSTR_BUFFER' THEN
+// 		IF tempkey = 'Acq_Keyence' THEN
+// 			GVL_MOTION.TestBuffer.Acq_Keyence := value;
+// 		ELSIF tempkey = 'Acq_Massa' THEN
+// 			GVL_MOTION.TestBuffer.Acq_Massa := value;
+// 		ELSIF tempkey = 'Acq_Sonar' THEN
+// 			GVL_MOTION.TestBuffer.Acq_Sonar := value;
+// 		END_IF	
 		
 	END_IF
 
@@ -351,10 +351,10 @@ END_VAR
 	IF label = 'MOTION/INSTR_BUFFER' THEN
 		IF tempkey = 'MotionCommand' THEN
 			GVL_MOTION.TestBuffer.MotionCommand		:= UDINT_TO_INT(value);
-		ELSIF tempkey = 'zType' THEN
-			GVL_MOTION.TestBuffer.zType				:= UDINT_TO_INT(value);
-		ELSIF tempkey = 'DataTrigger' THEN
-			GVL_MOTION.TestBuffer.DataTrigger		:= UDINT_TO_INT(value);	
+// 		ELSIF tempkey = 'zType' THEN
+// 			GVL_MOTION.TestBuffer.zType				:= UDINT_TO_INT(value);
+// 		ELSIF tempkey = 'DataTrigger' THEN
+// 			GVL_MOTION.TestBuffer.DataTrigger		:= UDINT_TO_INT(value);	
 		ELSIF tempkey = 'SetXPosition' THEN
 			GVL_MOTION.TestBuffer.SetXPosition		:= UDINT_TO_INT(value);
 		ELSIF tempkey = 'SetXVelocity' THEN
@@ -375,10 +375,10 @@ END_VAR
 			//temptime := TIME#1MS * value;
 			GVL_MOTION.TestBuffer.PauseTime 		:= TIME#1MS * value;
 		END_IF		
-	ELSIF label = 'DAQ/CTR' THEN
-		IF tempkey = 'DAQRES' THEN
-			GVL_DAQ.TEST_CTR.DAQRES				:= UDINT_TO_INT(value);
-		END_IF	
+// 	ELSIF label = 'DAQ/CTR' THEN
+// 		IF tempkey = 'DAQRES' THEN
+// 			GVL_DAQ.TEST_CTR.DAQRES				:= UDINT_TO_INT(value);
+// 		END_IF	
 	ELSIF label = 'MOTION/CTR' THEN	
 		IF tempkey = 'SCRIPTITERATIONS' THEN 	
 			GVL_MOTION.TEST_CTR.SCRIPTITERATIONS	:= UDINT_TO_INT(value);	
@@ -439,105 +439,5 @@ METHOD TcRelease : UDINT
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="JsonSaxHandler">
-      <LineId Id="1" Count="3" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnBool">
-      <LineId Id="1" Count="0" />
-      <LineId Id="3" Count="4" />
-      <LineId Id="27" Count="1" />
-      <LineId Id="8" Count="5" />
-      <LineId Id="29" Count="1" />
-      <LineId Id="14" Count="7" />
-      <LineId Id="31" Count="3" />
-      <LineId Id="52" Count="11" />
-      <LineId Id="51" Count="0" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="37" Count="4" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="44" Count="4" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="49" Count="1" />
-      <LineId Id="23" Count="2" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnDint">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnEndArray">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnEndObject">
-      <LineId Id="1" Count="12" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnKey">
-      <LineId Id="22" Count="7" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="30" Count="3" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnLint">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnLreal">
-      <LineId Id="1" Count="7" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="12" Count="5" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="19" Count="1" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnNull">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnRawNumber">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnStartArray">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnStartObject">
-      <LineId Id="11" Count="1" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="13" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnString">
-      <LineId Id="1" Count="7" />
-      <LineId Id="11" Count="2" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="19" Count="2" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="16" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnUdint">
-      <LineId Id="1" Count="8" />
-      <LineId Id="11" Count="4" />
-      <LineId Id="39" Count="1" />
-      <LineId Id="16" Count="19" />
-      <LineId Id="41" Count="2" />
-      <LineId Id="49" Count="1" />
-      <LineId Id="47" Count="1" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="51" Count="0" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="38" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnUlint">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.TcAddRef">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.TcQueryInterface">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.TcRelease">
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

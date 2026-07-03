@@ -3,27 +3,35 @@
   <DUT Name="MOTION_CTR" Id="{7b736c67-30bf-4989-9a85-4ad577225276}">
     <Declaration><![CDATA[TYPE MOTION_CTR :
 STRUCT
-	CMDADD					:BOOL	:= FALSE; //add instruction to script
-	CMDCLR					:BOOL	:= FALSE; //clear script
-	CMDDEL					:BOOL	:= FALSE; //delete instruction at end of script
-	CMDRUN					:BOOL	:= FALSE; //run script if all safety conditions are met (homed, hard stops located, x axes coupled, safe z set)
 	CMDHOME					:BOOL	:= FALSE; //run home routine
 	CMDHOMEX				:BOOL	:= FALSE;
 	CMDHOMEY				:BOOL	:= FALSE;
 	CMDHOMEZ				:BOOL	:= FALSE;
-	CMDSETZLIM				:BOOL	:= FALSE; //this will set the safe lower limit of z to where it is currently positioned
-	CMDFINDSTOPS			:BOOL	:= FALSE; //run find stops routine
-	CMDLOOP					:BOOL	:= FALSE; //sets script to run indefinitely and forces separate data files for each script run
-	CMDCOUPLE				:BOOL	:= FALSE; //cycle between couple and uncouple x axes
+	SETXPOS					:BOOL	:= FALSE;
+	POSX					:INT	:= 0;
+	SETYPOS					:BOOL	:= FALSE;
+	POSY					:INT	:= 0;
+	SETZPOS					:BOOL	:= FALSE;
+	POSZ					:INT	:= 0;
 	
+	//CMDSETZLIM				:BOOL	:= FALSE; //this will set the safe lower limit of z to where it is currently positioned
+	//CMDFINDSTOPS			:BOOL	:= FALSE; //run find stops routine
+	CMDCOUPLE				:BOOL	:= FALSE; //cycle between couple and uncouple x axes
 	AXESHALT				:BOOL	:= FALSE; //pause motion during script run if true. set to false to continue motion
 	AXESEN					:BOOL	:= FALSE; //sends enable signal to all axes
 	AXESRESET				:BOOL	:= FALSE; //reset each axis, reset home and hardstop states
+	
+	CMDADD					:BOOL	:= FALSE; //add instruction to script
+	CMDCLR					:BOOL	:= FALSE; //clear script
+	CMDDEL					:BOOL	:= FALSE; //delete instruction at end of script
+	CMDLOOP					:BOOL	:= FALSE; //sets script to run indefinitely and forces separate data files for each script run
+	CMDRUN					:BOOL	:= FALSE; //run script if all safety conditions are met (homed, hard stops located, x axes coupled, safe z set)
+	CMDCSVRESET				:BOOL	:= FALSE; //reset csvwrite logic CHANGED
 	CMDSCRIPTWRITE			:BOOL	:= FALSE; //write script to file based on script name entered
 	CMDSCRIPTREAD			:BOOL	:= FALSE; //read script from file based on script name
 	SCRIPTITERATIONS		:INT	:= 1; //number of times a script will be executed in a run
 	SCRIPTNAME				:T_MaxString; //name of script for data and script files.
-	BASINCTR				:BOOL	:= FALSE; //true = basin A, false = basin B
+	BASINCTR				:BOOL	:= FALSE; //true = basin A, false = basin B CHANGED
 
 	XJOGFW					:BOOL	:= FALSE;
 	XJOGBW					:BOOL	:= FALSE;
@@ -32,12 +40,7 @@ STRUCT
 	ZJOGFW					:BOOL	:= FALSE;
 	ZJOGBW					:BOOL	:= FALSE;
 	HEARTBEAT				:BOOL	:= FALSE; //check in MQTTCOM to keep jog commands online
-	SETXPOS					:BOOL	:= FALSE;
-	POSX					:INT	:= 0;
-	SETYPOS					:BOOL	:= FALSE;
-	POSY					:INT	:= 0;
-	SETZPOS					:BOOL	:= FALSE;
-	POSZ					:INT	:= 0;
+
 END_STRUCT
 END_TYPE
 ]]></Declaration>

@@ -65,7 +65,7 @@ GVL_MOTION.STATUS.yVelOut					:= GVL_MOTION.yOut.VelocityOut;
 GVL_MOTION.STATUS.zPosOut					:= GVL_MOTION.zOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[2];
 GVL_MOTION.STATUS.zVelOut					:= GVL_MOTION.zOut.VelocityOut;
 GVL_MOTION.STATUS.AxesLocated				:= GVL_MOTION.AxesLocated;
-GVL_MOTION.STATUS.zSafeSet					:= GVL_MOTION.zSafeSet;			
+//GVL_MOTION.STATUS.zSafeSet					:= GVL_MOTION.zSafeSet;			
 GVL_MOTION.STATUS.HaltDone					:= GVL_MOTION.xOut.HaltDone;
 GVL_MOTION.STATUS.PowerError				:= GVL_MOTION.xOut.PowerError OR GVL_MOTION.yOut.PowerError	OR
 											   GVL_MOTION.zOut.PowerError OR GVL_MOTION.xCOut.PowerError;	
@@ -225,8 +225,8 @@ END_IF
 //require safe z limit, home complete, x axes coupled, hard stops located, basin set
 //check before RunCommands is executed
 IF (NOT GVL_MOTION.AxesLocated)
-OR (NOT GVL_MOTION.xOut.AxisCoupled) //OR (NOT GVL_MOTION.STATUS.HardStopLoc)
-OR (NOT GVL_MOTION.STATUS.BasinSet) THEN
+OR (NOT GVL_MOTION.xOut.AxisCoupled) //OR (NOT GVL_MOTION.STATUS.HardStopLoc) 
+THEN
 	GVL_MOTION.CurInstruction				:= 0;
 	GVL_MOTION.EXT_CTR.CMDRUN				:= FALSE;	//maybe change this to internal variable
 END_IF

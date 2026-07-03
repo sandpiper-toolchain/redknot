@@ -17,8 +17,8 @@ STRUCT
 	
 	AxesLocated			:BOOL	:= FALSE;
 	//HardStopLoc			:BOOL	:= FALSE; 
-	zSafeSet			:BOOL	:= FALSE;
-	BasinSet			:BOOL	:= FALSE;
+	//zSafeSet			:BOOL	:= FALSE;
+	//BasinSet			:BOOL	:= FALSE;
 	HaltDone			:BOOL	:= FALSE;
 	PowerError			:BOOL	:= FALSE;
 	

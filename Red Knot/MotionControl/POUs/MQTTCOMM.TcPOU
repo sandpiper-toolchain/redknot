@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="MQTTCOMM" Id="{6cc164ab-7114-46c3-9a99-d0016021e99e}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MQTTCOMM
 VAR
@@ -75,30 +75,30 @@ IF fbMqttClient.bConnected THEN
     IF NOT SubMCTR THEN
         SubMCTR := fbMqttClient.Subscribe(sTopic:='MOTION/CTR', eQoS:=TcIotMqttQos.AtMostOnceDelivery);
     END_IF
-	IF NOT SubDCTR THEN
-        SubDCTR := fbMqttClient.Subscribe(sTopic:='DAQ/CTR', eQoS:=TcIotMqttQos.AtMostOnceDelivery);
-    END_IF
+// 	IF NOT SubDCTR THEN
+//         SubDCTR := fbMqttClient.Subscribe(sTopic:='DAQ/CTR', eQoS:=TcIotMqttQos.AtMostOnceDelivery);
+//     END_IF
     IF NOT SubIBuff THEN
         SubIBuff := fbMqttClient.Subscribe(sTopic:='MOTION/INSTR_BUFFER', eQoS:=TcIotMqttQos.AtMostOnceDelivery);
     END_IF	
     fbTimer(IN:=TRUE);
 	//wait for trigger from daqtask - instantaneous data ready to transmit
-	IF GVL_DAQ.DREADY THEN
-		GVL_DAQ.DREADY			:= FALSE;
-		fbJson.ResetDocument();
-		fbJson.StartObject();	
-		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, '', 'DATA', SIZEOF(GVL_DAQ.DATA), ADR(GVL_DAQ.DATA));
-		fbJson.EndObject();
-		fbJson.CopyDocument(sPayloadPub, SIZEOF(sPayLoadPub));
-		
-		found	:= FIND2(ADR(sPayLoadPub), ADR('}}'));
-		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 1, found + 1);
-		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 4, 1);
-		
-		fbMqttClient.Publish(sTopic:= DaqDataPub, pPayload:= ADR(sPayloadPub), 
-			nPayloadSize:= LEN2(ADR(sPayloadPub)), eQoS:= TcIotMqttQos.AtMostOnceDelivery, 
-			bRetain:= TRUE, bQueue:= FALSE );	
-	END_IF
+// 	IF GVL_DAQ.DREADY THEN
+// 		GVL_DAQ.DREADY			:= FALSE;
+// 		fbJson.ResetDocument();
+// 		fbJson.StartObject();	
+// 		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, '', 'DATA', SIZEOF(GVL_DAQ.DATA), ADR(GVL_DAQ.DATA));
+// 		fbJson.EndObject();
+// 		fbJson.CopyDocument(sPayloadPub, SIZEOF(sPayLoadPub));
+// 		
+// 		found	:= FIND2(ADR(sPayLoadPub), ADR('}}'));
+// 		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 1, found + 1);
+// 		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 4, 1);
+// 		
+// 		fbMqttClient.Publish(sTopic:= DaqDataPub, pPayload:= ADR(sPayloadPub), 
+// 			nPayloadSize:= LEN2(ADR(sPayloadPub)), eQoS:= TcIotMqttQos.AtMostOnceDelivery, 
+// 			bRetain:= TRUE, bQueue:= FALSE );	
+// 	END_IF
 	
     IF fbTimer.Q THEN // publish new payload every second
 		//convert xOut to JSON
@@ -137,19 +137,19 @@ IF fbMqttClient.bConnected THEN
 			nPayloadSize:= LEN2(ADR(sPayloadPub)), eQoS:= TcIotMqttQos.AtMostOnceDelivery, 
 			bRetain:= TRUE, bQueue:= FALSE );
 		
-		fbJson.ResetDocument();
-		fbJson.StartObject();	
-		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, '', 'DAQ_CTR', SIZEOF(GVL_DAQ.TEST_CTR), ADR(GVL_DAQ.TEST_CTR));
-		fbJson.EndObject();
-		fbJson.CopyDocument(sPayloadPub, SIZEOF(sPayLoadPub));
-		
-		found	:= FIND2(ADR(sPayLoadPub), ADR('}}'));
-		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 1, found + 1);
-		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 4, 1);
-		
-		fbMqttClient.Publish(sTopic:= DAQCTREcho, pPayload:= ADR(sPayloadPub), 
-			nPayloadSize:= LEN2(ADR(sPayloadPub)), eQoS:= TcIotMqttQos.AtMostOnceDelivery, 
-			bRetain:= TRUE, bQueue:= FALSE );
+// 		fbJson.ResetDocument();
+// 		fbJson.StartObject();	
+// 		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, '', 'DAQ_CTR', SIZEOF(GVL_DAQ.TEST_CTR), ADR(GVL_DAQ.TEST_CTR));
+// 		fbJson.EndObject();
+// 		fbJson.CopyDocument(sPayloadPub, SIZEOF(sPayLoadPub));
+// 		
+// 		found	:= FIND2(ADR(sPayLoadPub), ADR('}}'));
+// 		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 1, found + 1);
+// 		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 4, 1);
+// 		
+// 		fbMqttClient.Publish(sTopic:= DAQCTREcho, pPayload:= ADR(sPayloadPub), 
+// 			nPayloadSize:= LEN2(ADR(sPayloadPub)), eQoS:= TcIotMqttQos.AtMostOnceDelivery, 
+// 			bRetain:= TRUE, bQueue:= FALSE );
 
 		fbJson.ResetDocument();
 		fbJson.StartObject();	
@@ -183,79 +183,5 @@ IF HBtimer.Q THEN
 	GVL_MOTION.TEST_CTR.ZJOGBW	:= FALSE;	
 END_IF]]></ST>
     </Implementation>
-    <LineIds Name="MQTTCOMM">
-      <LineId Id="116" Count="0" />
-      <LineId Id="121" Count="0" />
-      <LineId Id="125" Count="0" />
-      <LineId Id="118" Count="0" />
-      <LineId Id="120" Count="0" />
-      <LineId Id="122" Count="1" />
-      <LineId Id="137" Count="0" />
-      <LineId Id="124" Count="0" />
-      <LineId Id="115" Count="0" />
-      <LineId Id="1" Count="5" />
-      <LineId Id="117" Count="0" />
-      <LineId Id="7" Count="5" />
-      <LineId Id="65" Count="0" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="13" Count="6" />
-      <LineId Id="158" Count="1" />
-      <LineId Id="157" Count="0" />
-      <LineId Id="112" Count="1" />
-      <LineId Id="111" Count="0" />
-      <LineId Id="197" Count="0" />
-      <LineId Id="200" Count="1" />
-      <LineId Id="217" Count="0" />
-      <LineId Id="205" Count="11" />
-      <LineId Id="203" Count="1" />
-      <LineId Id="202" Count="0" />
-      <LineId Id="198" Count="1" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="130" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="49" Count="1" />
-      <LineId Id="126" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="191" Count="1" />
-      <LineId Id="190" Count="0" />
-      <LineId Id="193" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="31" Count="2" />
-      <LineId Id="127" Count="2" />
-      <LineId Id="131" Count="2" />
-      <LineId Id="185" Count="0" />
-      <LineId Id="187" Count="1" />
-      <LineId Id="186" Count="0" />
-      <LineId Id="189" Count="0" />
-      <LineId Id="135" Count="1" />
-      <LineId Id="134" Count="0" />
-      <LineId Id="148" Count="0" />
-      <LineId Id="150" Count="4" />
-      <LineId Id="175" Count="0" />
-      <LineId Id="178" Count="1" />
-      <LineId Id="176" Count="1" />
-      <LineId Id="155" Count="1" />
-      <LineId Id="149" Count="0" />
-      <LineId Id="161" Count="5" />
-      <LineId Id="169" Count="3" />
-      <LineId Id="174" Count="0" />
-      <LineId Id="167" Count="1" />
-      <LineId Id="160" Count="0" />
-      <LineId Id="139" Count="0" />
-      <LineId Id="26" Count="1" />
-      <LineId Id="226" Count="0" />
-      <LineId Id="225" Count="0" />
-      <LineId Id="227" Count="1" />
-      <LineId Id="230" Count="1" />
-      <LineId Id="229" Count="0" />
-      <LineId Id="232" Count="0" />
-      <LineId Id="235" Count="4" />
-      <LineId Id="233" Count="1" />
-    </LineIds>
   </POU>
 </TcPlcObject>

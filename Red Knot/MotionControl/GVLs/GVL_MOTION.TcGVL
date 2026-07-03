@@ -45,18 +45,19 @@ VAR_GLOBAL PERSISTENT
 	
 	STATUS					:STATUS;
 	ActiveBasin				:BASIN;
-	BasinA					:BASIN	:= (Name := BasinA,
+	BasinA					:BASIN	:= (Name := 'BasinA',
 										xMin := 1,			
 										xMax := 100,
 										yMin := 1,
 										yMax := 48);
 	
-	BasinB					:BASIN	:= (Name := BasinB,
+	BasinB					:BASIN	:= (Name := 'BasinB',
 										xMin := 1,			
 										xMax := 100,
 										yMin := 52,
 										yMax := 100);
 	NOTBASINCTR				:BOOL;
+	CSV_ROW					:INT	:= 0;
 	
 	xOut					:OUT_SIGNALS;
 	xCOut					:OUT_SIGNALS;
