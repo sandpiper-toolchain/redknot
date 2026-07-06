@@ -2212,7 +2212,7 @@ External Setpoint Generation:
 					<Name>yAxis</Name>
 					<AxisPara>
 						<Dynamic Acceleration="678.165" Deceleration="678.165" Jerk="2034.49"/>
-						<Velo RefSearch="12" RefSync="5" SlowManual="50" FastManual="100" Fast="452.11" Maximum="452.11"/>
+						<Velo RefSearch="12" RefSync="5" SlowManual="25" FastManual="100" Fast="452.11" Maximum="452.11"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="19">
@@ -2643,7 +2643,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{35F1EE57-8B64-404F-9A2B-38524D23373E}" Name="MotionControl" PrjFilePath="MotionControl\MotionControl.plcproj" TmcFilePath="MotionControl\MotionControl.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{465E646A-80E1-6DA2-A756-7E90C8CBD32C}" TmcPath="MotionControl\MotionControl.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{6EB1D33F-2380-6C13-BA24-9F5DAA6A5B4F}" TmcPath="MotionControl\MotionControl.tmc">
 					<Name>MotionControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1" ContextId="2" AreaNo="32">
@@ -2660,6 +2660,16 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_DAQ.test2</Name>
 							<Type>STRING(80)</Type>
+						</Var>
+						<Var>
+							<Name>GVL_SICK.SCAN_HEIGHT</Name>
+							<Comment><![CDATA[# profiles per buffer. 1-65535]]></Comment>
+							<Type>UDINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_SICK.CNT_PER_REV</Name>
+							<Comment><![CDATA[# encoder cnts before trigger 1-65535]]></Comment>
+							<Type>UDINT</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2" ContextId="1" AreaNo="17">
@@ -2755,6 +2765,7 @@ External Setpoint Generation:
 						</Var>
 						<Var>
 							<Name>GVL_SICK.SWATH_CNT</Name>
+							<Comment><![CDATA[numbering for scans]]></Comment>
 							<Type>UDINT</Type>
 						</Var>
 						<Var>

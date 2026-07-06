@@ -61,7 +61,6 @@ END_VAR
 	4: //name
 	IF GVL_MOTION.EXT_CTR.BASINNAME <> '' THEN
 		GVL_MOTION.Basin.Name			:= GVL_MOTION.EXT_CTR.BASINNAME;
-		GVL_MOTION.STATUS.BasinSet		:= TRUE;
 	ELSE
 		GVL_MOTION.STATUS.Basin_Set_Err	:= TRUE;
 	END_IF	
@@ -86,7 +85,7 @@ END_CASE]]></ST>
       <LineId Id="48" Count="0" />
       <LineId Id="50" Count="5" />
       <LineId Id="57" Count="1" />
-      <LineId Id="61" Count="2" />
+      <LineId Id="61" Count="1" />
       <LineId Id="65" Count="1" />
       <LineId Id="68" Count="0" />
       <LineId Id="72" Count="1" />

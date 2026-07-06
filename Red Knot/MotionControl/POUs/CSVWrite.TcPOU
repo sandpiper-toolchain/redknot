@@ -81,7 +81,7 @@ END_IF
 
 CASE step OF
 	0:	(* Wait for rising edge at bWrite variable *)
-		IF bWrite AND GVL_MOTION.STATUS.BasinSet THEN
+		IF bWrite THEN
 			//GVL_DAQ.DAQ_CTR_INT.CSVWriteMode	:= CSVWriteMode.keyence; //TEST ONLY
 			bBusy 					:= TRUE;
 			bError					:= FALSE;

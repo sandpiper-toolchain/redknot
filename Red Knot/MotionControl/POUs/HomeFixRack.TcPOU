@@ -25,6 +25,7 @@ END_VAR
 			GVL_MOTION.xCon.ExecuteUncouple	:= FALSE;
 			GVL_MOTION.xCon.ExecuteCouple	:= TRUE;
 		END_IF
+		
 		GVL_MOTION.HomingState				:= 3;
 	END_IF
 	
@@ -84,7 +85,9 @@ END_VAR
 END_CASE]]></ST>
     </Implementation>
     <LineIds Name="HomeFixRack">
-      <LineId Id="1" Count="40" />
+      <LineId Id="1" Count="18" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="20" Count="21" />
       <LineId Id="77" Count="0" />
       <LineId Id="42" Count="33" />
     </LineIds>

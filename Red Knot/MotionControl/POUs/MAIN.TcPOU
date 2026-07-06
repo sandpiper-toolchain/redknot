@@ -22,6 +22,8 @@ VAR
 	
 	couplestate				:INT	:= 0;
 	boot_done				:BOOL	:= FALSE;
+	xNearStop				:BOOL	:= FALSE;
+	yNearStop				:BOOL	:= FALSE;
 
 END_VAR
 ]]></Declaration>
@@ -63,9 +65,9 @@ GVL_MOTION.STATUS.xVelOut					:= GVL_MOTION.xOut.VelocityOut;
 GVL_MOTION.STATUS.yVelOut					:= GVL_MOTION.yOut.VelocityOut;
 
 GVL_MOTION.STATUS.zPosOut					:= GVL_MOTION.zOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[2];
-GVL_MOTION.STATUS.zVelOut					:= GVL_MOTION.zOut.VelocityOut;
-GVL_MOTION.STATUS.AxesLocated				:= GVL_MOTION.AxesLocated;			
+GVL_MOTION.STATUS.zVelOut					:= GVL_MOTION.zOut.VelocityOut;		
 GVL_MOTION.STATUS.HaltDone					:= GVL_MOTION.xOut.HaltDone;
+GVL_MOTION.STATUS.AxesLocated				:= GVL_MOTION.AxesLocated;
 GVL_MOTION.STATUS.PowerError				:= GVL_MOTION.xOut.PowerError OR GVL_MOTION.yOut.PowerError	OR
 											   GVL_MOTION.zOut.PowerError OR GVL_MOTION.xCOut.PowerError;	
 											   										   						   
@@ -74,7 +76,11 @@ IF GVL_MOTION.EXT_CTR.BASINCOORD THEN
 	AND GVL_MOTION.xOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[0] <= GVL_MOTION.Basin.xMax 
 	THEN
 		GVL_MOTION.STATUS.xPosOut			:= GVL_MOTION.xOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[0];
-		GVL_MOTION.xCon.JogMode				:= MC_JOGMODE_STANDARD_FAST;
+		IF NOT (GVL_MOTION.xCon.Execute_HOME OR GVL_MOTION.EXT_CTR.CMDHOME OR xNearStop) THEN
+			GVL_MOTION.xCon.JogMode			:= MC_JOGMODE_STANDARD_FAST;
+		ELSE
+			GVL_MOTION.xCon.JogMode			:= MC_JOGMODE_STANDARD_SLOW;
+		END_IF
 	ELSE
 		GVL_MOTION.STATUS.xPosOut			:= -999999;
 		GVL_MOTION.xCon.JogMode				:= MC_JOGMODE_STANDARD_SLOW;
@@ -84,7 +90,11 @@ IF GVL_MOTION.EXT_CTR.BASINCOORD THEN
 	AND GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1] <= GVL_MOTION.Basin.yMax 
 	THEN
 		GVL_MOTION.STATUS.yPosOut			:= GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1];
-		GVL_MOTION.yCon.JogMode				:= MC_JOGMODE_STANDARD_FAST;
+		IF NOT (GVL_MOTION.yCon.Execute_HOME OR GVL_MOTION.EXT_CTR.CMDHOME OR yNearStop) THEN
+			GVL_MOTION.yCon.JogMode			:= MC_JOGMODE_STANDARD_FAST;
+		ELSE
+			GVL_MOTION.yCon.JogMode			:= MC_JOGMODE_STANDARD_SLOW;
+		END_IF	
 	ELSE
 		GVL_MOTION.STATUS.yPosOut			:= -999999;
 		GVL_MOTION.yCon.JogMode				:= MC_JOGMODE_STANDARD_SLOW;
@@ -92,33 +102,87 @@ IF GVL_MOTION.EXT_CTR.BASINCOORD THEN
 ELSE
 	GVL_MOTION.STATUS.xPosOut				:= GVL_MOTION.xOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[0];
 	GVL_MOTION.STATUS.yPosOut				:= GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1];
-	GVL_MOTION.xCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
-	GVL_MOTION.yCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
+	IF NOT (GVL_MOTION.xCon.Execute_HOME OR GVL_MOTION.EXT_CTR.CMDHOME OR xNearStop) THEN
+			GVL_MOTION.xCon.JogMode			:= MC_JOGMODE_STANDARD_FAST;
+		ELSE
+			GVL_MOTION.xCon.JogMode			:= MC_JOGMODE_STANDARD_SLOW;
+		END_IF
+	IF NOT (GVL_MOTION.yCon.Execute_HOME OR GVL_MOTION.EXT_CTR.CMDHOME OR yNearStop) THEN
+			GVL_MOTION.yCon.JogMode			:= MC_JOGMODE_STANDARD_FAST;
+		ELSE
+			GVL_MOTION.yCon.JogMode			:= MC_JOGMODE_STANDARD_SLOW;
+		END_IF	
 END_IF		
 
 //increasing jog speed may cause axis to lock up if it crashes into end stop
-IF GVL_MOTION.STATUS.HardStopLocations[3] - GVL_MOTION.STATUS.zPosOut < 20
-OR GVL_MOTION.STATUS.zPosOut - GVL_MOTION.CARRIAGE_OFFSETS[3] < 20 
+//pulse jog off at changeover to force reclick and new speed
+//jogmode for x and y set above in basin coordinates control
+IF GVL_MOTION.STATUS.HardStopLocations[0] - GVL_MOTION.STATUS.xPosOut < 30
+OR GVL_MOTION.STATUS.xPosOut - GVL_MOTION.CARRIAGE_OFFSETS[0] < 30 
 THEN
+	xNearStop								:= TRUE;
+	IF GVL_MOTION.xCon.JogMode = MC_JOGMODE_STANDARD_FAST THEN
+		GVL_MOTION.xJogBW					:= FALSE;
+		GVL_MOTION.xJogFW					:= FALSE;
+	END_IF
+ELSE
+	xNearStop								:= FALSE;
+	IF GVL_MOTION.xCon.JogMode = MC_JOGMODE_STANDARD_SLOW THEN
+		GVL_MOTION.xJogBW					:= FALSE;
+		GVL_MOTION.xJogFW					:= FALSE;
+	END_IF
+END_IF
+
+IF GVL_MOTION.STATUS.HardStopLocations[1] - GVL_MOTION.STATUS.yPosOut < 30
+OR GVL_MOTION.STATUS.yPosOut - GVL_MOTION.CARRIAGE_OFFSETS[1] < 30 
+THEN
+	yNearStop								:= TRUE;
+	IF GVL_MOTION.yCon.JogMode = MC_JOGMODE_STANDARD_FAST THEN
+		GVL_MOTION.yJogBW					:= FALSE;
+		GVL_MOTION.yJogFW					:= FALSE;
+	END_IF
+ELSE
+	yNearStop								:= FALSE;
+	IF GVL_MOTION.yCon.JogMode = MC_JOGMODE_STANDARD_SLOW THEN
+		GVL_MOTION.yJogBW					:= FALSE;
+		GVL_MOTION.yJogFW					:= FALSE;
+	END_IF	
+END_IF
+
+IF GVL_MOTION.STATUS.HardStopLocations[2] - GVL_MOTION.STATUS.zPosOut < 10
+OR GVL_MOTION.STATUS.zPosOut - GVL_MOTION.CARRIAGE_OFFSETS[2] < 10 
+THEN
+	IF GVL_MOTION.zCon.JogMode = MC_JOGMODE_STANDARD_FAST THEN
+		GVL_MOTION.zJogBW					:= FALSE;
+		GVL_MOTION.zJogFW					:= FALSE;
+	END_IF
 	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
 ELSE
+	IF GVL_MOTION.zCon.JogMode = MC_JOGMODE_STANDARD_SLOW THEN
+		GVL_MOTION.zJogBW					:= FALSE;
+		GVL_MOTION.zJogFW					:= FALSE;
+	END_IF
 	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
+END_IF
+
+IF GVL_MOTION.xLocated AND GVL_MOTION.yLocated AND GVL_MOTION.zLocated THEN
+	GVL_MOTION.AxesLocated					:= TRUE;
 END_IF			
 
 //coupled axis assignments, modify as needed for additional coupled axes
 //xAxis
-GVL_MOTION.xCon.AxisToCouple 			:= xAxisCoupled;
+GVL_MOTION.xCon.AxisToCouple 				:= xAxisCoupled;
 IF GVL_MOTION.EXT_CTR.CMDCOUPLE THEN
-	GVL_MOTION.EXT_CTR.CMDCOUPLE		:= FALSE;
+	GVL_MOTION.EXT_CTR.CMDCOUPLE			:= FALSE;
 	CASE couplestate OF
 		0: 
-		GVL_MOTION.xCon.ExecuteUncouple	:= FALSE;
-		GVL_MOTION.xCon.ExecuteCouple	:= TRUE;
-		couplestate						:= 1;
+		GVL_MOTION.xCon.ExecuteUncouple		:= FALSE;
+		GVL_MOTION.xCon.ExecuteCouple		:= TRUE;
+		couplestate							:= 1;
 		1:
-		GVL_MOTION.xCon.ExecuteCouple	:= FALSE;
-		GVL_MOTION.xCon.ExecuteUncouple	:= TRUE;
-		couplestate						:= 0;
+		GVL_MOTION.xCon.ExecuteCouple		:= FALSE;
+		GVL_MOTION.xCon.ExecuteUncouple		:= TRUE;
+		couplestate							:= 0;
 	END_CASE
 
 END_IF			   						   
@@ -253,24 +317,63 @@ END_IF]]></ST>
       <LineId Id="576" Count="1" />
       <LineId Id="575" Count="0" />
       <LineId Id="617" Count="18" />
-      <LineId Id="637" Count="0" />
-      <LineId Id="639" Count="5" />
+      <LineId Id="639" Count="0" />
+      <LineId Id="774" Count="0" />
+      <LineId Id="640" Count="4" />
       <LineId Id="722" Count="1" />
       <LineId Id="645" Count="0" />
+      <LineId Id="749" Count="0" />
       <LineId Id="727" Count="0" />
+      <LineId Id="750" Count="2" />
       <LineId Id="646" Count="1" />
       <LineId Id="728" Count="0" />
       <LineId Id="648" Count="2" />
       <LineId Id="724" Count="1" />
       <LineId Id="651" Count="0" />
+      <LineId Id="753" Count="0" />
       <LineId Id="729" Count="0" />
+      <LineId Id="754" Count="0" />
+      <LineId Id="756" Count="0" />
+      <LineId Id="755" Count="0" />
       <LineId Id="652" Count="1" />
       <LineId Id="730" Count="0" />
       <LineId Id="654" Count="3" />
-      <LineId Id="731" Count="1" />
+      <LineId Id="766" Count="3" />
+      <LineId Id="731" Count="0" />
+      <LineId Id="770" Count="3" />
+      <LineId Id="732" Count="0" />
       <LineId Id="616" Count="0" />
-      <LineId Id="738" Count="7" />
+      <LineId Id="738" Count="1" />
+      <LineId Id="775" Count="0" />
+      <LineId Id="819" Count="0" />
+      <LineId Id="781" Count="2" />
+      <LineId Id="812" Count="0" />
+      <LineId Id="784" Count="3" />
+      <LineId Id="813" Count="1" />
+      <LineId Id="816" Count="2" />
+      <LineId Id="815" Count="0" />
+      <LineId Id="780" Count="0" />
+      <LineId Id="811" Count="0" />
+      <LineId Id="796" Count="2" />
+      <LineId Id="820" Count="0" />
+      <LineId Id="799" Count="4" />
+      <LineId Id="822" Count="3" />
+      <LineId Id="821" Count="0" />
+      <LineId Id="795" Count="0" />
+      <LineId Id="810" Count="0" />
+      <LineId Id="740" Count="2" />
+      <LineId Id="758" Count="1" />
+      <LineId Id="761" Count="0" />
+      <LineId Id="760" Count="0" />
+      <LineId Id="743" Count="1" />
+      <LineId Id="763" Count="2" />
+      <LineId Id="762" Count="0" />
+      <LineId Id="745" Count="0" />
       <LineId Id="737" Count="0" />
+      <LineId Id="777" Count="0" />
+      <LineId Id="776" Count="0" />
+      <LineId Id="779" Count="0" />
+      <LineId Id="778" Count="0" />
       <LineId Id="678" Count="17" />
       <LineId Id="471" Count="0" />
       <LineId Id="473" Count="15" />
