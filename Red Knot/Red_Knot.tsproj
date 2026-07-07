@@ -2069,7 +2069,7 @@ External Setpoint Generation:
 					<Name>xAxis</Name>
 					<AxisPara>
 						<Dynamic Acceleration="1356.33" Deceleration="1356.33" Jerk="4068.99"/>
-						<Velo RefSearch="10" RefSync="9" SlowManual="25" FastManual="100" Fast="904.22" Maximum="904.22"/>
+						<Velo RefSearch="10" RefSync="9" SlowManual="20" FastManual="100" Fast="904.22" Maximum="904.22"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="19">
@@ -2212,7 +2212,7 @@ External Setpoint Generation:
 					<Name>yAxis</Name>
 					<AxisPara>
 						<Dynamic Acceleration="678.165" Deceleration="678.165" Jerk="2034.49"/>
-						<Velo RefSearch="12" RefSync="5" SlowManual="25" FastManual="100" Fast="452.11" Maximum="452.11"/>
+						<Velo RefSearch="12" RefSync="5" SlowManual="20" FastManual="100" Fast="452.11" Maximum="452.11"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="19">
@@ -2643,7 +2643,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{35F1EE57-8B64-404F-9A2B-38524D23373E}" Name="MotionControl" PrjFilePath="MotionControl\MotionControl.plcproj" TmcFilePath="MotionControl\MotionControl.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{6EB1D33F-2380-6C13-BA24-9F5DAA6A5B4F}" TmcPath="MotionControl\MotionControl.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{3CDADC47-5EB8-8139-FD44-D847816A289E}" TmcPath="MotionControl\MotionControl.tmc">
 					<Name>MotionControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1" ContextId="2" AreaNo="32">

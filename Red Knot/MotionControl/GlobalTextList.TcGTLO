@@ -141,6 +141,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"1717"</v>
+              <v n="TextDefault">"Basin Coordinate Mode"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"1413"</v>
               <v n="TextDefault">"Basin Set"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -436,6 +441,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"1304"</v>
+              <v n="TextDefault">"Instruction Parameters"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"863"</v>
               <v n="TextDefault">"Jog Controls"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -641,6 +651,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"1490"</v>
+              <v n="TextDefault">"Read Script From File(data/basin/script)"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"419"</v>
               <v n="TextDefault">"RELAT"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -701,6 +716,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"1955"</v>
+              <v n="TextDefault">"Run Script Continuously"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"785"</v>
               <v n="TextDefault">"s"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -723,6 +743,11 @@
             <o>
               <v n="TextID">"558"</v>
               <v n="TextDefault">"Set Basin"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"444"</v>
+              <v n="TextDefault">"Set Basin Limits"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -861,6 +886,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"1652"</v>
+              <v n="TextDefault">"Test Features"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"474"</v>
               <v n="TextDefault">"Test for sick (ADS)"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -898,6 +928,11 @@
             <o>
               <v n="TextID">"1372"</v>
               <v n="TextDefault">"Write Script"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"7"</v>
+              <v n="TextDefault">"Write Script to File"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

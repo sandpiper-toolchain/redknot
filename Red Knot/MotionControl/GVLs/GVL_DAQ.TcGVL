@@ -44,9 +44,6 @@ VAR_GLOBAL
 	//z offsets should be calculated from bottom of z stage at home position
 	KEYENCE_OFFSETS		:ARRAY[0..2]	  OF LREAL	:= [53.52,108.41,23.9];
 	MASSA_OFFSETS		:ARRAY[0..2]	  OF LREAL	:= [36,31,-116.11];
-	
-	cpptest AT %I*			:UDINT := 8;
-	test2 AT %I*			:STRING := 'testing';
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

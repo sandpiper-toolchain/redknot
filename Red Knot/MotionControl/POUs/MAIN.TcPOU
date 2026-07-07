@@ -29,7 +29,7 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[//external/mqtt control signals located in gvl's as struct EXT_CTR
-//100 element command queue. modify in GVL_MOTION and RunCommands()
+//100 element script. modify in GVL_MOTION and RunCommands()
 //200000 element data arrays. modify in GVL_DAQ
 
 //digital io and internal variable assignments
@@ -214,7 +214,7 @@ MQTTCOMM();
 //reset all axes from error state and reset several function state variables
 ResetAxes();
 
-//routine to check both sides of x at midpoint. if offset an error light turns on and a button can correct the offset
+//routine to check both sides of x at midpoint switches. if offset an error light turns on and a button can correct the offset
 //RackCheck();
 
 //axis control signals currently tied to VISU
@@ -226,6 +226,9 @@ zAxisMoreLogic();
 //stop data collection
 IF GVL_MOTION.STATUS.eStop THEN
 	GVL_DAQ.DAQ_CTR_INT.Activate_Trigger	:= DataTrigger.none;
+	GVL_MOTION.CurInstruction				:= 0;
+	GVL_MOTION.InstructionState				:= 0;
+	GVL_MOTION.EXT_CTR.CMDRUN				:= FALSE;
 END_IF
 
 //clear all acquired data from memory
@@ -251,15 +254,18 @@ END_IF
 
 IF GVL_MOTION.EXT_CTR.SETXPOS THEN
 	GVL_MOTION.EXT_CTR.SETXPOS				:= FALSE;
+	GVL_MOTION.xCon.SetLocation				:= GVL_MOTION.EXT_CTR.POSX - GVL_MOTION.CARRIAGE_OFFSETS[0];
 	GVL_MOTION.xCon.Execute_SPOS			:= TRUE;
 	GVL_MOTION.xLocated						:= TRUE;
 END_IF
 IF GVL_MOTION.xOut.SetPosDone THEN
 	GVL_MOTION.xCon.Execute_SPOS			:= FALSE;	
+	
 END_IF
 
 IF GVL_MOTION.EXT_CTR.SETYPOS THEN
 	GVL_MOTION.EXT_CTR.SETYPOS				:= FALSE;
+	GVL_MOTION.yCon.SetLocation				:= GVL_MOTION.EXT_CTR.POSY - GVL_MOTION.CARRIAGE_OFFSETS[1];
 	GVL_MOTION.yCon.Execute_SPOS			:= TRUE;
 	GVL_MOTION.yLocated						:= TRUE;
 END_IF
@@ -269,6 +275,7 @@ END_IF
 
 IF GVL_MOTION.EXT_CTR.SETZPOS THEN
 	GVL_MOTION.EXT_CTR.SETZPOS				:= FALSE;
+	GVL_MOTION.zCon.SetLocation				:= GVL_MOTION.EXT_CTR.POSZ - GVL_MOTION.CARRIAGE_OFFSETS[2];
 	GVL_MOTION.zCon.Execute_SPOS			:= TRUE;
 	GVL_MOTION.zLocated						:= TRUE;
 END_IF
@@ -391,6 +398,7 @@ END_IF]]></ST>
       <LineId Id="579" Count="1" />
       <LineId Id="578" Count="0" />
       <LineId Id="587" Count="3" />
+      <LineId Id="837" Count="2" />
       <LineId Id="586" Count="0" />
       <LineId Id="591" Count="0" />
       <LineId Id="593" Count="2" />
@@ -403,18 +411,26 @@ END_IF]]></ST>
       <LineId Id="714" Count="0" />
       <LineId Id="719" Count="2" />
       <LineId Id="718" Count="0" />
-      <LineId Id="598" Count="3" />
+      <LineId Id="598" Count="2" />
+      <LineId Id="833" Count="0" />
+      <LineId Id="601" Count="0" />
       <LineId Id="746" Count="0" />
       <LineId Id="602" Count="0" />
       <LineId Id="697" Count="0" />
-      <LineId Id="699" Count="2" />
-      <LineId Id="603" Count="2" />
+      <LineId Id="699" Count="0" />
+      <LineId Id="834" Count="0" />
+      <LineId Id="700" Count="1" />
+      <LineId Id="603" Count="1" />
+      <LineId Id="835" Count="0" />
+      <LineId Id="605" Count="0" />
       <LineId Id="747" Count="0" />
       <LineId Id="606" Count="0" />
       <LineId Id="704" Count="1" />
       <LineId Id="703" Count="0" />
       <LineId Id="702" Count="0" />
-      <LineId Id="607" Count="2" />
+      <LineId Id="607" Count="1" />
+      <LineId Id="836" Count="0" />
+      <LineId Id="609" Count="0" />
       <LineId Id="748" Count="0" />
       <LineId Id="597" Count="0" />
       <LineId Id="707" Count="1" />
