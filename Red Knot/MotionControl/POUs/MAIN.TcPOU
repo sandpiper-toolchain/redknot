@@ -22,6 +22,9 @@ VAR
 	
 	couplestate				:INT	:= 0;
 	boot_done				:BOOL	:= FALSE;
+	
+	xNearStop				:BOOL	:= FALSE;
+	yNearStop				:BOOL	:= FALSE;
 
 END_VAR
 ]]></Declaration>
@@ -86,18 +89,81 @@ IF  GVL_MOTION.xOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[0] >= GVL_MOTION.A
 AND GVL_MOTION.xOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[0] <= GVL_MOTION.ActiveBasin.xMax 
 THEN
 	GVL_MOTION.STATUS.xPosOut			:= GVL_MOTION.xOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[0];
+	IF NOT (GVL_MOTION.xCon.Execute_HOME OR GVL_MOTION.EXT_CTR.CMDHOME OR xNearStop) THEN
+			GVL_MOTION.xCon.JogMode		:= MC_JOGMODE_STANDARD_FAST;
+		ELSE
+			GVL_MOTION.xCon.JogMode		:= MC_JOGMODE_STANDARD_SLOW;
+	END_IF
 ELSE
 	GVL_MOTION.STATUS.xPosOut			:= -999999;
+	GVL_MOTION.xCon.JogMode				:= MC_JOGMODE_STANDARD_SLOW;
 END_IF
 
 IF  GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1] >= GVL_MOTION.ActiveBasin.yMin 
 AND GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1] <= GVL_MOTION.ActiveBasin.yMax 
 THEN
 	GVL_MOTION.STATUS.yPosOut			:= GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1];
+	IF NOT (GVL_MOTION.yCon.Execute_HOME OR GVL_MOTION.EXT_CTR.CMDHOME OR yNearStop) THEN
+			GVL_MOTION.yCon.JogMode		:= MC_JOGMODE_STANDARD_FAST;
+		ELSE
+			GVL_MOTION.yCon.JogMode		:= MC_JOGMODE_STANDARD_SLOW;
+	END_IF
 ELSE
 	GVL_MOTION.STATUS.yPosOut			:= -999999;
+	GVL_MOTION.yCon.JogMode				:= MC_JOGMODE_STANDARD_SLOW;
 END_IF	
-				
+	
+//increasing jog speed may cause axis to lock up if it crashes into end stop
+//pulse jog off at changeover to force reclick and new speed
+//jogmode for x and y set above in basin coordinates control
+IF GVL_MOTION.STATUS.HardStopLocations[0] - GVL_MOTION.STATUS.xPosOut < 30
+OR GVL_MOTION.STATUS.xPosOut - GVL_MOTION.CARRIAGE_OFFSETS[0] < 30 
+THEN
+	xNearStop								:= TRUE;
+	IF GVL_MOTION.xCon.JogMode = MC_JOGMODE_STANDARD_FAST THEN
+		GVL_MOTION.xJogBW					:= FALSE;
+		GVL_MOTION.xJogFW					:= FALSE;
+	END_IF
+ELSE
+	xNearStop								:= FALSE;
+	IF GVL_MOTION.xCon.JogMode = MC_JOGMODE_STANDARD_SLOW THEN
+		GVL_MOTION.xJogBW					:= FALSE;
+		GVL_MOTION.xJogFW					:= FALSE;
+	END_IF
+END_IF
+
+IF GVL_MOTION.STATUS.HardStopLocations[1] - GVL_MOTION.STATUS.yPosOut < 30
+OR GVL_MOTION.STATUS.yPosOut - GVL_MOTION.CARRIAGE_OFFSETS[1] < 30 
+THEN
+	yNearStop								:= TRUE;
+	IF GVL_MOTION.yCon.JogMode = MC_JOGMODE_STANDARD_FAST THEN
+		GVL_MOTION.yJogBW					:= FALSE;
+		GVL_MOTION.yJogFW					:= FALSE;
+	END_IF
+ELSE
+	yNearStop								:= FALSE;
+	IF GVL_MOTION.yCon.JogMode = MC_JOGMODE_STANDARD_SLOW THEN
+		GVL_MOTION.yJogBW					:= FALSE;
+		GVL_MOTION.yJogFW					:= FALSE;
+	END_IF	
+END_IF
+
+IF GVL_MOTION.STATUS.HardStopLocations[2] - GVL_MOTION.STATUS.zPosOut < 10
+OR GVL_MOTION.STATUS.zPosOut - GVL_MOTION.CARRIAGE_OFFSETS[2] < 10 
+THEN
+	IF GVL_MOTION.zCon.JogMode = MC_JOGMODE_STANDARD_FAST THEN
+		GVL_MOTION.zJogBW					:= FALSE;
+		GVL_MOTION.zJogFW					:= FALSE;
+	END_IF
+	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
+ELSE
+	IF GVL_MOTION.zCon.JogMode = MC_JOGMODE_STANDARD_SLOW THEN
+		GVL_MOTION.zJogBW					:= FALSE;
+		GVL_MOTION.zJogFW					:= FALSE;
+	END_IF
+	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
+END_IF
+			
 
 //coupled axis assignments, modify as needed for additional coupled axes
 //xAxis
@@ -116,21 +182,6 @@ IF GVL_MOTION.EXT_CTR.CMDCOUPLE THEN
 	END_CASE
 
 END_IF		   						   
-
-//increasing jog speed may cause axis to lock up if it crashes into end stop
-IF  (GVL_MOTION.STATUS.xPosOut > GVL_MOTION.ActiveBasin.xMin)
-AND (GVL_MOTION.STATUS.xPosOut < GVL_MOTION.ActiveBasin.xMax)	
-AND (GVL_MOTION.STATUS.yPosOut > GVL_MOTION.ActiveBasin.yMin)
-AND (GVL_MOTION.STATUS.yPosOut < GVL_MOTION.ActiveBasin.yMax)
-THEN
-	GVL_MOTION.xCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
-	GVL_MOTION.yCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
-	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
-ELSE
-	GVL_MOTION.xCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
-	GVL_MOTION.yCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
-	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
-END_IF
 
 //axis function blocks
 xAxisFunctions(Axis:=xAxis,
@@ -162,6 +213,9 @@ ResetAxes();
 //axis control signals currently tied to VISU
 zAxisMoreLogic();
 
+//testing list of script titles
+ScriptList();
+
 IF GVL_MOTION.EXT_CTR.CMDHOME THEN
 	HomeFixRack();
 END_IF
@@ -180,7 +234,7 @@ END_IF
 
 IF GVL_MOTION.EXT_CTR.SETXPOS THEN
 	GVL_MOTION.EXT_CTR.SETXPOS				:= FALSE;
-	GVL_MOTION.xCon.SetLocation				:= GVL_MOTION.EXT_CTR.POSX - TO_INT(GVL_MOTION.CARRIAGE_OFFSETS[0]);
+	GVL_MOTION.xCon.SetLocation				:= GVL_MOTION.EXT_CTR.POSX - GVL_MOTION.CARRIAGE_OFFSETS[0];
 	GVL_MOTION.xCon.Execute_SPOS			:= TRUE;
 END_IF
 IF GVL_MOTION.xOut.SetPosDone THEN
@@ -190,7 +244,7 @@ END_IF
 
 IF GVL_MOTION.EXT_CTR.SETYPOS THEN
 	GVL_MOTION.EXT_CTR.SETYPOS				:= FALSE;
-	GVL_MOTION.yCon.SetLocation				:= GVL_MOTION.EXT_CTR.POSY - TO_INT(GVL_MOTION.CARRIAGE_OFFSETS[1]);
+	GVL_MOTION.yCon.SetLocation				:= GVL_MOTION.EXT_CTR.POSY - GVL_MOTION.CARRIAGE_OFFSETS[1];
 	GVL_MOTION.yCon.Execute_SPOS			:= TRUE;
 END_IF
 IF GVL_MOTION.yOut.SetPosDone THEN
@@ -200,12 +254,16 @@ END_IF
 
 IF GVL_MOTION.EXT_CTR.SETZPOS THEN
 	GVL_MOTION.EXT_CTR.SETZPOS				:= FALSE;
-	GVL_MOTION.zCon.SetLocation				:= GVL_MOTION.EXT_CTR.POSZ - TO_INT(GVL_MOTION.CARRIAGE_OFFSETS[2]);
+	GVL_MOTION.zCon.SetLocation				:= GVL_MOTION.EXT_CTR.POSZ - GVL_MOTION.CARRIAGE_OFFSETS[2];
 	GVL_MOTION.zCon.Execute_SPOS			:= TRUE;
 END_IF
 IF GVL_MOTION.zOut.SetPosDone THEN
 	GVL_MOTION.zLocated						:= TRUE;
 	GVL_MOTION.zCon.Execute_SPOS			:= FALSE;	
+END_IF
+
+IF GVL_MOTION.xLocated AND GVL_MOTION.yLocated AND GVL_MOTION.zLocated THEN
+	GVL_MOTION.AxesLocated					:= TRUE;
 END_IF
  
 //needs to come after set position or axis reset is executed

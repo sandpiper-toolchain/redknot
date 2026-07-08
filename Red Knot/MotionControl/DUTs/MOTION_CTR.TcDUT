@@ -8,11 +8,11 @@ STRUCT
 	CMDHOMEY				:BOOL	:= FALSE;
 	CMDHOMEZ				:BOOL	:= FALSE;
 	SETXPOS					:BOOL	:= FALSE;
-	POSX					:INT	:= 0;
+	POSX					:LREAL	:= 0;
 	SETYPOS					:BOOL	:= FALSE;
-	POSY					:INT	:= 0;
+	POSY					:LREAL	:= 0;
 	SETZPOS					:BOOL	:= FALSE;
-	POSZ					:INT	:= 0;
+	POSZ					:LREAL	:= 0;
 	
 	//CMDSETZLIM				:BOOL	:= FALSE; //this will set the safe lower limit of z to where it is currently positioned
 	//CMDFINDSTOPS			:BOOL	:= FALSE; //run find stops routine
@@ -29,6 +29,7 @@ STRUCT
 	CMDCSVRESET				:BOOL	:= FALSE; //reset csvwrite logic CHANGED
 	CMDSCRIPTWRITE			:BOOL	:= FALSE; //write script to file based on script name entered
 	CMDSCRIPTREAD			:BOOL	:= FALSE; //read script from file based on script name
+	CMDREQLIST				:BOOL	:= FALSE;
 	SCRIPTITERATIONS		:INT	:= 1; //number of times a script will be executed in a run
 	SCRIPTNAME				:T_MaxString; //name of script for data and script files.
 	BASINCTR				:BOOL	:= FALSE; //true = basin A, false = basin B CHANGED

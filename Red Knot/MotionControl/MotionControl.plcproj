@@ -49,6 +49,9 @@
     <Compile Include="DUTs\MOTION_CTR.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\SCRIPTNAME.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\STATUS.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -99,6 +102,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\RackCheck.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\ScriptList.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\ScriptRead.TcPOU">

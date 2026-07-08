@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="ScriptList" Id="{8bb4b4e5-6a0a-433f-a3cd-db068ded7078}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM ScriptList
+VAR
+	fbEnum: FB_EnumFindFileEntry := ( sNetID := '', tTimeout := T#5S, sPathName := 'C:\MOTION_SCRIPTS\*.csv' );
+    bEnum	:BOOL;
+    bAbort	:BOOL;
+    nState	:BYTE;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE nState OF
+    0:
+		//if requestlist
+        IF GVL_MOTION.CMDLIST THEN             (* flag set ? *)
+            GVL_MOTION.CMDLIST				:= FALSE;         (* reset flag *)
+			GVL_MOTION.LISTPTR				:= 0;
+            fbEnum.eCmd := eEnumCmd_First;    (* enum first entry *)
+            nState							:= 1;
+        END_IF
+
+    1:    (* enum one entry *)
+        IF bAbort THEN
+            bAbort							:= FALSE;
+            fbEnum.eCmd						:= eEnumCmd_Abort;
+        END_IF
+        fbEnum( bExecute := FALSE );
+        fbEnum( bExecute := TRUE );
+        nState								:= 2;
+
+    2:    (* wait until function block not busy *)
+        fbEnum( bExecute := FALSE );
+        IF NOT fbEnum.bBusy THEN
+            IF NOT fbEnum.bError THEN
+                IF NOT fbEnum.bEOE THEN
+                    GVL_MOTION.LISTPTR		:= ADR(fbEnum.stFindFile.sFileName);
+					GVL_MOTION.LISTCNT		:= GVL_MOTION.LISTCNT + 1;
+					GVL_MOTION.LISTPTR		:= GVL_MOTION.LISTPTR + SIZEOF(T_MaxString);
+                    fbEnum.eCmd := eEnumCmd_Next; (* enum next entry *)
+                    nState      := 1;
+                ELSE (* no more entries *)
+					//GVL_MOTION.LISTCNT	:= 1;
+					GVL_MOTION.LISTPTR		:= GVL_MOTION.LISTPTR - ((GVL_MOTION.LISTCNT-1) * SIZEOF(T_MaxString));
+					GVL_MOTION.LISTSTART	:= TRUE;
+                    nState     				:= 3;
+                END_IF
+            ELSE (* log error *)
+                ADSLOGSTR( ADSLOG_MSGTYPE_ERROR OR ADSLOG_MSGTYPE_LOG, 'FB_EnumFindFileEntry error:%s', DWORD_TO_HEXSTR( fbEnum.nErrID, 0, FALSE ) );
+                nState    					:= 0;
+            END_IF
+        END_IF
+	3:
+		//wait for LISTDONE and reset variables
+		IF GVL_MOTION.LISTEND THEN
+			GVL_MOTION.LISTPTR				:= 0;
+			GVL_MOTION.LISTCNT				:= 1;
+			nState							:= 0;
+			GVL_MOTION.LISTEND				:= FALSE;
+		END_IF
+END_CASE]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
