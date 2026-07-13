@@ -13,7 +13,7 @@ STRUCT
 	Move_Abs_Err		:BOOL	:= FALSE;
 	//HS_Err				:BOOL	:= FALSE;
 	Basin_Exceed_Err	:BOOL	:= FALSE;
-	Basin_Set_Err		:BOOL	:= FALSE;
+	//Basin_Set_Err		:BOOL	:= FALSE;
 	
 	AxesLocated			:BOOL	:= FALSE;
 	//HardStopLoc			:BOOL	:= FALSE; 
@@ -24,6 +24,7 @@ STRUCT
 	
 	CurInstr			:INT;
 	NextInstr			:INT;
+	ScriptEnd			:INT;
 	RUN_INDEX			:INT;
 	
 	xCoupled			:BOOL;
@@ -40,8 +41,8 @@ STRUCT
 	basinyMax			:LREAL;
 
 	
-	HardStopLocations	:ARRAY[0..2] 	  OF LREAL	:= [485,455,120]; //includes carriage offsets 
-
+	HardStopLocations	:ARRAY[0..2] OF LREAL	:= [485,455,120]; //includes carriage offsets 
+	CARRIAGE_OFFSETS	:ARRAY[0..2] OF LREAL	:= [84.25,62.5,40]; //for display. also in GVL_MOTION
 	
 	
 END_STRUCT

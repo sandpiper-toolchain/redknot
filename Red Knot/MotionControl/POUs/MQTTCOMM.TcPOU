@@ -4,26 +4,27 @@
     <Declaration><![CDATA[PROGRAM MQTTCOMM
 VAR
     fbMqttClient    :FB_IotMqttClient;
-    bSetParameter   :BOOL 		 := TRUE;
-    bConnect        :BOOL 		 := TRUE;	
+    bSetParameter   :BOOL 		 	:= TRUE;
+    bConnect        :BOOL 		 	:= TRUE;	
 	
 	(* published message *)
-	DaqDataPub		:STRING(255) := 'DAQ/DATA';
-	MotionStatusPub :STRING(255) := 'MOTION/STATUS';
-	MotionCTREcho	:STRING(255) := 'MOTION/CTR_ECHO';
-	DAQCTREcho		:STRING(255) := 'DAQ/CTR_ECHO';
-	IBuffEcho		:STRING(255) := 'MOTION/INSTR_ECHO';
-	ScriptName		:STRING(255) := 'MOTION/SCRIPTNAME';
+	//DaqDataPub		:STRING(255) := 'DAQ/DATA';
+	MotionStatusPub :STRING(255)	:= 'MOTION/STATUS';
+	MotionCTREcho	:STRING(255)	:= 'MOTION/CTR_ECHO';
+	//DAQCTREcho		:STRING(255) := 'DAQ/CTR_ECHO';
+	InstrSend		:STRING(255)	:= 'MOTION/INSTR_READ';
+	ScriptName		:STRING(255)	:= 'MOTION/SCRIPTNAME';
 	sPayloadPub 	:STRING(1000);
-	fbTimer 		:TON 		 := (PT:=T#1S);
-	HBtimer 		:TON 		 := (PT:=T#3S);
+	fbTimer 		:TON			:= (PT:=T#1S);
+	HBtimer 		:TON			:= (PT:=T#3S);
+	scriptTimer		:TON			:= (PT:=T#2MS);
 	found 			:UDINT;	
 	
    (* received message *)
     SubMCTR		    :BOOL;
 	SubDCTR			:BOOL;
 	SubIBuff		:BOOL;
-    sTopicSub       :STRING(255) := 'MOTION/CTR';
+    sTopicSub       :STRING(255)	:= 'MOTION/CTR';
     {attribute 'TcEncoding':='UTF-8'}
     sTopicRcv       :STRING(255);
     {attribute 'TcEncoding':='UTF-8'}
@@ -41,8 +42,9 @@ VAR
 	
 	ok				:BOOL;
 	error			:HRESULT;
-	index			:INT	:= 1;
+	index			:INT			:= 1;
 	payload			:T_MaxString;
+	scriptcnt		:INT			:= 0;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -153,20 +155,7 @@ IF fbMqttClient.bConnected THEN
 // 		fbMqttClient.Publish(sTopic:= DAQCTREcho, pPayload:= ADR(sPayloadPub), 
 // 			nPayloadSize:= LEN2(ADR(sPayloadPub)), eQoS:= TcIotMqttQos.AtMostOnceDelivery, 
 // 			bRetain:= TRUE, bQueue:= FALSE );
-
-		fbJson.ResetDocument();
-		fbJson.StartObject();	
-		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, '', 'MOTION_INSTRUCTION', SIZEOF(GVL_MOTION.TestBuffer), ADR(GVL_MOTION.TestBuffer));
-		fbJson.EndObject();
-		fbJson.CopyDocument(sPayloadPub, SIZEOF(sPayLoadPub));
-		
-		found	:= FIND2(ADR(sPayLoadPub), ADR('}}'));
-		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 1, found + 1);
-		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 4, 1);
-		
-		fbMqttClient.Publish(sTopic:= IBuffEcho, pPayload:= ADR(sPayloadPub), 
-			nPayloadSize:= LEN2(ADR(sPayloadPub)), eQoS:= TcIotMqttQos.AtMostOnceDelivery, 
-			bRetain:= TRUE, bQueue:= FALSE );	
+	
 			
 		IF GVL_MOTION.LISTSTART THEN
 			IF index <= GVL_MOTION.LISTCNT THEN
@@ -206,6 +195,34 @@ IF fbMqttClient.bConnected THEN
 			END_IF
 		END_IF
     END_IF
+END_IF
+
+IF fbMqttClient.bConnected THEN
+	IF GVL_MOTION.EXT_CTR.CMDREQSCRIPT THEN
+		scriptTimer(IN:=TRUE);
+		IF scriptTimer.Q THEN
+			scriptTimer(IN:=FALSE);
+			IF scriptcnt < GVL_MOTION.STATUS.ScriptEnd THEN
+				fbJson.ResetDocument();
+				fbJson.StartObject();	
+				fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, '', 'MOTION_INSTRUCTION', SIZEOF(GVL_MOTION.Script[scriptcnt]), ADR(GVL_MOTION.Script[scriptcnt]));
+				fbJson.EndObject();
+				fbJson.CopyDocument(sPayloadPub, SIZEOF(sPayLoadPub));
+				
+				found	:= FIND2(ADR(sPayLoadPub), ADR('}}'));
+				DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 1, found + 1);
+				DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 4, 1);
+				
+				fbMqttClient.Publish(sTopic:= InstrSend, pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub)), eQoS:= TcIotMqttQos.AtMostOnceDelivery, 
+					bRetain:= TRUE, bQueue:= FALSE );
+				scriptcnt						:= scriptcnt + 1;
+			ELSE
+				scriptcnt						:= 0;
+				GVL_MOTION.EXT_CTR.CMDREQSCRIPT	:= FALSE;
+			END_IF
+		END_IF
+	END_IF
 END_IF
 
 HBtimer(IN:=TRUE); //3 second timer. set heartbeat false. control continuously sets heartbeat true, after 3 cycles disable sensitive motion controls

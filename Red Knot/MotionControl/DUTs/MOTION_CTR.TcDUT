@@ -30,6 +30,7 @@ STRUCT
 	CMDSCRIPTWRITE			:BOOL	:= FALSE; //write script to file based on script name entered
 	CMDSCRIPTREAD			:BOOL	:= FALSE; //read script from file based on script name
 	CMDREQLIST				:BOOL	:= FALSE;
+	CMDREQSCRIPT			:BOOL	:= FALSE;
 	SCRIPTITERATIONS		:INT	:= 1; //number of times a script will be executed in a run
 	SCRIPTNAME				:T_MaxString; //name of script for data and script files.
 	BASINCTR				:BOOL	:= FALSE; //true = basin A, false = basin B CHANGED

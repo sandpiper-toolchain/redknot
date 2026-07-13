@@ -14,8 +14,8 @@ END_VAR
       <ST><![CDATA[CASE nState OF
     0:
 		//if requestlist
-        IF GVL_MOTION.CMDLIST THEN             (* flag set ? *)
-            GVL_MOTION.CMDLIST				:= FALSE;         (* reset flag *)
+        IF GVL_MOTION.EXT_CTR.CMDREQLIST THEN             (* flag set ? *)
+            GVL_MOTION.EXT_CTR.CMDREQLIST	:= FALSE;         (* reset flag *)
 			GVL_MOTION.LISTPTR				:= 0;
             fbEnum.eCmd := eEnumCmd_First;    (* enum first entry *)
             nState							:= 1;
