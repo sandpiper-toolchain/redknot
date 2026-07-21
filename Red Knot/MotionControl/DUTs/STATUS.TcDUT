@@ -9,11 +9,13 @@ STRUCT
 	Rack_Err			:BOOL	:= FALSE;
 	Script_Open_Err		:BOOL	:= FALSE;	
 	Script_Read_Err		:BOOL	:= FALSE;
+	List_Overflow_Err	:BOOL	:= FALSE;
 	Move_Rel_Err		:BOOL 	:= FALSE;
 	Move_Abs_Err		:BOOL	:= FALSE;
 	//HS_Err				:BOOL	:= FALSE;
 	Basin_Exceed_Err	:BOOL	:= FALSE;
 	//Basin_Set_Err		:BOOL	:= FALSE;
+	
 	
 	AxesLocated			:BOOL	:= FALSE;
 	//HardStopLoc			:BOOL	:= FALSE; 

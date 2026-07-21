@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="DeleteScriptFile" Id="{8063690d-4b3a-4e99-a706-756d6bdec19c}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM DeleteScriptFile
+VAR
+	step			:INT	:= 0;
+	directory		:T_MaxString	:= 'C:\MOTION_SCRIPTS';
+	CMDPATH			:T_MaxString	:= 'C:\Windows\System32\cmd.exe';
+	COMNDLINE		:T_MaxString	:= '/C "del '; // /C carries out command string then terminates
+	fbCMD			:NT_StartProcess; //run CMD to create data directories
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE step OF
+	0:
+	IF GVL_MOTION.EXT_CTR.CMDSCRIPTDEL THEN
+		GVL_MOTION.EXT_CTR.CMDSCRIPTDEL	:= FALSE;
+		COMNDLINE						:= concat('/C "del ', GVL_MOTION.EXT_CTR.SCRIPTNAME);
+		COMNDLINE						:= concat(COMNDLINE, '_Script.csv');
+		step							:= 1;
+	END_IF
+	
+	1:
+		fbCMD( PATHSTR:= CMDPATH, DIRNAME:= directory, COMNDLINE:= COMNDLINE, START:= TRUE);
+		fbCMD(START:= FALSE);
+		IF NOT fbCMD.BUSY THEN
+			step 						:= 0;
+		END_IF
+END_CASE]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

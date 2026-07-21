@@ -23,6 +23,7 @@ STRUCT
 	
 	CMDADD					:BOOL	:= FALSE; //add instruction to script
 	CMDCLR					:BOOL	:= FALSE; //clear script
+	CMDSCRIPTDEL			:BOOL	:= FALSE; //delete script file
 	CMDDEL					:BOOL	:= FALSE; //delete instruction at end of script
 	CMDLOOP					:BOOL	:= FALSE; //sets script to run indefinitely and forces separate data files for each script run
 	CMDRUN					:BOOL	:= FALSE; //run script if all safety conditions are met (homed, hard stops located, x axes coupled, safe z set)

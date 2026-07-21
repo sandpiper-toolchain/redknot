@@ -74,6 +74,9 @@
     <Compile Include="POUs\ClearScript.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\DeleteScriptFile.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\HomeFixRack.TcPOU">
       <SubType>Code</SubType>
     </Compile>

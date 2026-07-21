@@ -181,6 +181,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"273"</v>
+              <v n="TextDefault">"Clear Loaded Script"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"848"</v>
               <v n="TextDefault">"Clear Queue"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -278,6 +283,16 @@
             <o>
               <v n="TextID">"1786"</v>
               <v n="TextDefault">"Delete Loaded Script"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"2013"</v>
+              <v n="TextDefault">"delete script file"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"140"</v>
+              <v n="TextDefault">"Delete Script File"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -738,6 +753,16 @@
             <o>
               <v n="TextID">"2090"</v>
               <v n="TextDefault">"scriptlist"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1909"</v>
+              <v n="TextDefault">"send list of script names"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"773"</v>
+              <v n="TextDefault">"send script"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

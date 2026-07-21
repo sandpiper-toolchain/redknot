@@ -7,7 +7,7 @@ VAR
     bEnum	:BOOL;
     bAbort	:BOOL;
     nState	:BYTE;
-
+	found	:UDINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -15,49 +15,61 @@ END_VAR
     0:
 		//if requestlist
         IF GVL_MOTION.EXT_CTR.CMDREQLIST THEN             (* flag set ? *)
-            GVL_MOTION.EXT_CTR.CMDREQLIST	:= FALSE;         (* reset flag *)
-			GVL_MOTION.LISTPTR				:= 0;
+            GVL_MOTION.EXT_CTR.CMDREQLIST						:= FALSE;         (* reset flag *)
+			
             fbEnum.eCmd := eEnumCmd_First;    (* enum first entry *)
-            nState							:= 1;
+            nState												:= 1;
         END_IF
 
     1:    (* enum one entry *)
         IF bAbort THEN
-            bAbort							:= FALSE;
-            fbEnum.eCmd						:= eEnumCmd_Abort;
+            bAbort												:= FALSE;
+            fbEnum.eCmd											:= eEnumCmd_Abort;
         END_IF
         fbEnum( bExecute := FALSE );
         fbEnum( bExecute := TRUE );
-        nState								:= 2;
+        nState													:= 2;
 
     2:    (* wait until function block not busy *)
         fbEnum( bExecute := FALSE );
         IF NOT fbEnum.bBusy THEN
             IF NOT fbEnum.bError THEN
                 IF NOT fbEnum.bEOE THEN
-                    GVL_MOTION.LISTPTR		:= ADR(fbEnum.stFindFile.sFileName);
-					GVL_MOTION.LISTCNT		:= GVL_MOTION.LISTCNT + 1;
-					GVL_MOTION.LISTPTR		:= GVL_MOTION.LISTPTR + SIZEOF(T_MaxString);
-                    fbEnum.eCmd := eEnumCmd_Next; (* enum next entry *)
-                    nState      := 1;
+						IF GVL_MOTION.LISTCNT < 1000 THEN
+						GVL_MOTION.LIST[GVL_MOTION.LISTCNT]		:= fbEnum.stFindFile.sFileName;
+						found									:= FIND2(ADR(GVL_MOTION.LIST[GVL_MOTION.LISTCNT]), ADR('_Script.csv'));
+						IF found <> 0 THEN
+							//delete '_Script.csv' from title
+							DELETE2(ADR(GVL_MOTION.LIST[GVL_MOTION.LISTCNT])
+								   ,ADR(GVL_MOTION.LIST[GVL_MOTION.LISTCNT])
+								   ,SIZEOF(GVL_MOTION.LIST[GVL_MOTION.LISTCNT])
+								   ,11
+								   ,found);
+							GVL_MOTION.LISTCNT		:= GVL_MOTION.LISTCNT + 1;
+						END_IF
+						fbEnum.eCmd := eEnumCmd_Next; (* enum next entry *)
+						nState      := 1;
+						ELSE
+							GVL_MOTION.STATUS.List_Overflow_Err	:= TRUE;
+							GVL_MOTION.LISTCNT					:= 0;
+							nState								:= 0;
+						END_IF	
                 ELSE (* no more entries *)
 					//GVL_MOTION.LISTCNT	:= 1;
-					GVL_MOTION.LISTPTR		:= GVL_MOTION.LISTPTR - ((GVL_MOTION.LISTCNT-1) * SIZEOF(T_MaxString));
-					GVL_MOTION.LISTSTART	:= TRUE;
-                    nState     				:= 3;
+					GVL_MOTION.LISTSTART						:= TRUE;
+                    nState     									:= 3;
                 END_IF
             ELSE (* log error *)
                 ADSLOGSTR( ADSLOG_MSGTYPE_ERROR OR ADSLOG_MSGTYPE_LOG, 'FB_EnumFindFileEntry error:%s', DWORD_TO_HEXSTR( fbEnum.nErrID, 0, FALSE ) );
-                nState    					:= 0;
+                nState    										:= 0;
             END_IF
         END_IF
 	3:
 		//wait for LISTDONE and reset variables
 		IF GVL_MOTION.LISTEND THEN
-			GVL_MOTION.LISTPTR				:= 0;
-			GVL_MOTION.LISTCNT				:= 1;
-			nState							:= 0;
-			GVL_MOTION.LISTEND				:= FALSE;
+			GVL_MOTION.LISTCNT									:= 0;
+			nState												:= 0;
+			GVL_MOTION.LISTEND									:= FALSE;
 		END_IF
 END_CASE]]></ST>
     </Implementation>

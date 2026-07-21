@@ -214,8 +214,11 @@ ResetAxes();
 //axis control signals currently tied to VISU
 zAxisMoreLogic();
 
-//testing list of script titles
+//generate list of script titles
 ScriptList();
+
+//delete script based on selected name
+DeleteScriptFile();
 
 IF GVL_MOTION.EXT_CTR.CMDHOME THEN
 	HomeFixRack();

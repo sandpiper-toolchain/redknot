@@ -57,15 +57,15 @@ VAR_GLOBAL PERSISTENT
 										yMin := 52,
 										yMax := 100);
 	NOTBASINCTR				:BOOL;
-	CSV_ROW					:INT	:= 0;
+	CSV_ROW					:INT						:= 0;
 	
 	//variables for script list
-	LISTSTART				:BOOL	:= FALSE;
-	LISTEND					:BOOL	:= FALSE;
-	LISTPTR					:POINTER TO T_MaxString;
-	LISTCNT					:INT	:= 1;
+	
+	LISTSTART				:BOOL						:= FALSE;
+	LISTEND					:BOOL						:= FALSE;
+	LIST					:ARRAY[0..999] OF T_MaxString;
+	LISTCNT					:INT						:= 0;
 	SCRIPTNAME				:SCRIPTNAME;
-	opendialog				:BOOL	:= FALSE;
 	
 	//filelistp				:VISU_FBFileListProvider;
 	

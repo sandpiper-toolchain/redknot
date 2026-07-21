@@ -33,7 +33,7 @@ VAR
 
 	TEMP			:T_MaxString	:= '';
 	CMDPATH			:T_MaxString	:= 'C:\Windows\System32\cmd.exe';
-	COMNDLINE		:T_MaxString	:= '/C "mkdir ';
+	COMNDLINE		:T_MaxString	:= '/C "mkdir '; // /C carries out command string then terminates
 	TOPDIR			:T_MaxString	:= 'C:\';
 	FILENAME		:T_MaxString;
 	FILEPATH		:T_MaxString; 	//path of directory for current experiment including file name	
@@ -84,7 +84,7 @@ CASE step OF
 			hFile					:= 0;
 			nRow					:= 0;
 			nColumn					:= 0;
-			TOPDIR					:= 'C:\data';
+			TOPDIR					:= 'C:\';
 			//make sure C:\MOTION_SCRIPTS exists
 			fbCMD( PATHSTR:= CMDPATH, DIRNAME:= 'C:\', COMNDLINE:= concat(COMNDLINE, 'MOTION_SCRIPTS"'), START:= TRUE);
 			fbCMD(START:= FALSE);
@@ -98,7 +98,7 @@ CASE step OF
 	1:
 	
 		TOPDIR						:= concat(TOPDIR, 'MOTION_SCRIPTS\');
-		FILENAME					:= concat(GVL_MOTION.EXT_CTR.SCRIPTNAME, '.csv');
+		FILENAME					:= concat(GVL_MOTION.EXT_CTR.SCRIPTNAME, '_Script.csv');
 		
 		//path to working folder
 		FILEPATH	:= concat(TOPDIR, FILENAME);	
