@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="MAIN" Id="{87b2b848-4606-4e60-8645-04a896b6e737}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
@@ -83,7 +83,7 @@ END_IF
 GVL_MOTION.STATUS.basinxMin					:= GVL_MOTION.ActiveBasin.xMin;					
 GVL_MOTION.STATUS.basinxMax					:= GVL_MOTION.ActiveBasin.xMax;
 GVL_MOTION.STATUS.basinyMin					:= GVL_MOTION.ActiveBasin.yMin;
-GVL_MOTION.STATUS.basinyMax					:= GVL_MOTION.ActiveBasin.xMin;	
+GVL_MOTION.STATUS.basinyMax					:= GVL_MOTION.ActiveBasin.yMax;	
 	
 			   										   						   
 IF  GVL_MOTION.xOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[0] >= GVL_MOTION.ActiveBasin.xMin 
@@ -300,5 +300,9 @@ ELSE
 	GVL_MOTION.InstructionState				:= 0;
 END_IF]]></ST>
     </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="3" Count="268" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

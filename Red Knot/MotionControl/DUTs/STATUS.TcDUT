@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <DUT Name="STATUS" Id="{f85b29e1-bc75-46b4-af59-e2e0fcb03fd0}">
     <Declaration><![CDATA[TYPE STATUS :
 STRUCT
@@ -43,8 +43,8 @@ STRUCT
 	basinyMax			:LREAL;
 
 	
-	HardStopLocations	:ARRAY[0..2] OF LREAL	:= [485,455,120]; //includes carriage offsets 
-	CARRIAGE_OFFSETS	:ARRAY[0..2] OF LREAL	:= [84.25,62.5,40]; //for display. also in GVL_MOTION
+	HardStopLocations	:ARRAY[0..2] OF LREAL	:= [100000,11000,1000]; //includes carriage offsets 
+	CARRIAGE_OFFSETS	:ARRAY[0..2] OF LREAL	:= [500,250,100]; //for display. also in GVL_MOTION
 	
 	
 END_STRUCT

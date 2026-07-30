@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.24">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.18">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-000000000035}" TcBaseType="true" HideType="true">UINTARR2</Name>
@@ -444,7 +444,7 @@ Drive Status 4 (manually linked):
 			</Relations>
 		</DataType>
 		<DataType>
-			<Name GUID="{875D2B22-B7EB-497E-B933-0C004593CCF3}" Namespace="MC" HideType="true" IecDeclaration="DWORD;">PLCTONC_AXIS_REF_CTRL</Name>
+			<Name GUID="{875D2B22-B7EB-497E-B933-0C004593CCF3}" Namespace="MC" TcBaseType="true" HideType="true" IecDeclaration="DWORD;">PLCTONC_AXIS_REF_CTRL</Name>
 			<BitSize>32</BitSize>
 			<SubItem>
 				<Name>Enable</Name>
@@ -631,7 +631,7 @@ Drive Status 4 (manually linked):
 			</Relations>
 		</DataType>
 		<DataType>
-			<Name GUID="{CBC83B73-B816-4597-A9E5-2B03263CA131}" Namespace="MC" HideType="true" IecDeclaration="DWORD;">NCTOPLC_AXIS_REF_STATE</Name>
+			<Name GUID="{CBC83B73-B816-4597-A9E5-2B03263CA131}" Namespace="MC" TcBaseType="true" HideType="true" IecDeclaration="DWORD;">NCTOPLC_AXIS_REF_STATE</Name>
 			<BitSize>32</BitSize>
 			<SubItem>
 				<Name>Operational</Name>
@@ -841,7 +841,7 @@ Drive Status 4 (manually linked):
 			</Relations>
 		</DataType>
 		<DataType>
-			<Name GUID="{6BDEED54-7268-405F-A18B-665A0AE0FEE9}" Namespace="MC" HideType="true" IecDeclaration="DWORD;">NCTOPLC_AXIS_REF_OPMODE</Name>
+			<Name GUID="{6BDEED54-7268-405F-A18B-665A0AE0FEE9}" Namespace="MC" TcBaseType="true" HideType="true" IecDeclaration="DWORD;">NCTOPLC_AXIS_REF_OPMODE</Name>
 			<BitSize>32</BitSize>
 			<SubItem>
 				<Name>OpModePosAreaMonitoring</Name>
@@ -959,7 +959,7 @@ Drive Status 4 (manually linked):
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{303D9411-849C-467F-8A4C-5C8CD0F3DD46}" Namespace="MC" HideType="true">NCTOPLC_AXIS_REF_STATE2_FLAGS</Name>
+			<Name GUID="{303D9411-849C-467F-8A4C-5C8CD0F3DD46}" Namespace="MC" TcBaseType="true" HideType="true">NCTOPLC_AXIS_REF_STATE2_FLAGS</Name>
 			<BitSize>32</BitSize>
 			<SubItem>
 				<Name>AvoidingCollision</Name>
@@ -978,7 +978,7 @@ Drive Status 4 (manually linked):
 			</Format>
 		</DataType>
 		<DataType>
-			<Name GUID="{669F3788-48FD-42CF-8A59-2DA946853FB6}" Namespace="MC" HideType="true">NCTOPLC_AXIS_REF_STATE2</Name>
+			<Name GUID="{669F3788-48FD-42CF-8A59-2DA946853FB6}" Namespace="MC" TcBaseType="true" HideType="true">NCTOPLC_AXIS_REF_STATE2</Name>
 			<BitSize>32</BitSize>
 			<SubItem>
 				<Name>Value</Name>
@@ -1003,7 +1003,7 @@ Drive Status 4 (manually linked):
 			</Format>
 		</DataType>
 		<DataType>
-			<Name GUID="{F7B9FC50-054E-4547-B468-83A9E72D8064}" Namespace="MC" HideType="true">NCTOPLC_AXIS_REF_STATE3_FLAGS</Name>
+			<Name GUID="{F7B9FC50-054E-4547-B468-83A9E72D8064}" Namespace="MC" TcBaseType="true" HideType="true">NCTOPLC_AXIS_REF_STATE3_FLAGS</Name>
 			<BitSize>32</BitSize>
 			<SubItem>
 				<Name>TouchProbe1InputState</Name>
@@ -1028,7 +1028,7 @@ Drive Status 4 (manually linked):
 			</Format>
 		</DataType>
 		<DataType>
-			<Name GUID="{60E203BA-3CEE-4BB0-8728-643B1F529592}" Namespace="MC" HideType="true">NCTOPLC_AXIS_REF_STATE3</Name>
+			<Name GUID="{60E203BA-3CEE-4BB0-8728-643B1F529592}" Namespace="MC" TcBaseType="true" HideType="true">NCTOPLC_AXIS_REF_STATE3</Name>
 			<BitSize>32</BitSize>
 			<SubItem>
 				<Name>Value</Name>
@@ -1053,7 +1053,7 @@ Drive Status 4 (manually linked):
 			</Format>
 		</DataType>
 		<DataType>
-			<Name GUID="{BA9D9D0F-1A4A-4A27-A19F-3032626A8491}" Namespace="MC" HideType="true">NCTOPLC_AXIS_REF_CAMCOUPLINGSTATE</Name>
+			<Name GUID="{BA9D9D0F-1A4A-4A27-A19F-3032626A8491}" Namespace="MC" TcBaseType="true" HideType="true">NCTOPLC_AXIS_REF_CAMCOUPLINGSTATE</Name>
 			<BitSize>8</BitSize>
 			<SubItem>
 				<Name>CamActivationPending</Name>
@@ -1464,7 +1464,7 @@ External Setpoint Generation:
 					<Name>xAxis</Name>
 					<AxisPara>
 						<Dynamic Acceleration="1356.33" Deceleration="1356.33" Jerk="4068.99"/>
-						<Velo RefSearch="10" RefSync="9" SlowManual="25" FastManual="100" Fast="904.22" Maximum="904.22"/>
+						<Velo RefSearch="10" RefSync="9" FastManual="250" Fast="904.22" Maximum="904.22"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="1">
@@ -1619,11 +1619,11 @@ External Setpoint Generation:
 						</Var>
 					</Vars>
 				</Axis>
-				<Axis Id="2" CreateSymbols="true" AxisType="1">
+				<Axis Id="2" CreateSymbols="true" AxisType="1" SimulationMode="true">
 					<Name>yAxis</Name>
 					<AxisPara>
 						<Dynamic Acceleration="678.165" Deceleration="678.165" Jerk="2034.49"/>
-						<Velo RefSearch="12" RefSync="5" SlowManual="50" FastManual="100" Fast="452.11" Maximum="452.11"/>
+						<Velo RefSearch="12" RefSync="5" FastManual="250" Fast="452.11" Maximum="452.11"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="19">
@@ -1927,7 +1927,7 @@ External Setpoint Generation:
 					<Name>zAxis</Name>
 					<AxisPara>
 						<Dynamic Acceleration="33.9075" Deceleration="33.9075" Jerk="101.722"/>
-						<Velo RefSearch="3" RefSync="3" SlowManual="7" FastManual="20" Fast="22.605" Maximum="22.605"/>
+						<Velo RefSearch="3" RefSync="3" SlowManual="20" FastManual="100" Fast="22.605" Maximum="22.605"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="1">
@@ -2086,7 +2086,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{35F1EE57-8B64-404F-9A2B-38524D23373E}" Name="MotionControl" PrjFilePath="MotionControl\MotionControl.plcproj" TmcFilePath="MotionControl\MotionControl.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{55538A08-F006-E680-6198-BD6E735D8007}" TmcPath="MotionControl\MotionControl.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{B1AF491B-053E-4E57-4CAA-AAC96BEA3156}" TmcPath="MotionControl\MotionControl.tmc">
 					<Name>MotionControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1" ContextId="1" AreaNo="16">
@@ -2233,7 +2233,6 @@ External Setpoint Generation:
 							<CycleTime>1000000</CycleTime>
 						</Context>
 					</Contexts>
-					<JsonDynPous><![CDATA[null]]></JsonDynPous>
 					<TaskPouOids>
 						<TaskPouOid Prio="6" OTCID="#x08502003"/>
 						<TaskPouOid Prio="8" OTCID="#x08502004"/>
@@ -2243,7 +2242,7 @@ External Setpoint Generation:
 			<PlcAuxTask Affinity="#x00000008"/>
 		</Plc>
 		<Io AddIoDescToArchive="true">
-			<Device Id="2" DevType="111" DevFlags="#x0003" AmsPort="28674" AmsNetId="10.1.179.227.3.1" RemoteName="Device 2 (EtherCAT)" InfoImageId="5">
+			<Device Id="2" Disabled="true" DevType="111" DevFlags="#x0003" AmsPort="28674" AmsNetId="10.1.179.227.3.1" RemoteName="Device 2 (EtherCAT)" InfoImageId="5">
 				<Name>Device 2 (EtherCAT)</Name>
 				<AddressInfo>
 					<Pnp>
@@ -2255,7 +2254,7 @@ External Setpoint Generation:
 				<Image Id="4" AddrType="9" ImageType="3">
 					<Name>Image</Name>
 				</Image>
-				<Box Id="1" BoxType="9099" BoxFlags="#x00000020">
+				<Box Id="1" Disabled="true" BoxType="9099" BoxFlags="#x00000020">
 					<Name>Drive 1 (ClearPath EtherCAT Integrated ServoMotor)</Name>
 					<ImageId>65</ImageId>
 					<EtherCAT SlaveType="2" PdiType="#x0e08" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="47" FoeType="1" VendorId="#x00000c96" ProductCode="#x00000001" RevisionNo="#x00000002" InfoDataAddr="true" InfoDataSoeDS401="true" TimeoutMailbox1="2000" TimeoutMailbox2="20000" PortPhys="17" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="ClearPath EC (CoE Rev 2)" Desc="ClearPath EtherCAT Integrated ServoMotor" PortABoxInfo="#x00ffffff">
@@ -2527,7 +2526,6 @@ External Setpoint Generation:
 		</Io>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{00000000-0040-0304-1000-040340000403}" Id="#x02030010"/>
 		<MappingInfo Identifier="{05000010-2003-0850-1000-040300205008}" Id="#x02030020" Watchdog="04000000040000000400000004000000"/>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^yAxis">
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Drive 1 (ClearPath EtherCAT Integrated ServoMotor)">

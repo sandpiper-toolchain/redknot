@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="JsonSaxHandler" Id="{fd22ba04-0d36-44e7-a81e-c59d3ac0f333}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'c++_compatible'}
 FUNCTION_BLOCK JsonSaxHandler IMPLEMENTS ITcJsonSaxHandler
@@ -45,31 +45,44 @@ END_VAR
         <ST><![CDATA[
 	IF label = 'MOTION/CTR' THEN
 		IF tempkey = 'CMDADD' THEN
-			GVL_MOTION.TEST_CTR.CMDADD := value;
+			GVL_MOTION.EXT_CTR.CMDADD := value;
 		ELSIF tempkey = 'CMDCLR' THEN
-			GVL_MOTION.TEST_CTR.CMDCLR := value;
+			GVL_MOTION.EXT_CTR.CMDCLR := value;
+		ELSIF tempkey = 'CMDSCRIPTDEL' THEN
+			GVL_MOTION.EXT_CTR.CMDSCRIPTDEL := value;	
 		ELSIF tempkey = 'CMDDEL' THEN
-			GVL_MOTION.TEST_CTR.CMDDEL := value;	
+			GVL_MOTION.EXT_CTR.CMDDEL := value;	
 		ELSIF tempkey = 'CMDRUN' THEN
-			GVL_MOTION.TEST_CTR.CMDRUN := value;
-		ELSIF tempkey = 'CMDHOME' THEN
-			GVL_MOTION.TEST_CTR.CMDHOME := value;
-// 		ELSIF tempkey = 'CMDSETZLIM' THEN
-// 			GVL_MOTION.TEST_CTR.CMDSETZLIM := value;
-// 		ELSIF tempkey = 'CMDFINDSTOPS' THEN
-// 			GVL_MOTION.TEST_CTR.CMDFINDSTOPS := value;				
+			GVL_MOTION.EXT_CTR.CMDRUN := value;
 		ELSIF tempkey = 'CMDLOOP' THEN
-			GVL_MOTION.TEST_CTR.CMDLOOP := value;	
+			GVL_MOTION.EXT_CTR.CMDLOOP := value;	
+		ELSIF tempkey = 'CMDHOME' THEN
+			
+			GVL_MOTION.EXT_CTR.CMDHOME := value;
+		ELSIF tempkey = 'CMDHOMEX' THEN
+			GVL_MOTION.EXT_CTR.CMDHOMEX := value;
+		ELSIF tempkey = 'CMDHOMEY' THEN
+			GVL_MOTION.EXT_CTR.CMDHOMEY := value;
+		ELSIF tempkey = 'CMDHOMEZ' THEN
+			GVL_MOTION.EXT_CTR.CMDHOMEZ := value;	
+		ELSIF tempkey = 'CMDCOUPLE' THEN
+			GVL_MOTION.EXT_CTR.CMDCOUPLE := value;				
+		ELSIF tempkey = 'CMDLOOP' THEN
+			GVL_MOTION.EXT_CTR.CMDLOOP := value;	
 		ELSIF tempkey = 'AXESHALT' THEN
-			GVL_MOTION.TEST_CTR.AXESHALT := value;	
+			GVL_MOTION.EXT_CTR.AXESHALT := value;	
 		ELSIF tempkey = 'AXESEN' THEN
-			GVL_MOTION.TEST_CTR.AXESEN := value;		
+			GVL_MOTION.EXT_CTR.AXESEN := value;		
 		ELSIF tempkey = 'AXESRESET' THEN
-			GVL_MOTION.TEST_CTR.AXESRESET := value;	
+			GVL_MOTION.EXT_CTR.AXESRESET := value;	
 		ELSIF tempkey = 'CMDSCRIPTWRITE' THEN
-			GVL_MOTION.TEST_CTR.CMDSCRIPTWRITE := value;
+			GVL_MOTION.EXT_CTR.CMDSCRIPTWRITE := value;
 		ELSIF tempkey = 'CMDSCRIPTREAD' THEN
-			GVL_MOTION.TEST_CTR.CMDSCRIPTREAD := value;	
+			GVL_MOTION.EXT_CTR.CMDSCRIPTREAD := value;	
+		ELSIF tempkey = 'CMDREQLIST' THEN
+			GVL_MOTION.EXT_CTR.CMDREQLIST := value;
+		ELSIF tempkey = 'CMDREQSCRIPT' THEN
+			GVL_MOTION.EXT_CTR.CMDREQSCRIPT := value;	
 		ELSIF tempkey = 'XJOGFW' THEN
 			GVL_MOTION.EXT_CTR.XJOGFW := value;
 		ELSIF tempkey = 'XJOGBW' THEN
@@ -82,6 +95,12 @@ END_VAR
 			GVL_MOTION.EXT_CTR.ZJOGFW := value;
 		ELSIF tempkey = 'ZJOGBW' THEN
 			GVL_MOTION.EXT_CTR.ZJOGBW := value;	
+		ELSIF tempkey = 'SETXPOS' THEN
+			GVL_MOTION.EXT_CTR.SETXPOS := value;
+		ELSIF tempkey = 'SETYPOS' THEN
+			GVL_MOTION.EXT_CTR.SETYPOS := value;
+		ELSIF tempkey = 'SETZPOS' THEN
+			GVL_MOTION.EXT_CTR.SETZPOS := value;			
 		END_IF		
 // 	ELSIF label = 'DAQ/CTR' THEN
 // 		IF tempkey = 'CMDDATACLR' THEN
@@ -225,13 +244,20 @@ END_VAR
 
 	IF label = 'MOTION/INSTR_BUFFER' THEN
 		IF tempkey = 'SetXPosition' THEN
-			GVL_MOTION.TestBuffer.SetXPosition		:= value;
+			GVL_MOTION.InstructionBuffer.SetXPosition		:= value;
 		ELSIF tempkey = 'SetYPosition' THEN
-			GVL_MOTION.TestBuffer.SetYPosition		:= value;
+			GVL_MOTION.InstructionBuffer.SetYPosition		:= value;
 		ELSIF tempkey = 'SetZPosition' THEN
-			GVL_MOTION.TestBuffer.SetZPosition		:= value;	
+			GVL_MOTION.InstructionBuffer.SetZPosition		:= value;	
 		END_IF
-		
+	ELSIF label = 'MOTION/CTR' THEN	
+		IF tempkey = 'POSX' THEN
+			GVL_MOTION.EXT_CTR.POSX		:= value;
+		ELSIF tempkey = 'POSY' THEN
+			GVL_MOTION.EXT_CTR.POSY		:= value;
+		ELSIF tempkey = 'POSZ' THEN
+			GVL_MOTION.EXT_CTR.POSZ		:= value;	
+		END_IF
 	END_IF
 	]]></ST>
       </Implementation>
@@ -314,11 +340,11 @@ END_VAR
 
 	IF label = 'MOTION/INSTR_BUFFER' THEN
 		IF tempkey = 'Comment' THEN
-			GVL_MOTION.TestBuffer.Comment		:= value;
+			GVL_MOTION.InstructionBuffer.Comment		:= value;
 		END_IF
 	ELSIF label = 'MOTION/CTR' THEN
 		IF tempkey = 'SCRIPTNAME' THEN
-			GVL_MOTION.TEST_CTR.SCRIPTNAME		:= value;
+			GVL_MOTION.EXT_CTR.SCRIPTNAME		:= value;
 		END_IF	
 	END_IF
 	
@@ -350,30 +376,30 @@ END_VAR
 
 	IF label = 'MOTION/INSTR_BUFFER' THEN
 		IF tempkey = 'MotionCommand' THEN
-			GVL_MOTION.TestBuffer.MotionCommand		:= UDINT_TO_INT(value);
+			GVL_MOTION.InstructionBuffer.MotionCommand		:= UDINT_TO_INT(value);
 // 		ELSIF tempkey = 'zType' THEN
 // 			GVL_MOTION.TestBuffer.zType				:= UDINT_TO_INT(value);
 // 		ELSIF tempkey = 'DataTrigger' THEN
 // 			GVL_MOTION.TestBuffer.DataTrigger		:= UDINT_TO_INT(value);	
 		ELSIF tempkey = 'SetXPosition' THEN
-			GVL_MOTION.TestBuffer.SetXPosition		:= UDINT_TO_INT(value);
+			GVL_MOTION.InstructionBuffer.SetXPosition		:= UDINT_TO_INT(value);
 		ELSIF tempkey = 'SetXVelocity' THEN
-			GVL_MOTION.TestBuffer.SetXVelocity		:= UDINT_TO_INT(value);
+			GVL_MOTION.InstructionBuffer.SetXVelocity		:= UDINT_TO_INT(value);
 		ELSIF tempkey = 'SetXAccel' THEN
-			GVL_MOTION.TestBuffer.SetXAccel			:= UDINT_TO_INT(value);
+			GVL_MOTION.InstructionBuffer.SetXAccel			:= UDINT_TO_INT(value);
 		ELSIF tempkey = 'SetYPosition' THEN
-			GVL_MOTION.TestBuffer.SetYPosition		:= UDINT_TO_INT(value);
+			GVL_MOTION.InstructionBuffer.SetYPosition		:= UDINT_TO_INT(value);
 		ELSIF tempkey = 'SetYVelocity' THEN
-			GVL_MOTION.TestBuffer.SetYVelocity		:= UDINT_TO_INT(value);
+			GVL_MOTION.InstructionBuffer.SetYVelocity		:= UDINT_TO_INT(value);
 		ELSIF tempkey = 'SetYAccel' THEN
-			GVL_MOTION.TestBuffer.SetYAccel			:= UDINT_TO_INT(value);
+			GVL_MOTION.InstructionBuffer.SetYAccel			:= UDINT_TO_INT(value);
 		ELSIF tempkey = 'SetZPosition' THEN
-			GVL_MOTION.TestBuffer.SetZPosition		:= UDINT_TO_INT(value);
+			GVL_MOTION.InstructionBuffer.SetZPosition		:= UDINT_TO_INT(value);
 		ELSIF tempkey = 'SetZVelocity' THEN
-			GVL_MOTION.TestBuffer.SetZVelocity		:= UDINT_TO_INT(value);			
+			GVL_MOTION.InstructionBuffer.SetZVelocity		:= UDINT_TO_INT(value);			
 		ELSIF tempkey = 'PauseTime' THEN
 			//temptime := TIME#1MS * value;
-			GVL_MOTION.TestBuffer.PauseTime 		:= TIME#1MS * value;
+			GVL_MOTION.InstructionBuffer.PauseTime 		:= TIME#1MS * value;
 		END_IF		
 // 	ELSIF label = 'DAQ/CTR' THEN
 // 		IF tempkey = 'DAQRES' THEN
@@ -381,7 +407,7 @@ END_VAR
 // 		END_IF	
 	ELSIF label = 'MOTION/CTR' THEN	
 		IF tempkey = 'SCRIPTITERATIONS' THEN 	
-			GVL_MOTION.TEST_CTR.SCRIPTITERATIONS	:= UDINT_TO_INT(value);	
+			GVL_MOTION.EXT_CTR.SCRIPTITERATIONS	:= UDINT_TO_INT(value);	
 		END_IF
 		
 	END_IF
@@ -439,5 +465,87 @@ METHOD TcRelease : UDINT
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="JsonSaxHandler">
+      <LineId Id="3" Count="2" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonSaxHandler.OnBool">
+      <LineId Id="3" Count="5" />
+      <LineId Id="77" Count="1" />
+      <LineId Id="9" Count="3" />
+      <LineId Id="79" Count="1" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="71" Count="5" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="19" Count="11" />
+      <LineId Id="82" Count="3" />
+      <LineId Id="31" Count="11" />
+      <LineId Id="64" Count="4" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="43" Count="19" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonSaxHandler.OnDint">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonSaxHandler.OnEndArray">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonSaxHandler.OnEndObject">
+      <LineId Id="3" Count="11" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonSaxHandler.OnKey">
+      <LineId Id="3" Count="12" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonSaxHandler.OnLint">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonSaxHandler.OnLreal">
+      <LineId Id="3" Count="16" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="25" Count="3" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonSaxHandler.OnNull">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonSaxHandler.OnRawNumber">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonSaxHandler.OnStartArray">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonSaxHandler.OnStartObject">
+      <LineId Id="3" Count="2" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonSaxHandler.OnString">
+      <LineId Id="3" Count="18" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonSaxHandler.OnUdint">
+      <LineId Id="3" Count="45" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonSaxHandler.OnUlint">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonSaxHandler.TcAddRef">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonSaxHandler.TcQueryInterface">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonSaxHandler.TcRelease">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

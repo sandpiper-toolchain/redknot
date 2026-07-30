@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="MQTTCOMM" Id="{6cc164ab-7114-46c3-9a99-d0016021e99e}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MQTTCOMM
 VAR
@@ -129,8 +129,8 @@ IF fbMqttClient.bConnected THEN
 			
 			
 		fbJson.ResetDocument();
-		fbJson.StartObject();	
-		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, '', 'MOTION_CTR', SIZEOF(GVL_MOTION.TEST_CTR), ADR(GVL_MOTION.TEST_CTR));
+		fbJson.StartObject();
+		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, '', 'MOTION_CTR', SIZEOF(GVL_MOTION.EXT_CTR), ADR(GVL_MOTION.EXT_CTR));
 		fbJson.EndObject();
 		fbJson.CopyDocument(sPayloadPub, SIZEOF(sPayLoadPub));
 		
@@ -239,5 +239,9 @@ IF HBtimer.Q THEN
 	GVL_MOTION.TEST_CTR.ZJOGBW					:= FALSE;	
 END_IF]]></ST>
     </Implementation>
+    <LineIds Name="MQTTCOMM">
+      <LineId Id="3" Count="188" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
