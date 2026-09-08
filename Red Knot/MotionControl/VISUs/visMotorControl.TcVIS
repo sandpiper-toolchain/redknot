@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <Visu Name="visMotorControl" Id="{597b15b9-8242-4835-b47f-ab7cbb2aa3c0}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"1341"</v>
+          <v n="UniqueIdGenerator">"1344"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -3961,7 +3961,7 @@
                     </o>
                     <o>
                       <v n="Id">743958181L</v>
-                      <v n="Value">"GVL_MOTION.xOut.PowerError"</v>
+                      <v n="Value">"GVL_MOTION.STATUS.PowerError"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
