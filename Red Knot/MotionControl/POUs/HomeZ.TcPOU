@@ -1,13 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="HomeZ" Id="{fdcbce25-5af2-4d38-9075-ee5b0a33af17}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM HomeZ
 VAR
-	state	:INT	:= 0;
+	state	:INT	:= 99;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[CASE state OF
+      <ST><![CDATA[IF GVL_MOTION.EXT_CTR.CMDHOMEZ THEN
+	GVL_MOTION.EXT_CTR.CMDHOMEZ				:= FALSE;
+	GVL_MOTION.zCon.IsHoming				:= TRUE;
+	state									:= 0;
+END_IF
+
+CASE state OF
 	0:
 	GVL_MOTION.zCon.Execute_HOME		:= TRUE;
 	state								:= 1;
@@ -16,14 +22,13 @@ END_VAR
 	IF GVL_MOTION.zHomeStatus.Done THEN
 		GVL_MOTION.zCon.Execute_HOME	:= FALSE;
 		GVL_MOTION.zLocated				:= TRUE;
-		state							:= 0;
-		GVL_MOTION.EXT_CTR.CMDHOMEZ		:= FALSE;
+		state							:= 99;
+		GVL_MOTION.zCon.IsHoming		:= FALSE;
 	END_IF	
+	
+	99:; //idle
 
 END_CASE]]></ST>
     </Implementation>
-    <LineIds Name="HomeZ">
-      <LineId Id="1" Count="13" />
-    </LineIds>
   </POU>
 </TcPlcObject>

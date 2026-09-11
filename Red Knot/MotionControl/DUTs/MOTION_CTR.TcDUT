@@ -14,10 +14,10 @@ STRUCT
 	SETZPOS					:BOOL	:= FALSE;
 	POSZ					:LREAL	:= 0;
 	
-	//CMDSETZLIM				:BOOL	:= FALSE; //this will set the safe lower limit of z to where it is currently positioned
+	//CMDSETZLIM			:BOOL	:= FALSE; //this will set the safe lower limit of z to where it is currently positioned
 	//CMDFINDSTOPS			:BOOL	:= FALSE; //run find stops routine
 	CMDCOUPLE				:BOOL	:= FALSE; //cycle between couple and uncouple x axes
-	AXESHALT				:BOOL	:= FALSE; //pause motion during script run if true. set to false to continue motion
+	PAUSE					:BOOL	:= FALSE; //pause motion during script run if true. set to false to continue motion
 	AXESEN					:BOOL	:= FALSE; //sends enable signal to all axes
 	AXESRESET				:BOOL	:= FALSE; //reset each axis, reset home and hardstop states
 	

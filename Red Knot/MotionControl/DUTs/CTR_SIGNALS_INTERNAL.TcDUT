@@ -22,6 +22,7 @@ STRUCT
 	SetAccel				:LREAL;
 	LimPos					:BOOL;
 	LimNeg					:BOOL;
+	IsHoming				:BOOL	:= FALSE;
 	
 	//axis coupling control
 	ExecuteCouple			:BOOL; //connected to GearIn

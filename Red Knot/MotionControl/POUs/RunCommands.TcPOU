@@ -32,11 +32,11 @@ CASE GVL_MOTION.InstructionState OF
 			GVL_MOTION.HaltMem 												:= TRUE;
 			GVL_MOTION.xCon.Execute_HALT									:= TRUE;
 			GVL_MOTION.yCon.Execute_HALT									:= TRUE;
-			GVL_MOTION.EXT_CTR.AxesHalt										:= TRUE;
+			GVL_MOTION.EXT_CTR.PAUSE										:= TRUE;
 			GVL_MOTION.TxtBxWaitOK											:= FALSE;	
 		END_IF
 		
-		IF NOT GVL_MOTION.EXT_CTR.AxesHalt THEN
+		IF NOT GVL_MOTION.EXT_CTR.PAUSE THEN
 			GVL_MOTION.HaltMem												:= FALSE;
 			GVL_MOTION.TxtBxWaitOK											:= TRUE;
 			GVL_MOTION.xCon.Execute_HALT									:= FALSE;
@@ -159,7 +159,7 @@ CASE GVL_MOTION.InstructionState OF
 
 	1:
 	//state 1: non DAQ motion
-	IF GVL_MOTION.EXT_CTR.AxesHalt THEN
+	IF GVL_MOTION.EXT_CTR.PAUSE THEN
 		GVL_MOTION.xCon.Execute_MABS 										:= FALSE;
 		GVL_MOTION.yCon.Execute_MABS 										:= FALSE;
 		GVL_MOTION.zCon.Execute_MABS 										:= FALSE;
@@ -219,7 +219,7 @@ CASE GVL_MOTION.InstructionState OF
 	
 	2:
 	//state 2: pause motion
-	IF NOT GVL_MOTION.EXT_CTR.AxesHalt THEN
+	IF NOT GVL_MOTION.EXT_CTR.PAUSE THEN
 		GVL_MOTION.xCon.Execute_HALT 										:= FALSE;
 		GVL_MOTION.yCon.Execute_HALT 										:= FALSE;
 		GVL_MOTION.zCon.Execute_HALT 										:= FALSE;

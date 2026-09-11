@@ -1,14 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <GVL Name="GVL_MOTION" Id="{ea33deb8-8627-4a0d-a3f0-288faa3aa9d9}">
     <Declaration><![CDATA[//variables must be referenced GVL_MOTION.etc b/c of attribute
 //persistent data causes problems when changing variable declarations
 {attribute 'qualified_only'}
 VAR_GLOBAL
-	//npn switch variables
-	NPNX					:BOOL;
-	NPNXC					:BOOL;	
-
 	//motor control signals
 	
 	xCon					:CTR_SIGNALS_INTERNAL;
@@ -58,8 +54,9 @@ VAR_GLOBAL
 										xMin := 0,			
 										xMax := 100000,
 										yMin := 5050,
-										yMax := 11000);
-	NOTBASINCTR				:BOOL;
+										yMax := 10639);
+	BASINLAMPA				:BOOL;
+	BASINLAMPB				:BOOL;
 	CSV_ROW					:INT						:= 0;
 	
 	//variables for script list

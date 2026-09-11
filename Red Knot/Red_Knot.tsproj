@@ -1575,7 +1575,7 @@ External Setpoint Generation:
 				<Axis Id="1" CreateSymbols="true" AxisType="1">
 					<Name>xAxis</Name>
 					<AxisPara>
-						<Dynamic Acceleration="1356.33" Deceleration="1356.33" Jerk="4068.99"/>
+						<Dynamic Acceleration="1808.44" Deceleration="1808.44" Jerk="3616.88"/>
 						<Velo RefSearch="10" RefSync="9" FastManual="250" Fast="904.22" Maximum="904.22"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
@@ -1718,14 +1718,13 @@ External Setpoint Generation:
 				<Axis Id="2" CreateSymbols="true" AxisType="1">
 					<Name>yAxis</Name>
 					<AxisPara>
-						<Dynamic Acceleration="678.165" Deceleration="678.165" Jerk="2034.49"/>
-						<Velo RefSearch="12" RefSync="5" FastManual="250" Fast="452.11" Maximum="452.11"/>
+						<Dynamic Acceleration="958.232" Deceleration="677.565" Jerk="2030.94"/>
+						<Velo RefSearch="12" RefSync="5" SlowManual="70" FastManual="300" Fast="452.11" Maximum="452.11"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="19">
 						<EncPara ScaleFactorNumerator="0.0003125" Inverse="true" MaxCount="#xffffffff">
 							<Inc RefSearchInverse="true" RefSyncInverse="false"/>
-							<ParameterChanged>35</ParameterChanged>
 						</EncPara>
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
@@ -1863,15 +1862,13 @@ External Setpoint Generation:
 				<Axis Id="3" CreateSymbols="true" AxisType="1">
 					<Name>xAxisCoupled</Name>
 					<AxisPara>
-						<Dynamic Acceleration="1356.33" Deceleration="1356.33" Jerk="4068.99"/>
+						<Dynamic Acceleration="1808.44" Deceleration="1808.44" Jerk="3616.88"/>
 						<Velo RefSearch="10" RefSync="9.0422" SlowManual="45.211" FastManual="271.266" Fast="904.22" Maximum="904.22"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="19">
 						<EncPara ScaleFactorNumerator="0.0007056311621" Inverse="true" MaxCount="#xffffffff">
 							<Inc RefSearchInverse="true" RefSyncInverse="false"/>
-							<ParameterChanged>36</ParameterChanged>
-							<ParameterChanged>35</ParameterChanged>
 						</EncPara>
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
@@ -2009,15 +2006,13 @@ External Setpoint Generation:
 				<Axis Id="4" CreateSymbols="true" AxisType="1">
 					<Name>zAxis</Name>
 					<AxisPara>
-						<Dynamic Acceleration="33.9075" Deceleration="33.9075" Jerk="101.722"/>
-						<Velo RefSearch="3" RefSync="3" SlowManual="20" FastManual="100" Fast="22.605" Maximum="22.605"/>
+						<Dynamic Acceleration="45.21" Deceleration="45.21" Jerk="90.42"/>
+						<Velo RefSearch="3" RefSync="3" SlowManual="20" FastManual="50" Fast="22.605" Maximum="50"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="19">
 						<EncPara ScaleFactorNumerator="0.0003125" Inverse="true" MaxCount="#xffffffff">
 							<Inc RefSearchInverse="true" RefSyncInverse="false"/>
-							<ParameterChanged>36</ParameterChanged>
-							<ParameterChanged>35</ParameterChanged>
 						</EncPara>
 						<Vars VarGrpType="1">
 							<Name>Inputs</Name>
@@ -2077,7 +2072,7 @@ External Setpoint Generation:
 					</Encoder>
 					<Drive Name="Drive" DrvType="16">
 						<DrvPara Inverse="true" MaxCount="#xffffffff" DriveControlDWord="#x00020100">
-							<Analog VeloReferenz="24.8655" TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
+							<Analog VeloReferenz="50" TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
@@ -2155,17 +2150,9 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{35F1EE57-8B64-404F-9A2B-38524D23373E}" Name="MotionControl" PrjFilePath="MotionControl\MotionControl.plcproj" TmcFilePath="MotionControl\MotionControl.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{38E8803D-373B-1226-FDB3-FB8B1EF78780}" TmcPath="MotionControl\MotionControl.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{1FE8EF76-FE0F-158B-AEA8-3158A1A9690F}" TmcPath="MotionControl\MotionControl.tmc">
 					<Name>MotionControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
-					<Vars VarGrpType="1" ContextId="1" AreaNo="16">
-						<Name>CSVTask Inputs</Name>
-						<Var>
-							<Name>MAIN.ED1008Ch1I</Name>
-							<Comment><![CDATA[current or voltage input]]></Comment>
-							<Type GUID="{D9793DB4-87E8-E5D5-D312-4F1B59D09A8C}">ED1008_AB7978D6</Type>
-						</Var>
-					</Vars>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
 						<Var>
@@ -2204,9 +2191,9 @@ External Setpoint Generation:
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
-							<Name>MAIN.InfoData1T5Ch1</Name>
-							<Comment><![CDATA[input address, any input]]></Comment>
-							<Type>UINT</Type>
+							<Name>MAIN.ED1008I</Name>
+							<Comment><![CDATA[current or voltage input]]></Comment>
+							<Type GUID="{D9793DB4-87E8-E5D5-D312-4F1B59D09A8C}">ED1008_AB7978D6</Type>
 						</Var>
 						<Var>
 							<Name>MAIN.xAxis.NcToPlc</Name>
@@ -2223,18 +2210,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>MAIN.zAxis.NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.InfoData1T5Ch2</Name>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.InfoData1T6Ch1</Name>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.InfoData1T6Ch2</Name>
-							<Type>UINT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_MOTION.xCon.AxisToCouple.NcToPlc</Name>
@@ -2279,6 +2254,20 @@ External Setpoint Generation:
 							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 4 (EK1200)^Term 5 (EL7062)">
 								<Link VarA="MAIN.InfoData1Ch1" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="DRV Info data 1 Channel 1^Info data 1" RestoreInfo="ANotFound"/>
 								<Link VarA="MAIN.InfoData1Ch2" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="DRV Info data 1 Channel 2^Info data 1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2026-09-08T17:05:29">
+						<OwnerA Name="InputDst" Prefix="TIPC^MotionControl^MotionControl Instance" Type="1">
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (ED1008)">
+								<Link VarA="ED1008_Input^MDP5001_100_DI_Channel_1_Input" TypeA="BIT" InOutA="0" ParentTypeA="ED1008_I_AB7978D6" GuidA="{18071995-0000-0000-0000-000000000010}" VarB="DI Channel 1^Input" RestoreInfo="ANotFound"/>
+								<Link VarA="ED1008_Input^MDP5001_100_DI_Channel_2_Input" TypeA="BIT" InOutA="0" ParentTypeA="ED1008_I_AB7978D6" GuidA="{18071995-0000-0000-0000-000000000010}" VarB="DI Channel 2^Input" RestoreInfo="ANotFound"/>
+								<Link VarA="ED1008_Input^MDP5001_100_DI_Channel_3_Input" TypeA="BIT" InOutA="0" ParentTypeA="ED1008_I_AB7978D6" GuidA="{18071995-0000-0000-0000-000000000010}" VarB="DI Channel 3^Input" RestoreInfo="ANotFound"/>
+								<Link VarA="ED1008_Input^MDP5001_100_DI_Channel_4_Input" TypeA="BIT" InOutA="0" ParentTypeA="ED1008_I_AB7978D6" GuidA="{18071995-0000-0000-0000-000000000010}" VarB="DI Channel 4^Input" RestoreInfo="ANotFound"/>
+								<Link VarA="ED1008_Input^MDP5001_100_DI_Channel_5_Input" TypeA="BIT" InOutA="0" ParentTypeA="ED1008_I_AB7978D6" GuidA="{18071995-0000-0000-0000-000000000010}" VarB="DI Channel 5^Input" RestoreInfo="ANotFound"/>
+								<Link VarA="ED1008_Input^MDP5001_100_DI_Channel_6_Input" TypeA="BIT" InOutA="0" ParentTypeA="ED1008_I_AB7978D6" GuidA="{18071995-0000-0000-0000-000000000010}" VarB="DI Channel 6^Input" RestoreInfo="ANotFound"/>
+								<Link VarA="ED1008_Input^MDP5001_100_DI_Channel_7_Input" TypeA="BIT" InOutA="0" ParentTypeA="ED1008_I_AB7978D6" GuidA="{18071995-0000-0000-0000-000000000010}" VarB="DI Channel 7^Input" RestoreInfo="ANotFound"/>
+								<Link VarA="ED1008_Input^MDP5001_100_DI_Channel_8_Input" TypeA="BIT" InOutA="0" ParentTypeA="ED1008_I_AB7978D6" GuidA="{18071995-0000-0000-0000-000000000010}" VarB="DI Channel 8^Input" RestoreInfo="ANotFound"/>
 							</OwnerB>
 						</OwnerA>
 					</UnrestoredVarLinks>
@@ -3547,7 +3536,7 @@ External Setpoint Generation:
 		</Io>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{00000000-2004-0850-0120-500820000403}" Id="#x02030020"/>
+		<MappingInfo Identifier="{00000000-2003-0850-0020-500820000403}" Id="#x02030020"/>
 		<MappingInfo Identifier="{00000000-0040-0304-1000-040340000403}" Id="#x02030030"/>
 		<MappingInfo Identifier="{05000010-2003-0850-1000-040300205008}" Id="#x02030010" Watchdog="04000000040000000400000004000000"/>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^xAxis">
@@ -3612,14 +3601,14 @@ External Setpoint Generation:
 		</OwnerA>
 		<OwnerA Name="TIPC^MotionControl^MotionControl Instance">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (ED1008)">
-				<Link VarA="CSVTask Inputs^MAIN.ED1008Ch1I^ED1008_Input^MDP5001_100_DI_Channel_1_Input" VarB="DI Channel 1^Input"/>
-				<Link VarA="CSVTask Inputs^MAIN.ED1008Ch1I^ED1008_Input^MDP5001_100_DI_Channel_2_Input" VarB="DI Channel 2^Input"/>
-				<Link VarA="CSVTask Inputs^MAIN.ED1008Ch1I^ED1008_Input^MDP5001_100_DI_Channel_3_Input" VarB="DI Channel 3^Input"/>
-				<Link VarA="CSVTask Inputs^MAIN.ED1008Ch1I^ED1008_Input^MDP5001_100_DI_Channel_4_Input" VarB="DI Channel 4^Input"/>
-				<Link VarA="CSVTask Inputs^MAIN.ED1008Ch1I^ED1008_Input^MDP5001_100_DI_Channel_5_Input" VarB="DI Channel 5^Input"/>
-				<Link VarA="CSVTask Inputs^MAIN.ED1008Ch1I^ED1008_Input^MDP5001_100_DI_Channel_6_Input" VarB="DI Channel 6^Input"/>
-				<Link VarA="CSVTask Inputs^MAIN.ED1008Ch1I^ED1008_Input^MDP5001_100_DI_Channel_7_Input" VarB="DI Channel 7^Input"/>
-				<Link VarA="CSVTask Inputs^MAIN.ED1008Ch1I^ED1008_Input^MDP5001_100_DI_Channel_8_Input" VarB="DI Channel 8^Input"/>
+				<Link VarA="PlcTask Inputs^MAIN.ED1008I^ED1008_Input^MDP5001_100_DI_Channel_1_Input" VarB="DI Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^MAIN.ED1008I^ED1008_Input^MDP5001_100_DI_Channel_2_Input" VarB="DI Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^MAIN.ED1008I^ED1008_Input^MDP5001_100_DI_Channel_3_Input" VarB="DI Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^MAIN.ED1008I^ED1008_Input^MDP5001_100_DI_Channel_4_Input" VarB="DI Channel 4^Input"/>
+				<Link VarA="PlcTask Inputs^MAIN.ED1008I^ED1008_Input^MDP5001_100_DI_Channel_5_Input" VarB="DI Channel 5^Input"/>
+				<Link VarA="PlcTask Inputs^MAIN.ED1008I^ED1008_Input^MDP5001_100_DI_Channel_6_Input" VarB="DI Channel 6^Input"/>
+				<Link VarA="PlcTask Inputs^MAIN.ED1008I^ED1008_Input^MDP5001_100_DI_Channel_7_Input" VarB="DI Channel 7^Input"/>
+				<Link VarA="PlcTask Inputs^MAIN.ED1008I^ED1008_Input^MDP5001_100_DI_Channel_8_Input" VarB="DI Channel 8^Input"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^xAxis">
 				<Link VarA="PlcTask Inputs^MAIN.xAxis.NcToPlc" VarB="Outputs^ToPlc"/>

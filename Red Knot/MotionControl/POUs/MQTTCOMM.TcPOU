@@ -60,7 +60,7 @@ END_VAR
 
 IF bSetParameter THEN
     bSetParameter								:= FALSE;
-    fbMqttClient.sHostName						:= '160.94.187.160';
+    fbMqttClient.sHostName						:= '127.0.0.1';
     fbMqttClient.nHostPort						:= 1883;
     fbMqttClient.ipMessageQueue					:= fbMessageQueue;
 END_IF

@@ -1,24 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="HomeX" Id="{5469c866-fd6c-4219-b391-e07e4f5d7d0a}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM HomeX
 VAR
-	state		:INT	:= 0;
+	state		:INT	:= 99;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[CASE state OF
+      <ST><![CDATA[IF GVL_MOTION.EXT_CTR.CMDHOMEX THEN
+	GVL_MOTION.EXT_CTR.CMDHOMEX				:= FALSE;
+	GVL_MOTION.xCon.IsHoming				:= TRUE;
+	state									:= 0;
+END_IF
+
+CASE state OF
 	0:
 	IF NOT GVL_MOTION.xOut.AxisCoupled THEN
-		GVL_MOTION.xCon.ExecuteUncouple	:= FALSE;
-		GVL_MOTION.xCon.ExecuteCouple	:= TRUE;
+		GVL_MOTION.xCon.ExecuteUncouple		:= FALSE;
+		GVL_MOTION.xCon.ExecuteCouple		:= TRUE;
 	END_IF
-	state								:= 1;
+	state									:= 1;
 	
 	1:
 	IF GVL_MOTION.xOut.AxisCoupled THEN
-		GVL_MOTION.xJogBW				:= TRUE;
-		state							:= 2;
+		GVL_MOTION.xJogBW					:= TRUE;
+		state								:= 2;
 	END_IF
 	
 	2:
@@ -63,14 +69,13 @@ END_VAR
 	END_IF
 	
 	8:
-	state									:= 0;
+	state									:= 99;
 	GVL_MOTION.xCon.ExecuteCouple			:= TRUE;
 	GVL_MOTION.xLocated						:= TRUE;
-	GVL_MOTION.EXT_CTR.CMDHOMEX				:= FALSE;
+	GVL_MOTION.xCon.IsHoming				:= FALSE;
+	
+	99:; //idle
 END_CASE]]></ST>
     </Implementation>
-    <LineIds Name="HomeX">
-      <LineId Id="1" Count="60" />
-    </LineIds>
   </POU>
 </TcPlcObject>
