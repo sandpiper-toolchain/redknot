@@ -8,15 +8,16 @@ VAR
 	yAxis					:AXIS_REF;
 	zAxis					:AXIS_REF;
 		
-	xAxisFunctions			:AxisFunctionBlocks;  //xCon, xOut
-	xCoupledFunctions		:AxisFunctionBlocks; //xCon, xCOut
+	xAxisFunctions			:AxisFunctionBlocks;
+	xCoupledFunctions		:AxisFunctionBlocks;
 	yAxisFunctions			:AxisFunctionBlocks;
-	zAxisFunctions			:AxisFunctionBlocks; 
+	zAxisFunctions			:AxisFunctionBlocks;
 	
 	ED1008I AT %I*			:ED1008_AB7978D6; //current or voltage input
 	
 	couplestate				:INT	:= 0;
 	basinstate				:INT	:= 0;
+	basintoggle				:BOOL;
 	boot_done				:BOOL	:= FALSE;
 	
 	xNearStop				:BOOL	:= FALSE;
@@ -38,6 +39,8 @@ GVL_MOTION.yCon.LimNeg				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_
 GVL_MOTION.yCon.LimPos				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_3_Input);
 //GVL_MOTION.zCon.LimNeg 				 		:= InfoData1T6Ch2.0;
 //GVL_MOTION.zCon.LimPos
+
+GVL_MOTION.PAUSE_EXT						:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_2_Input);
 
 GVL_MOTION.NextInstruction					:= GVL_MOTION.CurInstruction + 1;
 
@@ -111,6 +114,11 @@ END_IF
 IF  GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1] >= GVL_MOTION.ActiveBasin.yMin 
 AND GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1] <= GVL_MOTION.ActiveBasin.yMax 
 THEN
+	IF basintoggle THEN
+		GVL_MOTION.yJogBW					:= FALSE;
+		GVL_MOTION.yJogFW					:= FALSE;
+		basintoggle							:= FALSE;
+	END_IF
 	GVL_MOTION.STATUS.yPosOut				:= GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1];
 	IF NOT (GVL_MOTION.yCon.Execute_HOME OR GVL_MOTION.EXT_CTR.CMDHOME OR yNearStop) THEN
 			GVL_MOTION.yCon.JogMode			:= MC_JOGMODE_STANDARD_FAST;
@@ -118,6 +126,11 @@ THEN
 			GVL_MOTION.yCon.JogMode			:= MC_JOGMODE_STANDARD_SLOW;
 	END_IF
 ELSE
+	IF NOT basintoggle THEN
+		GVL_MOTION.yJogBW					:= FALSE;
+		GVL_MOTION.yJogFW					:= FALSE;
+		basintoggle							:= TRUE;		
+	END_IF
 	GVL_MOTION.STATUS.yPosOut				:= -999999;
 	GVL_MOTION.yCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
 END_IF	

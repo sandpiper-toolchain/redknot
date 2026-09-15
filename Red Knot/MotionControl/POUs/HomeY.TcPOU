@@ -23,7 +23,7 @@ CASE state OF
 		GVL_MOTION.yCon.Execute_HOME	:= FALSE;
 		GVL_MOTION.yLocated				:= TRUE;
 		state							:= 99;
-		GVL_MOTION.zCon.IsHoming		:= FALSE;
+		GVL_MOTION.yCon.IsHoming		:= FALSE;
 	END_IF
 	
 	99:; //idle

@@ -12,7 +12,7 @@ STRUCT
 	//Execute_VEL				:BOOL;
 	Execute_HALT			:BOOL;
 	Execute_STOP			:BOOL;
-	Execute_HOME			:BOOL;	
+	Execute_HOME			:BOOL;
 	JogFw					:BOOL;
 	JogBw					:BOOL;
 	JogMode					:E_JogMode;

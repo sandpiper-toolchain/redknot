@@ -1575,7 +1575,7 @@ External Setpoint Generation:
 				<Axis Id="1" CreateSymbols="true" AxisType="1">
 					<Name>xAxis</Name>
 					<AxisPara>
-						<Dynamic Acceleration="1808.44" Deceleration="1808.44" Jerk="3616.88"/>
+						<Dynamic Acceleration="1808.44" Deceleration="1291.49" Jerk="3616.88"/>
 						<Velo RefSearch="10" RefSync="9" FastManual="250" Fast="904.22" Maximum="904.22"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
@@ -1718,7 +1718,7 @@ External Setpoint Generation:
 				<Axis Id="2" CreateSymbols="true" AxisType="1">
 					<Name>yAxis</Name>
 					<AxisPara>
-						<Dynamic Acceleration="958.232" Deceleration="677.565" Jerk="2030.94"/>
+						<Dynamic Acceleration="958.232" Deceleration="677.578" Jerk="2030.94"/>
 						<Velo RefSearch="12" RefSync="5" SlowManual="70" FastManual="300" Fast="452.11" Maximum="452.11"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
@@ -1862,7 +1862,7 @@ External Setpoint Generation:
 				<Axis Id="3" CreateSymbols="true" AxisType="1">
 					<Name>xAxisCoupled</Name>
 					<AxisPara>
-						<Dynamic Acceleration="1808.44" Deceleration="1808.44" Jerk="3616.88"/>
+						<Dynamic Acceleration="1808.44" Deceleration="1278.76026955869" Jerk="3616.88"/>
 						<Velo RefSearch="10" RefSync="9.0422" SlowManual="45.211" FastManual="271.266" Fast="904.22" Maximum="904.22"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
@@ -2006,7 +2006,7 @@ External Setpoint Generation:
 				<Axis Id="4" CreateSymbols="true" AxisType="1">
 					<Name>zAxis</Name>
 					<AxisPara>
-						<Dynamic Acceleration="45.21" Deceleration="45.21" Jerk="90.42"/>
+						<Dynamic Acceleration="62.2684" Deceleration="44.0303" Jerk="77.5472"/>
 						<Velo RefSearch="3" RefSync="3" SlowManual="20" FastManual="50" Fast="22.605" Maximum="50"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
@@ -2150,7 +2150,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{35F1EE57-8B64-404F-9A2B-38524D23373E}" Name="MotionControl" PrjFilePath="MotionControl\MotionControl.plcproj" TmcFilePath="MotionControl\MotionControl.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{1FE8EF76-FE0F-158B-AEA8-3158A1A9690F}" TmcPath="MotionControl\MotionControl.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{134F65AB-2665-CE78-9392-FC24C8B2BABD}" TmcPath="MotionControl\MotionControl.tmc">
 					<Name>MotionControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">

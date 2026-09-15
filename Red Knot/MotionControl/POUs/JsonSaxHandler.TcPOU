@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="JsonSaxHandler" Id="{fd22ba04-0d36-44e7-a81e-c59d3ac0f333}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'c++_compatible'}
 FUNCTION_BLOCK JsonSaxHandler IMPLEMENTS ITcJsonSaxHandler
@@ -69,8 +69,8 @@ END_VAR
 			GVL_MOTION.EXT_CTR.CMDCOUPLE := value;				
 		ELSIF tempkey = 'CMDLOOP' THEN
 			GVL_MOTION.EXT_CTR.CMDLOOP := value;	
-		ELSIF tempkey = 'AXESHALT' THEN
-			GVL_MOTION.EXT_CTR.AXESHALT := value;	
+		ELSIF tempkey = 'PAUSE' THEN
+			GVL_MOTION.EXT_CTR.PAUSE := value;	
 		ELSIF tempkey = 'AXESEN' THEN
 			GVL_MOTION.EXT_CTR.AXESEN := value;		
 		ELSIF tempkey = 'AXESRESET' THEN
@@ -465,87 +465,5 @@ METHOD TcRelease : UDINT
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="JsonSaxHandler">
-      <LineId Id="3" Count="2" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnBool">
-      <LineId Id="3" Count="5" />
-      <LineId Id="77" Count="1" />
-      <LineId Id="9" Count="3" />
-      <LineId Id="79" Count="1" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="81" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="71" Count="5" />
-      <LineId Id="15" Count="1" />
-      <LineId Id="19" Count="11" />
-      <LineId Id="82" Count="3" />
-      <LineId Id="31" Count="11" />
-      <LineId Id="64" Count="4" />
-      <LineId Id="63" Count="0" />
-      <LineId Id="43" Count="19" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnDint">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnEndArray">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnEndObject">
-      <LineId Id="3" Count="11" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnKey">
-      <LineId Id="3" Count="12" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnLint">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnLreal">
-      <LineId Id="3" Count="16" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="25" Count="3" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnNull">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnRawNumber">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnStartArray">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnStartObject">
-      <LineId Id="3" Count="2" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnString">
-      <LineId Id="3" Count="18" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnUdint">
-      <LineId Id="3" Count="45" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.OnUlint">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.TcAddRef">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.TcQueryInterface">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonSaxHandler.TcRelease">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

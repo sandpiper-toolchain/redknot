@@ -6,6 +6,8 @@ VAR
 	timer		:TON;
 	t2			:TON;
 	t3			:TON;
+	t4			:TON;
+	t5			:TON;
 	index		:INT;
 	(*set to true during daq instruction when future daq instructions are detected. delay daq execution until last daq instruction in script*)
 	DAQ_HOLD	:BOOL	:= FALSE;
@@ -32,15 +34,17 @@ CASE GVL_MOTION.InstructionState OF
 			GVL_MOTION.HaltMem 												:= TRUE;
 			GVL_MOTION.xCon.Execute_HALT									:= TRUE;
 			GVL_MOTION.yCon.Execute_HALT									:= TRUE;
-			GVL_MOTION.EXT_CTR.PAUSE										:= TRUE;
+			GVL_MOTION.zCon.Execute_HALT									:= TRUE;
+			//GVL_MOTION.EXT_CTR.PAUSE										:= TRUE;
 			GVL_MOTION.TxtBxWaitOK											:= FALSE;	
 		END_IF
 		
-		IF NOT GVL_MOTION.EXT_CTR.PAUSE THEN
+		IF GVL_MOTION.PAUSE_INT THEN
 			GVL_MOTION.HaltMem												:= FALSE;
 			GVL_MOTION.TxtBxWaitOK											:= TRUE;
 			GVL_MOTION.xCon.Execute_HALT									:= FALSE;
-			GVL_MOTION.yCon.Execute_HALT									:= FALSE;	
+			GVL_MOTION.yCon.Execute_HALT									:= FALSE;
+			GVL_MOTION.zCon.Execute_HALT									:= FALSE;	
 			
 			IF GVL_MOTION.CurInstruction < (GVL_MOTION.ScriptEnd - 1) THEN
 				GVL_MOTION.CurInstruction 									:= GVL_MOTION.CurInstruction + 1; //queue next instruction
@@ -159,85 +163,100 @@ CASE GVL_MOTION.InstructionState OF
 
 	1:
 	//state 1: non DAQ motion
-	IF GVL_MOTION.EXT_CTR.PAUSE THEN
-		GVL_MOTION.xCon.Execute_MABS 										:= FALSE;
-		GVL_MOTION.yCon.Execute_MABS 										:= FALSE;
-		GVL_MOTION.zCon.Execute_MABS 										:= FALSE;
-		GVL_MOTION.xCon.Execute_MREL 										:= FALSE;
-		GVL_MOTION.yCon.Execute_MREL 										:= FALSE;	
-		GVL_MOTION.zCon.Execute_MREL 										:= FALSE;
-		GVL_MOTION.xCon.Execute_HALT 										:= TRUE;
-		GVL_MOTION.yCon.Execute_HALT 										:= TRUE;
-		GVL_MOTION.zCon.Execute_HALT 										:= TRUE;			
-			
-		GVL_MOTION.InstructionState 										:= 2;
+	//button debounce needed coming from pause state (2)
+	t5(IN := TRUE, PT := T#30MS);
+	IF t5.Q THEN
 		
-	END_IF	
-	
-	//with no timer pause in between instructions MoveDone stays high long enough to skip an instruction
-	//instruction always loaded but queue index is skipped
-	IF GVL_MOTION.xOut.MoveDone AND GVL_MOTION.yOut.MoveDone AND GVL_MOTION.zOut.MoveDone THEN //these signals depend on execute MABS/MREL
-		IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].PauseTime > T#0MS THEN
-			timer(IN := TRUE, PT := GVL_MOTION.Script[GVL_MOTION.CurInstruction].PauseTime);
-		ELSE
-			timer(IN := TRUE, PT := T#1MS);
+		IF GVL_MOTION.PAUSE_INT THEN
+			GVL_MOTION.xCon.Execute_MABS 										:= FALSE;
+			GVL_MOTION.yCon.Execute_MABS 										:= FALSE;
+			GVL_MOTION.zCon.Execute_MABS 										:= FALSE;
+			GVL_MOTION.xCon.Execute_MREL 										:= FALSE;
+			GVL_MOTION.yCon.Execute_MREL 										:= FALSE;	
+			GVL_MOTION.zCon.Execute_MREL 										:= FALSE;
+			GVL_MOTION.xCon.Execute_HALT 										:= TRUE;
+			GVL_MOTION.yCon.Execute_HALT 										:= TRUE;
+			GVL_MOTION.zCon.Execute_HALT 										:= TRUE;			
+				
+			GVL_MOTION.InstructionState 										:= 2;
+			t5(IN := FALSE);
 		END_IF	
 		
-		IF timer.Q THEN
-			GVL_MOTION.xCon.Execute_MABS 									:= FALSE;
-			GVL_MOTION.xCon.Execute_MREL 									:= FALSE;
-			GVL_MOTION.yCon.Execute_MABS 									:= FALSE;
-			GVL_MOTION.yCon.Execute_MREL 									:= FALSE;	
-			GVL_MOTION.zCon.Execute_MABS 									:= FALSE;
-			GVL_MOTION.zCon.Execute_MREL 									:= FALSE;		
-			timer(IN := FALSE);
-			
-			IF GVL_MOTION.CurInstruction < (GVL_MOTION.ScriptEnd - 1) THEN
-				GVL_MOTION.CurInstruction 									:= GVL_MOTION.CurInstruction + 1; //queue next instruction
-				GVL_MOTION.InstructionState 								:= 0;
+		//with no timer pause in between instructions MoveDone stays high long enough to skip an instruction
+		//instruction always loaded but queue index is skipped
+		IF GVL_MOTION.xOut.MoveDone AND GVL_MOTION.yOut.MoveDone AND GVL_MOTION.zOut.MoveDone THEN //these signals depend on execute MABS/MREL
+			IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].PauseTime > T#0MS THEN
+				timer(IN := TRUE, PT := GVL_MOTION.Script[GVL_MOTION.CurInstruction].PauseTime);
 			ELSE
-				GVL_MOTION.CurInstruction 									:= 0;
-				GVL_MOTION.InstructionState 								:= 0;
-				IF NOT GVL_MOTION.EXT_CTR.CMDLOOP THEN
-					IF GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.SCRIPTITERATIONS THEN
-						GVL_MOTION.RUN_INDEX								:= 1;
-						GVL_MOTION.EXT_CTR.CMDRUN 							:= FALSE;	 //command list executed
+				timer(IN := TRUE, PT := T#1MS);
+			END_IF	
+			
+			IF timer.Q THEN
+				GVL_MOTION.xCon.Execute_MABS 									:= FALSE;
+				GVL_MOTION.xCon.Execute_MREL 									:= FALSE;
+				GVL_MOTION.yCon.Execute_MABS 									:= FALSE;
+				GVL_MOTION.yCon.Execute_MREL 									:= FALSE;	
+				GVL_MOTION.zCon.Execute_MABS 									:= FALSE;
+				GVL_MOTION.zCon.Execute_MREL 									:= FALSE;		
+				timer(IN := FALSE);
+				
+				IF GVL_MOTION.CurInstruction < (GVL_MOTION.ScriptEnd - 1) THEN
+					GVL_MOTION.CurInstruction 									:= GVL_MOTION.CurInstruction + 1; //queue next instruction
+					GVL_MOTION.InstructionState 								:= 0;
+					t5(IN := FALSE);
+				ELSE
+					GVL_MOTION.CurInstruction 									:= 0;
+					GVL_MOTION.InstructionState 								:= 0;
+					t5(IN := FALSE);
+					IF NOT GVL_MOTION.EXT_CTR.CMDLOOP THEN
+						IF GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.SCRIPTITERATIONS THEN
+							GVL_MOTION.RUN_INDEX								:= 1;
+							GVL_MOTION.EXT_CTR.CMDRUN 							:= FALSE;	 //command list executed
+						ELSE
+							GVL_MOTION.RUN_INDEX								:= GVL_MOTION.RUN_INDEX + 1;	
+						END_IF
+						
 					ELSE
-						GVL_MOTION.RUN_INDEX								:= GVL_MOTION.RUN_INDEX + 1;	
+						
+						GVL_MOTION.RUN_INDEX									:= GVL_MOTION.RUN_INDEX + 1;
 					END_IF
 					
-				ELSE
-					
-					GVL_MOTION.RUN_INDEX									:= GVL_MOTION.RUN_INDEX + 1;
 				END_IF
 				
-			END_IF
+			END_IF	
 			
-		END_IF	
-		
+		END_IF
+	
 	END_IF
 	
 	2:
 	//state 2: pause motion
-	IF NOT GVL_MOTION.EXT_CTR.PAUSE THEN
-		GVL_MOTION.xCon.Execute_HALT 										:= FALSE;
-		GVL_MOTION.yCon.Execute_HALT 										:= FALSE;
-		GVL_MOTION.zCon.Execute_HALT 										:= FALSE;
-		
-		IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Absolute THEN	
-			GVL_MOTION.xCon.Execute_MABS 									:= TRUE;
-			GVL_MOTION.yCon.Execute_MABS 									:= TRUE;		
-			GVL_MOTION.zCon.Execute_MABS 									:= TRUE;
-		
-			GVL_MOTION.InstructionState 									:= 1;	
+	//debounce timer
+	t4(IN := TRUE, PT := T#30MS);
 	
+	IF t4.Q THEN
+		IF GVL_MOTION.PAUSE_INT THEN
+			GVL_MOTION.xCon.Execute_HALT 										:= FALSE;
+			GVL_MOTION.yCon.Execute_HALT 										:= FALSE;
+			GVL_MOTION.zCon.Execute_HALT 										:= FALSE;
 			
-		ELSIF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Relative THEN
-			GVL_MOTION.xCon.Execute_MREL 									:= TRUE;
-			GVL_MOTION.yCon.Execute_MREL 									:= TRUE;
-			GVL_MOTION.zCon.Execute_MREL 									:= TRUE;
-		
-			GVL_MOTION.InstructionState 			  						:= 1;	
+			IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Absolute THEN	
+				GVL_MOTION.xCon.Execute_MABS 									:= TRUE;
+				GVL_MOTION.yCon.Execute_MABS 									:= TRUE;		
+				GVL_MOTION.zCon.Execute_MABS 									:= TRUE;
+			
+				GVL_MOTION.InstructionState 									:= 1;	
+				t4(IN := FALSE);
+				
+			ELSIF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Relative THEN
+				GVL_MOTION.xCon.Execute_MREL 									:= TRUE;
+				GVL_MOTION.yCon.Execute_MREL 									:= TRUE;
+				GVL_MOTION.zCon.Execute_MREL 									:= TRUE;
+			
+				GVL_MOTION.InstructionState 			  						:= 1;	
+				t4(IN := FALSE);
+			
+			END_IF
 		
 		END_IF
 	
