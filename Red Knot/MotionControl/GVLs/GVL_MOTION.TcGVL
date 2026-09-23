@@ -46,16 +46,16 @@ VAR_GLOBAL
 	STATUS					:STATUS;
 	ActiveBasin				:BASIN;
 	BasinA					:BASIN	:= (Name := 'BasinA',
-										xMin := -200,			
+										xMin := 0,			
 										xMax := 100000,
-										yMin := -200,
+										yMin := 0,
 										yMax := 5000);
 	
 	BasinB					:BASIN	:= (Name := 'BasinB',
-										xMin := -200,			
+										xMin := 0,			
 										xMax := 100000,
 										yMin := 5050,
-										yMax := 10639);
+										yMax := 8991);
 	BASINLAMPA				:BOOL;
 	BASINLAMPB				:BOOL;
 	CSV_ROW					:INT						:= 0;

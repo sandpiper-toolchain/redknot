@@ -1538,16 +1538,15 @@ External Setpoint Generation:
 	</ImageDatas>
 	<Project ProjectGUID="{3341E311-E9ED-4CA1-8760-253F2F924762}" Target64Bit="true" AutoPrioManagement="true" ShowHideConfigurations="#x2c6">
 		<System>
-			<Settings MaxCpus="4" NonWinCpus="2" MaxStackSize="4096">
-				<Cpu CpuId="2" CpuMemorySize="#x400000"/>
-				<Cpu CpuId="3" CpuMemorySize="#x400000"/>
-				<IoIdleTask Priority="10" Affinity="#x00000008"/>
+			<Settings MaxCpus="4" NonWinCpus="1" MaxStackSize="4096">
+				<Cpu CpuId="3"/>
+				<IoIdleTask Priority="10"/>
 			</Settings>
 			<Tasks>
 				<Task Id="2" Priority="6" CycleTime="10000" AmsPort="350" AdtTasks="true">
 					<Name>PlcTask</Name>
 				</Task>
-				<Task Id="6" Priority="14" CycleTime="500000" AmsPort="351" Affinity="#x00000008" DisableFpExceptions="true" AdtTasks="true">
+				<Task Id="6" Priority="14" CycleTime="500000" AmsPort="351" DisableFpExceptions="true" AdtTasks="true">
 					<Name>VISU_TASK</Name>
 				</Task>
 				<Task Id="8" Priority="8" CycleTime="10000" AmsPort="353" AdtTasks="true">
@@ -1575,7 +1574,7 @@ External Setpoint Generation:
 				<Axis Id="1" CreateSymbols="true" AxisType="1">
 					<Name>xAxis</Name>
 					<AxisPara>
-						<Dynamic Acceleration="1808.44" Deceleration="1291.49" Jerk="3616.88"/>
+						<Dynamic Acceleration="100" Deceleration="1000" Jerk="4000"/>
 						<Velo RefSearch="10" RefSync="9" FastManual="250" Fast="904.22" Maximum="904.22"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
@@ -1718,7 +1717,7 @@ External Setpoint Generation:
 				<Axis Id="2" CreateSymbols="true" AxisType="1">
 					<Name>yAxis</Name>
 					<AxisPara>
-						<Dynamic Acceleration="958.232" Deceleration="677.578" Jerk="2030.94"/>
+						<Dynamic Acceleration="200" Deceleration="2000" Jerk="6000"/>
 						<Velo RefSearch="12" RefSync="5" SlowManual="70" FastManual="300" Fast="452.11" Maximum="452.11"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
@@ -1862,7 +1861,7 @@ External Setpoint Generation:
 				<Axis Id="3" CreateSymbols="true" AxisType="1">
 					<Name>xAxisCoupled</Name>
 					<AxisPara>
-						<Dynamic Acceleration="1808.44" Deceleration="1278.76026955869" Jerk="3616.88"/>
+						<Dynamic Acceleration="100" Deceleration="1000" Jerk="4000"/>
 						<Velo RefSearch="10" RefSync="9.0422" SlowManual="45.211" FastManual="271.266" Fast="904.22" Maximum="904.22"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
@@ -2006,8 +2005,8 @@ External Setpoint Generation:
 				<Axis Id="4" CreateSymbols="true" AxisType="1">
 					<Name>zAxis</Name>
 					<AxisPara>
-						<Dynamic Acceleration="62.2684" Deceleration="44.0303" Jerk="77.5472"/>
-						<Velo RefSearch="3" RefSync="3" SlowManual="20" FastManual="50" Fast="22.605" Maximum="50"/>
+						<Dynamic Acceleration="200" Deceleration="2000" Jerk="5000"/>
+						<Velo RefSearch="3" RefSync="3" FastManual="200" Fast="22.605" Maximum="210"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="19">
@@ -2072,7 +2071,7 @@ External Setpoint Generation:
 					</Encoder>
 					<Drive Name="Drive" DrvType="16">
 						<DrvPara Inverse="true" MaxCount="#xffffffff" DriveControlDWord="#x00020100">
-							<Analog VeloReferenz="50" TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
+							<Analog VeloReferenz="210" TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
@@ -2150,7 +2149,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{35F1EE57-8B64-404F-9A2B-38524D23373E}" Name="MotionControl" PrjFilePath="MotionControl\MotionControl.plcproj" TmcFilePath="MotionControl\MotionControl.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{134F65AB-2665-CE78-9392-FC24C8B2BABD}" TmcPath="MotionControl\MotionControl.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{CD923EED-5D07-080F-7B2D-3BCC82220634}" TmcPath="MotionControl\MotionControl.tmc">
 					<Name>MotionControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -2298,7 +2297,6 @@ External Setpoint Generation:
 					</TaskPouOids>
 				</Instance>
 			</Project>
-			<PlcAuxTask Affinity="#x00000008"/>
 		</Plc>
 		<Io AddIoDescToArchive="true">
 			<Device Id="2" DevType="111" DevFlags="#x0003" AmsPort="28674" AmsNetId="10.1.179.227.3.1" RemoteName="Device 2 (EtherCAT)" InfoImageId="5">

@@ -16,7 +16,6 @@ VAR
 	ED1008I AT %I*			:ED1008_AB7978D6; //current or voltage input
 	
 	couplestate				:INT	:= 0;
-	basinstate				:INT	:= 0;
 	basintoggle				:BOOL;
 	boot_done				:BOOL	:= FALSE;
 	
@@ -27,8 +26,7 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[//external/mqtt control signals located in gvl's as struct EXT_CTR
-//100 element command queue. modify in GVL_MOTION and RunCommands()
-//200000 element data arrays. modify in GVL_DAQ
+//100 instruction script. modify in GVL_MOTION and RunCommands()
 
 //digital io and internal variable assignments
 //GVL_MOTION.xcCon.LimNeg						:= InfoData1T5Ch1.0;
@@ -72,14 +70,14 @@ GVL_MOTION.STATUS.HaltDone					:= GVL_MOTION.xOut.HaltDone;
 GVL_MOTION.STATUS.PowerError				:= GVL_MOTION.xOut.PowerError OR GVL_MOTION.yOut.PowerError	OR
 											   GVL_MOTION.zOut.PowerError OR GVL_MOTION.xCOut.PowerError;	
 
-CASE basinstate OF
+CASE GVL_MOTION.STATUS.basinstate OF
 0:
 	GVL_MOTION.ActiveBasin					:= GVL_MOTION.BasinA;
 	GVL_MOTION.BASINLAMPA					:= TRUE;
 	GVL_MOTION.BASINLAMPB					:= FALSE;
 	IF GVL_MOTION.EXT_CTR.BASINCTR THEN
 		GVL_MOTION.EXT_CTR.BASINCTR			:= FALSE;
-		basinstate							:= 1;
+		GVL_MOTION.STATUS.basinstate		:= 1;
 	END_IF
 1:
 	GVL_MOTION.ActiveBasin					:= GVL_MOTION.BasinB;
@@ -87,7 +85,7 @@ CASE basinstate OF
 	GVL_MOTION.BASINLAMPB					:= TRUE;
 	IF GVL_MOTION.EXT_CTR.BASINCTR THEN
 		GVL_MOTION.EXT_CTR.BASINCTR			:= FALSE;
-		basinstate							:= 0;
+		GVL_MOTION.STATUS.basinstate		:= 0;
 	END_IF	
 
 END_CASE
@@ -117,6 +115,8 @@ THEN
 	IF basintoggle THEN
 		GVL_MOTION.yJogBW					:= FALSE;
 		GVL_MOTION.yJogFW					:= FALSE;
+		GVL_MOTION.EXT_CTR.YJOGBW			:= FALSE;
+		GVL_MOTION.EXT_CTR.YJOGFW			:= FALSE;
 		basintoggle							:= FALSE;
 	END_IF
 	GVL_MOTION.STATUS.yPosOut				:= GVL_MOTION.yOut.PositionOut + GVL_MOTION.CARRIAGE_OFFSETS[1];
@@ -129,6 +129,8 @@ ELSE
 	IF NOT basintoggle THEN
 		GVL_MOTION.yJogBW					:= FALSE;
 		GVL_MOTION.yJogFW					:= FALSE;
+		GVL_MOTION.EXT_CTR.YJOGBW			:= FALSE;
+		GVL_MOTION.EXT_CTR.YJOGFW			:= FALSE;
 		basintoggle							:= TRUE;		
 	END_IF
 	GVL_MOTION.STATUS.yPosOut				:= -999999;
@@ -145,12 +147,16 @@ THEN
 	IF GVL_MOTION.xCon.JogMode = MC_JOGMODE_STANDARD_FAST THEN
 		GVL_MOTION.xJogBW					:= FALSE;
 		GVL_MOTION.xJogFW					:= FALSE;
+		GVL_MOTION.EXT_CTR.XJOGBW			:= FALSE;
+		GVL_MOTION.EXT_CTR.XJOGFW			:= FALSE;
 	END_IF
 ELSE
 	xNearStop								:= FALSE;
 	IF GVL_MOTION.xCon.JogMode = MC_JOGMODE_STANDARD_SLOW THEN
 		GVL_MOTION.xJogBW					:= FALSE;
 		GVL_MOTION.xJogFW					:= FALSE;
+		GVL_MOTION.EXT_CTR.XJOGBW			:= FALSE;
+		GVL_MOTION.EXT_CTR.XJOGFW			:= FALSE;
 	END_IF
 END_IF
 
@@ -161,31 +167,35 @@ THEN
 	IF GVL_MOTION.yCon.JogMode = MC_JOGMODE_STANDARD_FAST THEN
 		GVL_MOTION.yJogBW					:= FALSE;
 		GVL_MOTION.yJogFW					:= FALSE;
+		GVL_MOTION.EXT_CTR.YJOGBW			:= FALSE;
+		GVL_MOTION.EXT_CTR.YJOGFW			:= FALSE;
 	END_IF
 ELSE
 	yNearStop								:= FALSE;
 	IF GVL_MOTION.yCon.JogMode = MC_JOGMODE_STANDARD_SLOW THEN
 		GVL_MOTION.yJogBW					:= FALSE;
 		GVL_MOTION.yJogFW					:= FALSE;
+		GVL_MOTION.EXT_CTR.YJOGBW			:= FALSE;
+		GVL_MOTION.EXT_CTR.YJOGFW			:= FALSE;
 	END_IF	
 END_IF
 
-IF GVL_MOTION.STATUS.HardStopLocations[2] - GVL_MOTION.STATUS.zPosOut < 150
-OR GVL_MOTION.STATUS.zPosOut - GVL_MOTION.CARRIAGE_OFFSETS[2] < 150 
-THEN
-	IF GVL_MOTION.zCon.JogMode = MC_JOGMODE_STANDARD_FAST THEN
-		GVL_MOTION.zJogBW					:= FALSE;
-		GVL_MOTION.zJogFW					:= FALSE;
-	END_IF
-	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
-ELSE
-	IF GVL_MOTION.zCon.JogMode = MC_JOGMODE_STANDARD_SLOW THEN
-		GVL_MOTION.zJogBW					:= FALSE;
-		GVL_MOTION.zJogFW					:= FALSE;
-	END_IF
-	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
-END_IF
-			
+// IF GVL_MOTION.STATUS.HardStopLocations[2] - GVL_MOTION.STATUS.zPosOut < 150
+// OR GVL_MOTION.STATUS.zPosOut - GVL_MOTION.CARRIAGE_OFFSETS[2] < 150 
+// THEN
+// 	IF GVL_MOTION.zCon.JogMode = MC_JOGMODE_STANDARD_FAST THEN
+// 		GVL_MOTION.zJogBW					:= FALSE;
+// 		GVL_MOTION.zJogFW					:= FALSE;
+// 	END_IF
+// 	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
+// ELSE
+// 	IF GVL_MOTION.zCon.JogMode = MC_JOGMODE_STANDARD_SLOW THEN
+// 		GVL_MOTION.zJogBW					:= FALSE;
+// 		GVL_MOTION.zJogFW					:= FALSE;
+// 	END_IF
+// 	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
+// END_IF
+GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;			
 
 //coupled axis assignments, modify as needed for additional coupled axes
 //xAxis

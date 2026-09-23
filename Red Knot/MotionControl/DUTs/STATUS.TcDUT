@@ -41,9 +41,10 @@ STRUCT
 	basinxMax			:LREAL;
 	basinyMin			:LREAL;
 	basinyMax			:LREAL;
+	basinstate			:INT	:= 0;
 
 	
-	HardStopLocations	:ARRAY[0..2] OF LREAL	:= [100000,10639,1000]; //includes carriage offsets 
+	HardStopLocations	:ARRAY[0..2] OF LREAL	:= [100000,8991,1000]; //includes carriage offsets 
 	CARRIAGE_OFFSETS	:ARRAY[0..2] OF LREAL	:= [500,250,100]; //for display. also in GVL_MOTION
 	
 	

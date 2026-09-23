@@ -6,15 +6,16 @@ STRUCT
 	(*motion type*)
 	MotionCommand 			:MotionType;
 	SetXPosition			:REAL;
-	SetXVelocity			:INT;
+	SetXVelocity			:INT := 10;
 	SetXAccel				:INT;
 	SetYPosition			:REAL;	
-	SetYVelocity			:INT;
+	SetYVelocity			:INT := 10;
 	SetYAccel				:INT;
 	SetZPosition			:REAL;
 	SetZVelocity			:INT := 10;
 	PauseTime				:TIME;	//comes in as UDINT in MS, variable format T#1D4H5M2S1MS
 	Comment					:STRING;
+	index					:INT := 0;
 
 END_STRUCT
 END_TYPE

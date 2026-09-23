@@ -57,7 +57,6 @@ END_VAR
 		ELSIF tempkey = 'CMDLOOP' THEN
 			GVL_MOTION.EXT_CTR.CMDLOOP := value;	
 		ELSIF tempkey = 'CMDHOME' THEN
-			
 			GVL_MOTION.EXT_CTR.CMDHOME := value;
 		ELSIF tempkey = 'CMDHOMEX' THEN
 			GVL_MOTION.EXT_CTR.CMDHOMEX := value;
@@ -100,7 +99,9 @@ END_VAR
 		ELSIF tempkey = 'SETYPOS' THEN
 			GVL_MOTION.EXT_CTR.SETYPOS := value;
 		ELSIF tempkey = 'SETZPOS' THEN
-			GVL_MOTION.EXT_CTR.SETZPOS := value;			
+			GVL_MOTION.EXT_CTR.SETZPOS := value;	
+		ELSIF tempkey = 'HEARTBEAT' THEN
+			GVL_MOTION.EXT_CTR.HEARTBEAT := value;			
 		END_IF		
 // 	ELSIF label = 'DAQ/CTR' THEN
 // 		IF tempkey = 'CMDDATACLR' THEN

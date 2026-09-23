@@ -10,6 +10,7 @@ END_VAR
       <ST><![CDATA[CASE resetstate OF
 	0:
 	IF GVL_MOTION.EXT_CTR.AxesReset THEN
+		GVL_MOTION.EXT_CTR.AxesReset		:= FALSE;
 		GVL_MOTION.HomingState				:= 0;
 		GVL_MOTION.xCon.Execute_MREL		:= FALSE;
 		//GVL_MOTION.HardStopState			:= 0;

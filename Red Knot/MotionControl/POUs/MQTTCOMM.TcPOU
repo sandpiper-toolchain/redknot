@@ -8,10 +8,11 @@ VAR
     bConnect        :BOOL 		 	:= TRUE;	
 	
 	(* published message *)
-	//DaqDataPub		:STRING(255) := 'DAQ/DATA';
+	
 	MotionStatusPub :STRING(255)	:= 'MOTION/STATUS';
 	MotionCTREcho	:STRING(255)	:= 'MOTION/CTR_ECHO';
-	//DAQCTREcho		:STRING(255) := 'DAQ/CTR_ECHO';
+	MotionINSTREcho	:STRING(255)	:= 'MOTION/INSTR_ECHO';
+
 	ScriptSend		:STRING(255)	:= 'MOTION/SCRIPTSEND';
 	ScriptNames		:STRING(255)	:= 'MOTION/SCRIPTNAMES';
 	sPayloadPub 	:STRING(1000);
@@ -50,13 +51,10 @@ END_VAR
     <Implementation>
       <ST><![CDATA[//takes any INT as UDINT?
 //received (and echoed) messages:
-//GVL_DAQ.EXT_CTR
 //GVL_MOTION.EXT_CTR
 //GVL_MOTION.InstructionBuffer
 //published messages:
 //GVL_MOTION.STATUS
-//GVL_DAQ.DATA
-
 
 IF bSetParameter THEN
     bSetParameter								:= FALSE;
@@ -80,9 +78,6 @@ IF fbMqttClient.bConnected THEN
     IF NOT SubMCTR THEN
         SubMCTR := fbMqttClient.Subscribe(sTopic:='MOTION/CTR', eQoS:=TcIotMqttQos.AtMostOnceDelivery);
     END_IF
-// 	IF NOT SubDCTR THEN
-//         SubDCTR := fbMqttClient.Subscribe(sTopic:='DAQ/CTR', eQoS:=TcIotMqttQos.AtMostOnceDelivery);
-//     END_IF
     IF NOT SubIBuff THEN
         SubIBuff := fbMqttClient.Subscribe(sTopic:='MOTION/INSTR_BUFFER', eQoS:=TcIotMqttQos.AtMostOnceDelivery);
     END_IF	
@@ -142,19 +137,19 @@ IF fbMqttClient.bConnected THEN
 			nPayloadSize:= LEN2(ADR(sPayloadPub)), eQoS:= TcIotMqttQos.AtMostOnceDelivery, 
 			bRetain:= TRUE, bQueue:= FALSE );
 		
-// 		fbJson.ResetDocument();
-// 		fbJson.StartObject();	
-// 		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, '', 'DAQ_CTR', SIZEOF(GVL_DAQ.TEST_CTR), ADR(GVL_DAQ.TEST_CTR));
-// 		fbJson.EndObject();
-// 		fbJson.CopyDocument(sPayloadPub, SIZEOF(sPayLoadPub));
-// 		
-// 		found	:= FIND2(ADR(sPayLoadPub), ADR('}}'));
-// 		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 1, found + 1);
-// 		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 4, 1);
-// 		
-// 		fbMqttClient.Publish(sTopic:= DAQCTREcho, pPayload:= ADR(sPayloadPub), 
-// 			nPayloadSize:= LEN2(ADR(sPayloadPub)), eQoS:= TcIotMqttQos.AtMostOnceDelivery, 
-// 			bRetain:= TRUE, bQueue:= FALSE );
+		fbJson.ResetDocument();
+		fbJson.StartObject();	
+		fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, '', 'MOTION_INSTRUCTION', SIZEOF(GVL_MOTION.InstructionBuffer), ADR(GVL_MOTION.InstructionBuffer));
+		fbJson.EndObject();
+		fbJson.CopyDocument(sPayloadPub, SIZEOF(sPayLoadPub));
+		
+		found	:= FIND2(ADR(sPayLoadPub), ADR('}}'));
+		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 1, found + 1);
+		DELETE2(ADR(sPayLoadPub), ADR(sPayLoadPub), SIZEOF(sPayLoadPub), 4, 1);
+		
+		fbMqttClient.Publish(sTopic:= MotionINSTREcho, pPayload:= ADR(sPayloadPub), 
+			nPayloadSize:= LEN2(ADR(sPayloadPub)), eQoS:= TcIotMqttQos.AtMostOnceDelivery, 
+			bRetain:= TRUE, bQueue:= FALSE );
 	
 			
 		IF GVL_MOTION.LISTSTART THEN
@@ -197,11 +192,12 @@ IF fbMqttClient.bConnected THEN
 END_IF
 
 IF fbMqttClient.bConnected THEN
-	IF GVL_MOTION.EXT_CTR.CMDREQSCRIPT THEN
+	//IF GVL_MOTION.EXT_CTR.CMDREQSCRIPT THEN
 		scriptTimer(IN:=TRUE);
 		IF scriptTimer.Q THEN
 			scriptTimer(IN:=FALSE);
 			IF scriptcnt < GVL_MOTION.STATUS.ScriptEnd THEN
+				GVL_MOTION.Script[scriptcnt].index	:= scriptcnt;
 				fbJson.ResetDocument();
 				fbJson.StartObject();	
 				fbJsonDataType.AddJsonKeyValueFromSymbol(fbJson, '', 'MOTION_INSTRUCTION', SIZEOF(GVL_MOTION.Script[scriptcnt]), ADR(GVL_MOTION.Script[scriptcnt]));
@@ -221,23 +217,24 @@ IF fbMqttClient.bConnected THEN
 				GVL_MOTION.EXT_CTR.CMDREQSCRIPT	:= FALSE;
 			END_IF
 		END_IF
-	END_IF
+	//END_IF
 END_IF
 
-HBtimer(IN:=TRUE); //3 second timer. set heartbeat false. control continuously sets heartbeat true, after 3 cycles disable sensitive motion controls
-IF GVL_MOTION.TEST_CTR.HEARTBEAT THEN
-	GVL_MOTION.TEST_CTR.HEARTBEAT				:= FALSE;
-	HBtimer(IN:=FALSE);
-	HBtimer(IN:=TRUE);
-END_IF
-IF HBtimer.Q THEN
-	GVL_MOTION.TEST_CTR.XJOGFW					:= FALSE;	
-	GVL_MOTION.TEST_CTR.XJOGBW					:= FALSE;
-	GVL_MOTION.TEST_CTR.YJOGFW					:= FALSE;
-	GVL_MOTION.TEST_CTR.YJOGBW					:= FALSE;
-	GVL_MOTION.TEST_CTR.ZJOGFW					:= FALSE;
-	GVL_MOTION.TEST_CTR.ZJOGBW					:= FALSE;	
-END_IF]]></ST>
+// HBtimer(IN:=TRUE); //3 second timer. set heartbeat false. control continuously sets heartbeat true, after 3 cycles disable sensitive motion controls
+// IF GVL_MOTION.EXT_CTR.HEARTBEAT THEN
+// 	GVL_MOTION.EXT_CTR.HEARTBEAT				:= FALSE;
+// 	HBtimer(IN:=FALSE);
+// 	HBtimer(IN:=TRUE);
+// END_IF
+// IF HBtimer.Q THEN
+// 	GVL_MOTION.EXT_CTR.XJOGFW					:= FALSE;	
+// 	GVL_MOTION.EXT_CTR.XJOGBW					:= FALSE;
+// 	GVL_MOTION.EXT_CTR.YJOGFW					:= FALSE;
+// 	GVL_MOTION.EXT_CTR.YJOGBW					:= FALSE;
+// 	GVL_MOTION.EXT_CTR.ZJOGFW					:= FALSE;
+// 	GVL_MOTION.EXT_CTR.ZJOGBW					:= FALSE;
+// 	HBtimer(IN:=FALSE);	
+// END_IF]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>
