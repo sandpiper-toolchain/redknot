@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="SICKProfile" Id="{7ff60531-153d-432d-b0cb-2b7f50730cbb}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM SICKProfile
+VAR
+	execute		:BOOL	:= FALSE;
+	step		:INT	:= 0;
+	
+	SICK_CPP	:NT_StartProcess; //run section_overlap CPP
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF GVL_DAQ.EXT_CTR.CMDSICKPROFILE THEN
+	GVL_DAQ.EXT_CTR.CMDSICKPROFILE	:= FALSE;
+	GVL_SICK.BASIN					:= GVL_MOTION.Basin.Name;
+	execute							:= TRUE;
+END_IF
+
+CASE step OF
+	0:
+	IF execute THEN
+		execute						:= FALSE;
+		//must be called from its own directory to load icx params
+		SICK_CPP( PATHSTR:= 'C:\section_overlap\Release\section_overlap.exe', DIRNAME:= 'C:\section_overlap\Release', START:= TRUE);
+		SICK_CPP( START:= FALSE);
+		IF NOT SICK_CPP.BUSY THEN
+			GVL_SICK.SICK_setup												:= TRUE;
+		END_IF
+	END_IF
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="SICKProfile">
+      <LineId Id="1" Count="17" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

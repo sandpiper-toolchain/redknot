@@ -176,6 +176,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"1645"</v>
+              <v n="TextDefault">"Clear Loaded Script"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"848"</v>
               <v n="TextDefault">"Clear Queue"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -858,6 +863,11 @@
             <o>
               <v n="TextID">"718"</v>
               <v n="TextDefault">"SICK (x axis)"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1752"</v>
+              <v n="TextDefault">"SICK profile"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

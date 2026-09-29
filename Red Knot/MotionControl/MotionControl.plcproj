@@ -157,6 +157,9 @@
     <Compile Include="POUs\RunCommands.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\SICKProfile.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\zAxisMoreLogic.TcPOU">
       <SubType>Code</SubType>
     </Compile>

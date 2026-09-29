@@ -22,13 +22,39 @@
       </TcLink>
       <OrderCode>EL7062</OrderCode>
       <Name>Term 5 (EL7062)</Name>
+      <ProductRevision>EL7062-0000-0016</ProductRevision>
       <FirmwareVersion>02</FirmwareVersion>
       <BootloaderVersion>L6.1.61.0</BootloaderVersion>
       <CatalogNo>EL7062</CatalogNo>
       <HardwareVersion>03</HardwareVersion>
       <SerialNr>1 112</SerialNr>
       <BIC>1P271797SBTN999kepk81KEL7062                        Q1    2P332502030016</BIC>
-      <ProductRevision>EL7062-0000-0016</ProductRevision>
+      <WatchLog UpdateIntervalInMs="500">
+        <WatchLogItem>
+          <WatchLogParaCoE Index="4120" SubIndex="2" />
+          <Alias>Type</Alias>
+        </WatchLogItem>
+        <WatchLogItem>
+          <WatchLogParaCoE Index="4120" SubIndex="4" />
+          <Alias>Serial Nr</Alias>
+        </WatchLogItem>
+        <WatchLogItem>
+          <WatchLogParaCoE Index="4322" SubIndex="1" />
+          <Alias>BIC</Alias>
+        </WatchLogItem>
+        <WatchLogItem>
+          <WatchLogParaCoE Index="4106" SubIndex="0" />
+          <Alias>Firmware version</Alias>
+        </WatchLogItem>
+        <WatchLogItem>
+          <WatchLogParaCoE Index="63744" SubIndex="18" />
+          <Alias>DC link voltage</Alias>
+        </WatchLogItem>
+        <WatchLogItem>
+          <WatchLogParaCoE Index="63744" SubIndex="17" />
+          <Alias>Amplifier temperature</Alias>
+        </WatchLogItem>
+      </WatchLog>
       <Inverter>
         <Device>
           <Name>DMInverterTypeDevice</Name>
@@ -62,8 +88,6 @@
                 <GroupType>AS20xx</GroupType>
                 <ElectricMotorType>AS2021-0Dx0</ElectricMotorType>
                 <MotorfeedbackType>Unkn#TTL-1024I-5V</MotorfeedbackType>
-                <MotorbrakeType></MotorbrakeType>
-                <AssemblyType></AssemblyType>
                 <VendorName>BECKHOFF</VendorName>
                 <IsAc>false</IsAc>
                 <ConstructType>4</ConstructType>
@@ -277,32 +301,26 @@
                   <Data type="int8" unitSiNumerator="second">2</Data>
                 </Parameter>
                 <Parameter>
-                  <Comment LcId="1033"></Comment>
                   <Name>PowerManagement_DelayTimeAfterPowerUp</Name>
                   <Data type="real64" unitSiNumerator="second">0.8</Data>
                 </Parameter>
                 <Parameter>
-                  <Comment LcId="1033"></Comment>
                   <Name>RelativePositonData_ResolutionPerRotation</Name>
                   <Data type="int32">1024</Data>
                 </Parameter>
                 <Parameter>
-                  <Comment LcId="1033"></Comment>
                   <Name>AbsolutePositionData_ResolutionSinglePos</Name>
                   <Data type="int16">0</Data>
                 </Parameter>
                 <Parameter>
-                  <Comment LcId="1033"></Comment>
                   <Name>AbsolutePositionData_ResolutionMultiPos</Name>
                   <Data type="int16">0</Data>
                 </Parameter>
                 <Parameter>
-                  <Comment LcId="1033"></Comment>
                   <Name>AbsolutePositionData_NumberOfClockCyclesForSinglePos</Name>
                   <Data type="int16">0</Data>
                 </Parameter>
                 <Parameter>
-                  <Comment LcId="1033"></Comment>
                   <Name>AbsolutePositionData_NumberOfClockCyclesForMultiPos</Name>
                   <Data type="int16">0</Data>
                 </Parameter>
@@ -351,7 +369,7 @@
               </Parameter>
               <Parameter>
                 <PropertyName>FeedConstant</PropertyName>
-                <Value>40</Value>
+                <Value>32</Value>
               </Parameter>
               <Parameter>
                 <PropertyName>GearRatioMotorSide</PropertyName>
@@ -440,6 +458,24 @@
               </Filter>
             </Controller>
           </Block>
+          <WatchLog ChnId="0" UpdateIntervalInMs="500">
+            <WatchLogItem>
+              <WatchLogParaCoE Index="24592" SubIndex="1" />
+              <Alias>Status word</Alias>
+            </WatchLogItem>
+            <WatchLogItem>
+              <WatchLogParaCoE Index="28688" SubIndex="3" />
+              <Alias>Actual operation mode</Alias>
+            </WatchLogItem>
+            <WatchLogItem>
+              <WatchLogParaCoE Index="24592" SubIndex="7" />
+              <Alias>Actual velocity</Alias>
+            </WatchLogItem>
+            <WatchLogItem>
+              <WatchLogParaCoE Index="24592" SubIndex="8" />
+              <Alias>Actual torque</Alias>
+            </WatchLogItem>
+          </WatchLog>
         </Channel>
         <Channel ChnId="1">
           <TcLink>
@@ -457,8 +493,6 @@
                 <GroupType>AS20xx</GroupType>
                 <ElectricMotorType>AS2021-0Dx0</ElectricMotorType>
                 <MotorfeedbackType>Unkn#TTL-1024I-5V</MotorfeedbackType>
-                <MotorbrakeType></MotorbrakeType>
-                <AssemblyType></AssemblyType>
                 <VendorName>BECKHOFF</VendorName>
                 <IsAc>false</IsAc>
                 <ConstructType>4</ConstructType>
@@ -672,32 +706,26 @@
                   <Data type="int8" unitSiNumerator="second">2</Data>
                 </Parameter>
                 <Parameter>
-                  <Comment LcId="1033"></Comment>
                   <Name>PowerManagement_DelayTimeAfterPowerUp</Name>
                   <Data type="real64" unitSiNumerator="second">0.8</Data>
                 </Parameter>
                 <Parameter>
-                  <Comment LcId="1033"></Comment>
                   <Name>RelativePositonData_ResolutionPerRotation</Name>
                   <Data type="int32">1024</Data>
                 </Parameter>
                 <Parameter>
-                  <Comment LcId="1033"></Comment>
                   <Name>AbsolutePositionData_ResolutionSinglePos</Name>
                   <Data type="int16">0</Data>
                 </Parameter>
                 <Parameter>
-                  <Comment LcId="1033"></Comment>
                   <Name>AbsolutePositionData_ResolutionMultiPos</Name>
                   <Data type="int16">0</Data>
                 </Parameter>
                 <Parameter>
-                  <Comment LcId="1033"></Comment>
                   <Name>AbsolutePositionData_NumberOfClockCyclesForSinglePos</Name>
                   <Data type="int16">0</Data>
                 </Parameter>
                 <Parameter>
-                  <Comment LcId="1033"></Comment>
                   <Name>AbsolutePositionData_NumberOfClockCyclesForMultiPos</Name>
                   <Data type="int16">0</Data>
                 </Parameter>
@@ -746,7 +774,7 @@
               </Parameter>
               <Parameter>
                 <PropertyName>FeedConstant</PropertyName>
-                <Value>40</Value>
+                <Value>32</Value>
               </Parameter>
               <Parameter>
                 <PropertyName>GearRatioMotorSide</PropertyName>
@@ -787,6 +815,24 @@
               </Stepper>
             </Controller>
           </Block>
+          <WatchLog ChnId="1" UpdateIntervalInMs="500">
+            <WatchLogItem>
+              <WatchLogParaCoE Index="24848" SubIndex="1" />
+              <Alias>Status word</Alias>
+            </WatchLogItem>
+            <WatchLogItem>
+              <WatchLogParaCoE Index="28944" SubIndex="3" />
+              <Alias>Actual operation mode</Alias>
+            </WatchLogItem>
+            <WatchLogItem>
+              <WatchLogParaCoE Index="24848" SubIndex="7" />
+              <Alias>Actual velocity</Alias>
+            </WatchLogItem>
+            <WatchLogItem>
+              <WatchLogParaCoE Index="24848" SubIndex="8" />
+              <Alias>Actual torque</Alias>
+            </WatchLogItem>
+          </WatchLog>
         </Channel>
       </Inverter>
     </TcDMDrive>
@@ -5298,7 +5344,7 @@ Bit 8 - 15 : reserved</Comment>
       </TwinCAT>
     </Slave>
     <AmsAddress>
-      <AmsNetId>10.1.181.57.2.1</AmsNetId>
+      <AmsNetId>160.94.187.159.2.1</AmsNetId>
       <AmsPort>1001</AmsPort>
     </AmsAddress>
     <LinkedAxis Chn="0">TINC^NC-Task 1 SAF^Axes^xAxis</LinkedAxis>

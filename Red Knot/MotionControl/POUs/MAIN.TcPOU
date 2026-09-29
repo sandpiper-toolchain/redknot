@@ -33,15 +33,20 @@ END_VAR
 //200000 element data arrays. modify in GVL_DAQ
 
 //digital io and internal variable assignments
-GVL_MOTION.xcCon.LimNeg						:= InfoData1T5Ch1.0;
-GVL_MOTION.xCon.LimNeg				 		:= InfoData1T5Ch1.1;
-GVL_MOTION.STATUS.eStop   					:= InfoData1T5Ch2.0;
-GVL_MOTION.NPNX								:= NOT(InfoData1T5Ch2.1); 
+GVL_MOTION.xcCon.LimNeg						:= InfoData1T5Ch1.0; //good
+//GVL_MOTION.xCon.LimNeg				 		:= InfoData1T5Ch1.1; //ycon limpos
+GVL_MOTION.yCon.LimPos						:= InfoData1T5Ch1.1;
+GVL_MOTION.STATUS.eStop   					:= InfoData1T5Ch2.0; 
+//GVL_MOTION.NPNX								:= NOT(InfoData1T5Ch2.1);  //xcon limneg
+GVL_MOTION.xCon.LimNeg						:= InfoData1T5Ch2.1;
 
-GVL_MOTION.yCon.LimNeg				 		:= InfoData1T6Ch1.0;
-GVL_MOTION.yCon.LimPos				 		:= InfoData1T6Ch1.1;
-GVL_MOTION.zCon.LimNeg 				 		:= InfoData1T6Ch2.0;
-GVL_MOTION.NPNXC							:= NOT(InfoData1T6Ch2.1); 
+GVL_MOTION.yCon.LimNeg				 		:= InfoData1T6Ch1.0; //good
+//GVL_MOTION.yCon.LimPos				 		:= InfoData1T6Ch1.1; //zlimneg
+GVL_MOTION.zCon.LimNeg						:= InfoData1T6Ch1.1;
+//GVL_MOTION.zCon.LimNeg 				 		:= InfoData1T6Ch2.0; //npnxc
+GVL_MOTION.NPNXC							:= NOT(InfoData1T6Ch2.0);
+//GVL_MOTION.NPNXC							:= NOT(InfoData1T6Ch2.1); //npnx
+GVL_MOTION.NPNX								:= NOT(InfoData1T6Ch2.1);
 
 GVL_MOTION.NextInstruction					:= GVL_MOTION.CurInstruction + 1;
 
@@ -113,6 +118,9 @@ ELSE
 			GVL_MOTION.yCon.JogMode			:= MC_JOGMODE_STANDARD_SLOW;
 		END_IF	
 END_IF		
+
+GVL_SICK.Y_POS								:= GVL_MOTION.STATUS.yPosOut;
+GVL_SICK.BASIN								:= GVL_MOTION.Basin.Name;
 
 //increasing jog speed may cause axis to lock up if it crashes into end stop
 //pulse jog off at changeover to force reclick and new speed
@@ -209,7 +217,7 @@ zAxisFunctions(Axis:=zAxis,
 FunctionBlockMisc(); 
 
 //mqtt communication functions for external control/gui
-MQTTCOMM();
+//MQTTCOMM();
 
 //reset all axes from error state and reset several function state variables
 ResetAxes();
@@ -313,12 +321,24 @@ ELSE
 	GVL_MOTION.InstructionState				:= 0;
 	GVL_SICK.SICK_setup						:= FALSE;
 	GVL_SICK.SCAN_DONE						:= 0;
+END_IF
+
+IF GVL_MOTION.AxesLocated THEN
+	SICKProfile();
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="232" Count="8" />
+      <LineId Id="232" Count="6" />
+      <LineId Id="840" Count="0" />
+      <LineId Id="239" Count="1" />
+      <LineId Id="841" Count="0" />
       <LineId Id="422" Count="0" />
-      <LineId Id="241" Count="3" />
+      <LineId Id="241" Count="1" />
+      <LineId Id="842" Count="0" />
+      <LineId Id="243" Count="0" />
+      <LineId Id="843" Count="0" />
+      <LineId Id="244" Count="0" />
+      <LineId Id="844" Count="0" />
       <LineId Id="615" Count="0" />
       <LineId Id="613" Count="0" />
       <LineId Id="576" Count="1" />
@@ -350,6 +370,8 @@ END_IF]]></ST>
       <LineId Id="770" Count="3" />
       <LineId Id="732" Count="0" />
       <LineId Id="616" Count="0" />
+      <LineId Id="847" Count="1" />
+      <LineId Id="853" Count="0" />
       <LineId Id="738" Count="1" />
       <LineId Id="775" Count="0" />
       <LineId Id="819" Count="0" />
@@ -450,6 +472,9 @@ END_IF]]></ST>
       <LineId Id="696" Count="0" />
       <LineId Id="709" Count="0" />
       <LineId Id="326" Count="0" />
+      <LineId Id="850" Count="0" />
+      <LineId Id="849" Count="0" />
+      <LineId Id="851" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>

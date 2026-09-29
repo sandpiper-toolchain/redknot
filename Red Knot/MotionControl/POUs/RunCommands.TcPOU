@@ -6,6 +6,7 @@ VAR
 	timer		:TON;
 	t2			:TON;
 	t3			:TON;
+	t4			:TON;
 	index		:INT;
 	(*set to true during daq instruction when future daq instructions are detected. delay daq execution until last daq instruction in script*)
 	DAQ_HOLD	:BOOL	:= FALSE;
@@ -26,6 +27,8 @@ CASE GVL_MOTION.InstructionState OF
 	GVL_MOTION.STATUS.Move_Abs_Err											:= FALSE;
 	GVL_MOTION.STATUS.HS_Err												:= FALSE;
 	GVL_MOTION.STATUS.Basin_Exceed_Err										:= FALSE;
+	
+	
 	
 	IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.WaitOK THEN
 		IF NOT GVL_MOTION.HaltMem THEN
@@ -65,143 +68,156 @@ CASE GVL_MOTION.InstructionState OF
 	ELSIF (GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Absolute)
 	   OR (GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Relative) 
 	   THEN
+	    
+		GVL_MOTION.xCon.Execute_MABS 										:= FALSE;
+		GVL_MOTION.yCon.Execute_MABS 										:= FALSE;
+		GVL_MOTION.zCon.Execute_MABS 										:= FALSE;
+		GVL_MOTION.xCon.Execute_MREL 										:= FALSE;
+		GVL_MOTION.yCon.Execute_MREL 										:= FALSE;	
+		GVL_MOTION.zCon.Execute_MREL 										:= FALSE;
 		
-		IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Absolute THEN
-			
-			CASE GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger OF
-				DataTrigger.none: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 0;
-				DataTrigger.x: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger			:= 1;
-				DataTrigger.y: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger			:= 2;
-				DataTrigger.z: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger			:= 3;
-				DataTrigger.timed: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 4;	
-			END_CASE
+		t4(IN := TRUE, PT := T#1MS);
+		
+		IF t4.Q THEN
+			t4(IN := FALSE);
+			IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Absolute THEN
 				
-				//check hard stops
-			IF (GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition < GVL_MOTION.STATUS.HardStopLocations[0])
-			AND(GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition < GVL_MOTION.STATUS.HardStopLocations[1])
-			AND(GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition < GVL_MOTION.STATUS.HardStopLocations[2])
-			THEN
-				//check basin
-				IF  (GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition > GVL_MOTION.Basin.xMin)
-				AND (GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition < GVL_MOTION.Basin.xMax)
-				AND (GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition > GVL_MOTION.Basin.yMin)
-				AND (GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition < GVL_MOTION.Basin.yMax)
+				CASE GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger OF
+					DataTrigger.none: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger	:= 0;
+					DataTrigger.x: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 1;
+					DataTrigger.y: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 2;
+					DataTrigger.z: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 3;
+					DataTrigger.timed: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger	:= 4;	
+				END_CASE
+					
+					//check hard stops
+				IF (GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition < GVL_MOTION.STATUS.HardStopLocations[0])
+				AND(GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition < GVL_MOTION.STATUS.HardStopLocations[1])
+				AND(GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition < GVL_MOTION.STATUS.HardStopLocations[2])
 				THEN
-					IF 	GVL_MOTION.Script[GVL_MOTION.CurInstruction].zType = zBehavior.Manual THEN
-						GVL_MOTION.zCon.SetPosition							:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition - GVL_MOTION.CARRIAGE_OFFSETS[2];
-					ELSE
-						//TODO
-						//zCommandType.WaterSurface:
-						;//massa feedback
-						//zCommandType.SedSurface:
-						;//sonar feedback	
-					END_IF
-					GVL_MOTION.zCon.SetVelocity								:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZVelocity;
-					GVL_MOTION.xCon.SetPosition								:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition - GVL_MOTION.CARRIAGE_OFFSETS[0];
-					GVL_MOTION.xCon.SetVelocity								:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXVelocity;
-					GVL_MOTION.yCon.SetPosition								:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition - GVL_MOTION.CARRIAGE_OFFSETS[1];
-					GVL_MOTION.yCon.SetVelocity								:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYVelocity;
-					IF NOT GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_SICK THEN
-						GVL_MOTION.xCon.Execute_MABS						:= TRUE;
-						GVL_MOTION.yCon.Execute_MABS						:= TRUE;
-						GVL_MOTION.zCon.Execute_MABS						:= TRUE;
-					END_IF
-					IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none
-					OR GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_SICK
+					//check basin
+					IF  (GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition > GVL_MOTION.Basin.xMin)
+					AND (GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition < GVL_MOTION.Basin.xMax)
+					AND (GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition > GVL_MOTION.Basin.yMin)
+					AND (GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition < GVL_MOTION.Basin.yMax)
 					THEN
-						GVL_DAQ.INDEX_COLLECTOR[GVL_DAQ.PASS_INDEX]			:= GVL_DAQ.DATA_INDEX;
-						GVL_DAQ.DAQ_CTR_INT.Measure_Run_Time				:= TRUE; //start time collection for DAQ pass
-						IF NOT GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_SICK THEN
-							GVL_MOTION.InstructionState 					:= 3;
+						IF 	GVL_MOTION.Script[GVL_MOTION.CurInstruction].zType = zBehavior.Manual THEN
+							GVL_MOTION.zCon.SetPosition						:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition - GVL_MOTION.CARRIAGE_OFFSETS[2];
 						ELSE
-							GVL_MOTION.InstructionState 					:= 7;
-						END_IF	
+							//TODO
+							//zCommandType.WaterSurface:
+							;//massa feedback
+							//zCommandType.SedSurface:
+							;//sonar feedback	
+						END_IF
+						GVL_MOTION.zCon.SetVelocity							:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZVelocity;
+						GVL_MOTION.xCon.SetPosition							:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition - GVL_MOTION.CARRIAGE_OFFSETS[0];
+						GVL_MOTION.xCon.SetVelocity							:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXVelocity;
+						GVL_MOTION.yCon.SetPosition							:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition - GVL_MOTION.CARRIAGE_OFFSETS[1];
+						GVL_MOTION.yCon.SetVelocity							:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYVelocity;
+						IF NOT GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_SICK THEN
+							GVL_MOTION.xCon.Execute_MABS					:= TRUE;
+							GVL_MOTION.yCon.Execute_MABS					:= TRUE;
+							GVL_MOTION.zCon.Execute_MABS					:= TRUE;
+						END_IF
+						IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none
+						OR GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_SICK
+						THEN
+							GVL_DAQ.INDEX_COLLECTOR[GVL_DAQ.PASS_INDEX]		:= GVL_DAQ.DATA_INDEX;
+							GVL_DAQ.DAQ_CTR_INT.Measure_Run_Time			:= TRUE; //start time collection for DAQ pass
+							IF NOT GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_SICK THEN
+								GVL_MOTION.InstructionState 				:= 3;
+							ELSE
+								GVL_MOTION.InstructionState 				:= 7;
+							END_IF	
+						ELSE
+							GVL_MOTION.InstructionState 					:= 1;	
+						END_IF
+					//outside of basin error	
 					ELSE
-						GVL_MOTION.InstructionState 						:= 1;	
-					END_IF
-				//outside of basin error	
+						GVL_MOTION.STATUS.Basin_Exceed_Err					:= TRUE;
+						GVL_MOTION.CurInstruction 							:= 0;
+						GVL_MOTION.EXT_CTR.CMDRUN 							:= FALSE;
+					END_IF	
+					//hard stop error	
 				ELSE
-					GVL_MOTION.STATUS.Basin_Exceed_Err						:= TRUE;
+					GVL_MOTION.STATUS.HS_Err								:= TRUE;
+					GVL_MOTION.STATUS.Move_Abs_Err							:= TRUE;
 					GVL_MOTION.CurInstruction 								:= 0;
 					GVL_MOTION.EXT_CTR.CMDRUN 								:= FALSE;
 				END_IF	
-				//hard stop error	
-			ELSE
-				GVL_MOTION.STATUS.HS_Err									:= TRUE;
-				GVL_MOTION.STATUS.Move_Abs_Err								:= TRUE;
-				GVL_MOTION.CurInstruction 									:= 0;
-				GVL_MOTION.EXT_CTR.CMDRUN 									:= FALSE;
-			END_IF	
-		
-		
-		ELSIF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Relative THEN
 			
-			CASE GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger OF
-				DataTrigger.none: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 0;
-				DataTrigger.x: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger			:= 1;
-				DataTrigger.y: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger			:= 2;
-				DataTrigger.z: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger			:= 3;
-				DataTrigger.timed: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 4;					
-			END_CASE			
+			
+			ELSIF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Relative THEN
 				
-				//check hard stops
-			IF (GVL_MOTION.STATUS.xPosOut + GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition < GVL_MOTION.STATUS.HardStopLocations[0])
-			AND(GVL_MOTION.STATUS.yPosOut + GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition < GVL_MOTION.STATUS.HardStopLocations[1])	
-			AND(GVL_MOTION.STATUS.zPosOut + GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition < GVL_MOTION.STATUS.HardStopLocations[2])
-			THEN
-				//check basin
-				IF ((GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition + GVL_MOTION.STATUS.xPosOut) > GVL_MOTION.Basin.xMin)
-				AND((GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition + GVL_MOTION.STATUS.xPosOut) < GVL_MOTION.Basin.xMax)	
-				AND((GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition + GVL_MOTION.STATUS.yPosOut) < GVL_MOTION.Basin.yMin)
-				AND((GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition + GVL_MOTION.STATUS.yPosOut) < GVL_MOTION.Basin.yMax)
-				THEN	
-					IF 	GVL_MOTION.Script[GVL_MOTION.CurInstruction].zType = zBehavior.Manual THEN
-						GVL_MOTION.zCon.SetPosition							:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition;
-					ELSE
-						//TODO
-						//zCommandType.WaterSurface:
-						;//massa feedback
-						//zCommandType.SedSurface:
-						;//sonar feedback	
-					END_IF
-					GVL_MOTION.zCon.SetVelocity								:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZVelocity;
-					GVL_MOTION.xCon.SetPosition								:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition;
-					GVL_MOTION.xCon.SetVelocity								:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXVelocity;
-					GVL_MOTION.yCon.SetPosition								:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition;
-					GVL_MOTION.yCon.SetVelocity								:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYVelocity;
-					IF NOT GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_SICK THEN
-						GVL_MOTION.xCon.Execute_MREL						:= TRUE;
-						GVL_MOTION.yCon.Execute_MREL						:= TRUE;
-						GVL_MOTION.zCon.Execute_MREL						:= TRUE;
-					END_IF
-					IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none
-					OR GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_SICK 
-					THEN
-						GVL_DAQ.INDEX_COLLECTOR[GVL_DAQ.PASS_INDEX]			:= GVL_DAQ.DATA_INDEX;
-						GVL_DAQ.DAQ_CTR_INT.Measure_Run_Time				:= TRUE; //start time collection for DAQ pass
-						IF NOT GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_SICK THEN
-							GVL_MOTION.InstructionState 					:= 3;
+				CASE GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger OF
+					DataTrigger.none: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger	:= 0;
+					DataTrigger.x: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 1;
+					DataTrigger.y: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 2;
+					DataTrigger.z: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger		:= 3;
+					DataTrigger.timed: GVL_DAQ.DAQ_CTR_INT.Activate_Trigger	:= 4;					
+				END_CASE			
+					
+					//check hard stops
+				IF (GVL_MOTION.STATUS.xPosOut + GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition < GVL_MOTION.STATUS.HardStopLocations[0])
+				AND(GVL_MOTION.STATUS.yPosOut + GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition < GVL_MOTION.STATUS.HardStopLocations[1])	
+				AND(GVL_MOTION.STATUS.zPosOut + GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition < GVL_MOTION.STATUS.HardStopLocations[2])
+				THEN
+					//check basin
+					IF ((GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition + GVL_MOTION.STATUS.xPosOut) > GVL_MOTION.Basin.xMin)
+					AND((GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition + GVL_MOTION.STATUS.xPosOut) < GVL_MOTION.Basin.xMax)	
+					AND((GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition + GVL_MOTION.STATUS.yPosOut) < GVL_MOTION.Basin.yMin)
+					AND((GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition + GVL_MOTION.STATUS.yPosOut) < GVL_MOTION.Basin.yMax)
+					THEN	
+						IF 	GVL_MOTION.Script[GVL_MOTION.CurInstruction].zType = zBehavior.Manual THEN
+							GVL_MOTION.zCon.SetPosition						:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition;
 						ELSE
-							GVL_MOTION.InstructionState 					:= 7;
-						END_IF	
+							//TODO
+							//zCommandType.WaterSurface:
+							;//massa feedback
+							//zCommandType.SedSurface:
+							;//sonar feedback	
+						END_IF
+						GVL_MOTION.zCon.SetVelocity							:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZVelocity;
+						GVL_MOTION.xCon.SetPosition							:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXPosition;
+						GVL_MOTION.xCon.SetVelocity							:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetXVelocity;
+						GVL_MOTION.yCon.SetPosition							:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYPosition;
+						GVL_MOTION.yCon.SetVelocity							:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYVelocity;
+						IF NOT GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_SICK THEN
+							GVL_MOTION.xCon.Execute_MREL					:= TRUE;
+							GVL_MOTION.yCon.Execute_MREL					:= TRUE;
+							GVL_MOTION.zCon.Execute_MREL					:= TRUE;
+						END_IF
+						IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].DataTrigger <> DataTrigger.none
+						OR GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_SICK 
+						THEN
+							GVL_DAQ.INDEX_COLLECTOR[GVL_DAQ.PASS_INDEX]		:= GVL_DAQ.DATA_INDEX;
+							GVL_DAQ.DAQ_CTR_INT.Measure_Run_Time			:= TRUE; //start time collection for DAQ pass
+							IF NOT GVL_MOTION.Script[GVL_MOTION.CurInstruction].Acq_SICK THEN
+								GVL_MOTION.InstructionState 				:= 3;
+							ELSE
+								GVL_MOTION.InstructionState 				:= 7;
+							END_IF	
+						ELSE
+							GVL_MOTION.InstructionState 					:= 1;	
+						END_IF
+					//outside of basin error	
 					ELSE
-						GVL_MOTION.InstructionState 						:= 1;	
-					END_IF
-				//outside of basin error	
+						GVL_MOTION.STATUS.Basin_Exceed_Err					:= TRUE;
+						GVL_MOTION.CurInstruction 							:= 0;
+						GVL_MOTION.EXT_CTR.CMDRUN 							:= FALSE;
+					END_IF	
+					//hard stop error	
 				ELSE
-					GVL_MOTION.STATUS.Basin_Exceed_Err						:= TRUE;
+					GVL_MOTION.STATUS.HS_Err								:= TRUE;
+					GVL_MOTION.STATUS.Move_Rel_Err							:= TRUE;
 					GVL_MOTION.CurInstruction 								:= 0;
 					GVL_MOTION.EXT_CTR.CMDRUN 								:= FALSE;
 				END_IF	
-				//hard stop error	
-			ELSE
-				GVL_MOTION.STATUS.HS_Err									:= TRUE;
-				GVL_MOTION.STATUS.Move_Rel_Err								:= TRUE;
-				GVL_MOTION.CurInstruction 									:= 0;
-				GVL_MOTION.EXT_CTR.CMDRUN 									:= FALSE;
-			END_IF	
-				
-		END_IF	
+					
+			END_IF
+
+		END_IF //t4	
 			
 	ELSE  
 		GVL_MOTION.CurInstruction 											:= 0;
@@ -495,7 +511,7 @@ CASE GVL_MOTION.InstructionState OF
 		
 		//Release seems to skip over while loop waiting for SCAN_DONE 
 		//must be called from its own directory to load icx params
-		SICK_CPP( PATHSTR:= 'C:\SICK_Control\Debug\SICK_Control.exe', DIRNAME:= 'C:\SICK_Control\Debug', START:= TRUE);
+		SICK_CPP( PATHSTR:= 'C:\SICK_Control\Release\SICK_Control.exe', DIRNAME:= 'C:\SICK_Control\Release', START:= TRUE);
 		SICK_CPP( START:= FALSE);
 		IF NOT SICK_CPP.BUSY THEN
 			GVL_SICK.SICK_setup												:= TRUE;
@@ -565,6 +581,7 @@ END_CASE]]></ST>
       <LineId Id="4" Count="0" />
       <LineId Id="1040" Count="1" />
       <LineId Id="1069" Count="1" />
+      <LineId Id="1262" Count="1" />
       <LineId Id="1051" Count="0" />
       <LineId Id="5" Count="3" />
       <LineId Id="83" Count="1" />
@@ -592,7 +609,11 @@ END_CASE]]></ST>
       <LineId Id="21" Count="0" />
       <LineId Id="250" Count="0" />
       <LineId Id="1229" Count="0" />
-      <LineId Id="642" Count="0" />
+      <LineId Id="1272" Count="0" />
+      <LineId Id="1266" Count="4" />
+      <LineId Id="1264" Count="0" />
+      <LineId Id="1274" Count="3" />
+      <LineId Id="1273" Count="0" />
       <LineId Id="251" Count="0" />
       <LineId Id="651" Count="0" />
       <LineId Id="656" Count="1" />
@@ -679,6 +700,8 @@ END_CASE]]></ST>
       <LineId Id="1037" Count="0" />
       <LineId Id="702" Count="0" />
       <LineId Id="253" Count="0" />
+      <LineId Id="1279" Count="0" />
+      <LineId Id="1278" Count="0" />
       <LineId Id="284" Count="0" />
       <LineId Id="33" Count="7" />
       <LineId Id="760" Count="4" />

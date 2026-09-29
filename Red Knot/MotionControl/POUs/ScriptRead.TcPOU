@@ -41,7 +41,7 @@ CASE step OF
 			nErrId		:= 0;
 			hFile		:= 0;
 			FilePath	:= 'C:\data\';
-			FilePath	:= concat(FilePath, GVL_MOTION.EXT_CTR.BASINNAME);
+			FilePath	:= concat(FilePath, GVL_MOTION.Basin.Name);
 			FilePath	:= concat(FilePath, '\');
 			FilePath	:= concat(FilePath, GVL_MOTION.EXT_CTR.SCRIPTNAME);
 			FilePath	:= concat(FilePath, '_');

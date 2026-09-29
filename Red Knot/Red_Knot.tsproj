@@ -2068,12 +2068,12 @@ External Setpoint Generation:
 				<Axis Id="1" CreateSymbols="true" AxisType="1">
 					<Name>xAxis</Name>
 					<AxisPara>
-						<Dynamic Acceleration="1356.33" Deceleration="1356.33" Jerk="4068.99"/>
-						<Velo RefSearch="10" RefSync="9" SlowManual="20" FastManual="100" Fast="904.22" Maximum="904.22"/>
+						<Dynamic Acceleration="542.532" Deceleration="542.532" Jerk="1627.596"/>
+						<Velo RefSearch="3.61688" RefSync="3.61688" SlowManual="18.0844" FastManual="108.5064" Fast="361.688" Maximum="361.688"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="19">
-						<EncPara ScaleFactorNumerator="40" ScaleFactorDenominator="1048576" MaxCount="#xffffffff">
+						<EncPara ScaleFactorNumerator="32" ScaleFactorDenominator="1048576" MaxCount="#xffffffff">
 							<Inc RefSearchInverse="true" RefSyncInverse="false"/>
 						</EncPara>
 						<Vars VarGrpType="1">
@@ -2134,7 +2134,7 @@ External Setpoint Generation:
 					</Encoder>
 					<Drive Name="Drive" DrvType="16">
 						<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00020100">
-							<Analog VeloReferenz="994.642" VeloScale="32" TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
+							<Analog VeloReferenz="397.8568" VeloScale="32" TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
@@ -2355,12 +2355,12 @@ External Setpoint Generation:
 				<Axis Id="3" CreateSymbols="true" AxisType="1">
 					<Name>xAxisCoupled</Name>
 					<AxisPara>
-						<Dynamic Acceleration="1356.33" Deceleration="1356.33" Jerk="4068.99"/>
-						<Velo RefSearch="10" RefSync="9.0422" SlowManual="45.211" FastManual="271.266" Fast="904.22" Maximum="904.22"/>
+						<Dynamic Acceleration="542.532" Deceleration="542.532" Jerk="1627.596"/>
+						<Velo RefSearch="3.61688" RefSync="3.61688" SlowManual="18.0844" FastManual="108.5064" Fast="361.688" Maximum="361.688"/>
 						<OtherSettings AllowMotionCmdToSlave="true" DataPersistence="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="19">
-						<EncPara ScaleFactorNumerator="40" ScaleFactorDenominator="1048576" Inverse="true" MaxCount="#xffffffff">
+						<EncPara ScaleFactorNumerator="32" ScaleFactorDenominator="1048576" Inverse="true" MaxCount="#xffffffff">
 							<Inc RefSearchInverse="true" RefSyncInverse="false"/>
 						</EncPara>
 						<Vars VarGrpType="1">
@@ -2421,7 +2421,7 @@ External Setpoint Generation:
 					</Encoder>
 					<Drive Name="Drive" DrvType="16">
 						<DrvPara Inverse="true" MaxCount="#xffffffff" DriveControlDWord="#x00020100">
-							<Analog VeloReferenz="994.642" VeloScale="32" TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
+							<Analog VeloReferenz="397.8568" VeloScale="32" TorqueSetpointScale="10" ScaleFactorActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
@@ -2643,7 +2643,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{35F1EE57-8B64-404F-9A2B-38524D23373E}" Name="MotionControl" PrjFilePath="MotionControl\MotionControl.plcproj" TmcFilePath="MotionControl\MotionControl.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{3CDADC47-5EB8-8139-FD44-D847816A289E}" TmcPath="MotionControl\MotionControl.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{36610F77-A0D3-C725-582B-0851D1E46C12}" TmcPath="MotionControl\MotionControl.tmc">
 					<Name>MotionControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1" ContextId="2" AreaNo="32">
@@ -2654,14 +2654,6 @@ External Setpoint Generation:
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_DAQ.cpptest</Name>
-							<Type>UDINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_DAQ.test2</Name>
-							<Type>STRING(80)</Type>
-						</Var>
-						<Var>
 							<Name>GVL_SICK.SCAN_HEIGHT</Name>
 							<Comment><![CDATA[# profiles per buffer. 1-65535]]></Comment>
 							<Type>UDINT</Type>
@@ -2669,6 +2661,16 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_SICK.CNT_PER_REV</Name>
 							<Comment><![CDATA[# encoder cnts before trigger 1-65535]]></Comment>
+							<Type>UDINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_SICK.MOVE_DONE</Name>
+							<Comment><![CDATA[send 1 to plc to trigger profile capture]]></Comment>
+							<Type>UDINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_SICK.NUM_SWATHS</Name>
+							<Comment><![CDATA[max 5]]></Comment>
 							<Type>UDINT</Type>
 						</Var>
 					</Vars>
@@ -2743,22 +2745,6 @@ External Setpoint Generation:
 							<Type>UINT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_MOTION.xCon.AxisToCouple.NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MOTION.xcCon.AxisToCouple.NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MOTION.yCon.AxisToCouple.NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MOTION.zCon.AxisToCouple.NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
 							<Name>GVL_SICK.SCAN_DONE</Name>
 							<Comment><![CDATA[send 1 to cpp when scan motion complete]]></Comment>
 							<Type>UDINT</Type>
@@ -2767,6 +2753,10 @@ External Setpoint Generation:
 							<Name>GVL_SICK.SWATH_CNT</Name>
 							<Comment><![CDATA[numbering for scans]]></Comment>
 							<Type>UDINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_SICK.Y_POS</Name>
+							<Type>REAL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_SICK.BASIN</Name>
@@ -2785,6 +2775,22 @@ External Setpoint Generation:
 							<Name>GVL_SICK.DATA_DONE</Name>
 							<Comment><![CDATA[cpp sets to 1 when data is processed and script can proceed]]></Comment>
 							<Type>UDINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MOTION.xCon.AxisToCouple.NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MOTION.xcCon.AxisToCouple.NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MOTION.yCon.AxisToCouple.NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MOTION.zCon.AxisToCouple.NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="1">
@@ -2899,13 +2905,39 @@ External Setpoint Generation:
 								</TcLink>
 								<OrderCode>EL7062</OrderCode>
 								<Name>Term 5 (EL7062)</Name>
+								<ProductRevision>EL7062-0000-0016</ProductRevision>
 								<FirmwareVersion>02</FirmwareVersion>
 								<BootloaderVersion>L6.1.61.0</BootloaderVersion>
 								<CatalogNo>EL7062</CatalogNo>
 								<HardwareVersion>03</HardwareVersion>
 								<SerialNr>1 112</SerialNr>
 								<BIC>1P271797SBTN999kepk81KEL7062                        Q1    2P332502030016</BIC>
-								<ProductRevision>EL7062-0000-0016</ProductRevision>
+								<WatchLog UpdateIntervalInMs="500">
+									<WatchLogItem>
+										<WatchLogParaCoE Index="4120" SubIndex="2"/>
+										<Alias>Type</Alias>
+									</WatchLogItem>
+									<WatchLogItem>
+										<WatchLogParaCoE Index="4120" SubIndex="4"/>
+										<Alias>Serial Nr</Alias>
+									</WatchLogItem>
+									<WatchLogItem>
+										<WatchLogParaCoE Index="4322" SubIndex="1"/>
+										<Alias>BIC</Alias>
+									</WatchLogItem>
+									<WatchLogItem>
+										<WatchLogParaCoE Index="4106" SubIndex="0"/>
+										<Alias>Firmware version</Alias>
+									</WatchLogItem>
+									<WatchLogItem>
+										<WatchLogParaCoE Index="63744" SubIndex="18"/>
+										<Alias>DC link voltage</Alias>
+									</WatchLogItem>
+									<WatchLogItem>
+										<WatchLogParaCoE Index="63744" SubIndex="17"/>
+										<Alias>Amplifier temperature</Alias>
+									</WatchLogItem>
+								</WatchLog>
 								<Inverter>
 									<Device>
 										<Name>DMInverterTypeDevice</Name>
@@ -2939,8 +2971,6 @@ External Setpoint Generation:
 													<GroupType>AS20xx</GroupType>
 													<ElectricMotorType>AS2021-0Dx0</ElectricMotorType>
 													<MotorfeedbackType>Unkn#TTL-1024I-5V</MotorfeedbackType>
-													<MotorbrakeType/>
-													<AssemblyType/>
 													<VendorName>BECKHOFF</VendorName>
 													<IsAc>false</IsAc>
 													<ConstructType>4</ConstructType>
@@ -3154,32 +3184,26 @@ External Setpoint Generation:
 														<Data type="int8" unitSiNumerator="second">2</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>PowerManagement_DelayTimeAfterPowerUp</Name>
 														<Data type="real64" unitSiNumerator="second">0.8</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>RelativePositonData_ResolutionPerRotation</Name>
 														<Data type="int32">1024</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>AbsolutePositionData_ResolutionSinglePos</Name>
 														<Data type="int16">0</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>AbsolutePositionData_ResolutionMultiPos</Name>
 														<Data type="int16">0</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>AbsolutePositionData_NumberOfClockCyclesForSinglePos</Name>
 														<Data type="int16">0</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>AbsolutePositionData_NumberOfClockCyclesForMultiPos</Name>
 														<Data type="int16">0</Data>
 													</Parameter>
@@ -3228,7 +3252,7 @@ External Setpoint Generation:
 												</Parameter>
 												<Parameter>
 													<PropertyName>FeedConstant</PropertyName>
-													<Value>40</Value>
+													<Value>32</Value>
 												</Parameter>
 												<Parameter>
 													<PropertyName>GearRatioMotorSide</PropertyName>
@@ -3317,6 +3341,24 @@ External Setpoint Generation:
 												</Filter>
 											</Controller>
 										</Block>
+										<WatchLog ChnId="0" UpdateIntervalInMs="500">
+											<WatchLogItem>
+												<WatchLogParaCoE Index="24592" SubIndex="1"/>
+												<Alias>Status word</Alias>
+											</WatchLogItem>
+											<WatchLogItem>
+												<WatchLogParaCoE Index="28688" SubIndex="3"/>
+												<Alias>Actual operation mode</Alias>
+											</WatchLogItem>
+											<WatchLogItem>
+												<WatchLogParaCoE Index="24592" SubIndex="7"/>
+												<Alias>Actual velocity</Alias>
+											</WatchLogItem>
+											<WatchLogItem>
+												<WatchLogParaCoE Index="24592" SubIndex="8"/>
+												<Alias>Actual torque</Alias>
+											</WatchLogItem>
+										</WatchLog>
 									</Channel>
 									<Channel ChnId="1">
 										<TcLink>
@@ -3334,8 +3376,6 @@ External Setpoint Generation:
 													<GroupType>AS20xx</GroupType>
 													<ElectricMotorType>AS2021-0Dx0</ElectricMotorType>
 													<MotorfeedbackType>Unkn#TTL-1024I-5V</MotorfeedbackType>
-													<MotorbrakeType/>
-													<AssemblyType/>
 													<VendorName>BECKHOFF</VendorName>
 													<IsAc>false</IsAc>
 													<ConstructType>4</ConstructType>
@@ -3549,32 +3589,26 @@ External Setpoint Generation:
 														<Data type="int8" unitSiNumerator="second">2</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>PowerManagement_DelayTimeAfterPowerUp</Name>
 														<Data type="real64" unitSiNumerator="second">0.8</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>RelativePositonData_ResolutionPerRotation</Name>
 														<Data type="int32">1024</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>AbsolutePositionData_ResolutionSinglePos</Name>
 														<Data type="int16">0</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>AbsolutePositionData_ResolutionMultiPos</Name>
 														<Data type="int16">0</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>AbsolutePositionData_NumberOfClockCyclesForSinglePos</Name>
 														<Data type="int16">0</Data>
 													</Parameter>
 													<Parameter>
-														<Comment LcId="1033"/>
 														<Name>AbsolutePositionData_NumberOfClockCyclesForMultiPos</Name>
 														<Data type="int16">0</Data>
 													</Parameter>
@@ -3623,7 +3657,7 @@ External Setpoint Generation:
 												</Parameter>
 												<Parameter>
 													<PropertyName>FeedConstant</PropertyName>
-													<Value>40</Value>
+													<Value>32</Value>
 												</Parameter>
 												<Parameter>
 													<PropertyName>GearRatioMotorSide</PropertyName>
@@ -3664,6 +3698,24 @@ External Setpoint Generation:
 												</Stepper>
 											</Controller>
 										</Block>
+										<WatchLog ChnId="1" UpdateIntervalInMs="500">
+											<WatchLogItem>
+												<WatchLogParaCoE Index="24848" SubIndex="1"/>
+												<Alias>Status word</Alias>
+											</WatchLogItem>
+											<WatchLogItem>
+												<WatchLogParaCoE Index="28944" SubIndex="3"/>
+												<Alias>Actual operation mode</Alias>
+											</WatchLogItem>
+											<WatchLogItem>
+												<WatchLogParaCoE Index="24848" SubIndex="7"/>
+												<Alias>Actual velocity</Alias>
+											</WatchLogItem>
+											<WatchLogItem>
+												<WatchLogParaCoE Index="24848" SubIndex="8"/>
+												<Alias>Actual torque</Alias>
+											</WatchLogItem>
+										</WatchLog>
 									</Channel>
 								</Inverter>
 							</TcDMDrive>
