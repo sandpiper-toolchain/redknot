@@ -21,7 +21,7 @@ STRUCT
 	//HardStopLoc			:BOOL	:= FALSE; 
 	//zSafeSet			:BOOL	:= FALSE;
 	//BasinSet			:BOOL	:= FALSE;
-	HaltDone			:BOOL	:= FALSE;
+	Stop_Int			:BOOL	:= FALSE;
 	PowerError			:BOOL	:= FALSE;
 	
 	CurInstr			:INT;

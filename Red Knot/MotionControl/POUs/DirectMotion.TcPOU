@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="DirectMotion" Id="{105b326b-0c8a-4813-a6f4-71c1b84a8721}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM DirectMotion
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF GVL_MOTION.EXT_CTR.MOVEX THEN
+	IF  GVL_MOTION.EXT_CTR.POSX < GVL_MOTION.STATUS.HardStopLocations[0]
+	AND GVL_MOTION.EXT_CTR.POSX > GVL_MOTION.STATUS.CARRIAGE_OFFSETS[0]
+	THEN
+		GVL_MOTION.xCon.SetPosition												:= GVL_MOTION.EXT_CTR.POSX - GVL_MOTION.CARRIAGE_OFFSETS[0];
+		GVL_MOTION.xCon.SetVelocity												:= 200;
+		GVL_MOTION.xCon.Execute_MABS											:= TRUE;
+		IF GVL_MOTION.xOut.MoveDone THEN
+			GVL_MOTION.xCon.Execute_MABS										:= FALSE;
+			GVL_MOTION.EXT_CTR.MOVEX											:= FALSE;
+		END_IF
+	END_IF
+	
+ELSIF GVL_MOTION.EXT_CTR.MOVEY THEN
+	IF  GVL_MOTION.EXT_CTR.POSY < GVL_MOTION.STATUS.HardStopLocations[1]
+	AND GVL_MOTION.EXT_CTR.POSY > GVL_MOTION.STATUS.CARRIAGE_OFFSETS[1]
+	THEN
+		GVL_MOTION.yCon.SetPosition												:= GVL_MOTION.EXT_CTR.POSY - GVL_MOTION.CARRIAGE_OFFSETS[1];
+		GVL_MOTION.yCon.SetVelocity												:= 200;
+		GVL_MOTION.yCon.Execute_MABS											:= TRUE;
+		IF GVL_MOTION.yOut.MoveDone THEN
+			GVL_MOTION.yCon.Execute_MABS										:= FALSE;
+			GVL_MOTION.EXT_CTR.MOVEY											:= FALSE;
+		END_IF
+	END_IF	
+
+ELSIF GVL_MOTION.EXT_CTR.MOVEZ THEN
+	IF  GVL_MOTION.EXT_CTR.POSZ < GVL_MOTION.STATUS.HardStopLocations[2]
+	AND GVL_MOTION.EXT_CTR.POSZ > GVL_MOTION.STATUS.CARRIAGE_OFFSETS[2]
+	THEN
+		GVL_MOTION.ED2008O.ED2008_Output.MDP5001_200_DO_Channel_7_Output		:= TRUE;
+		GVL_MOTION.zCon.SetPosition												:= GVL_MOTION.EXT_CTR.POSZ - GVL_MOTION.CARRIAGE_OFFSETS[2];
+		GVL_MOTION.zCon.SetVelocity												:= 80;
+		GVL_MOTION.zCon.Execute_MABS											:= TRUE;
+		IF GVL_MOTION.zOut.MoveDone THEN
+			GVL_MOTION.ED2008O.ED2008_Output.MDP5001_200_DO_Channel_7_Output	:= FALSE;
+			GVL_MOTION.zCon.Execute_MABS										:= FALSE;
+			GVL_MOTION.EXT_CTR.MOVEZ											:= FALSE;
+		END_IF
+	END_IF	
+	
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

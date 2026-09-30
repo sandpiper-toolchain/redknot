@@ -15,6 +15,7 @@ VAR
 	
 	ED1008I AT %I*			:ED1008_AB7978D6; //current or voltage input
 	
+	
 	couplestate				:INT	:= 0;
 	basintoggle				:BOOL;
 	boot_done				:BOOL	:= FALSE;
@@ -29,16 +30,14 @@ END_VAR
 //100 instruction script. modify in GVL_MOTION and RunCommands()
 
 //digital io and internal variable assignments
-//GVL_MOTION.xcCon.LimNeg						:= InfoData1T5Ch1.0;
-//GVL_MOTION.xCon.LimNeg				 		:= InfoData1T5Ch1.1;
-//GVL_MOTION.STATUS.eStop   					:= InfoData1T5Ch2.0;
-
-GVL_MOTION.yCon.LimNeg				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_1_Input);
-GVL_MOTION.yCon.LimPos				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_3_Input);
-//GVL_MOTION.zCon.LimNeg 				 		:= InfoData1T6Ch2.0;
-//GVL_MOTION.zCon.LimPos
-
-GVL_MOTION.PAUSE_EXT						:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_2_Input);
+GVL_MOTION.xCon.LimNeg				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_1_Input);
+GVL_MOTION.yCon.LimPos				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_2_Input);
+GVL_MOTION.xCon.LimPos				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_3_Input);
+GVL_MOTION.zCon.LimPos				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_4_Input);
+GVL_MOTION.xcCon.LimNeg				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_5_Input);
+GVL_MOTION.zCon.LimNeg				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_6_Input);
+GVL_MOTION.yCon.LimNeg				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_7_Input);
+GVL_MOTION.STOP_EXT							:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_8_Input);
 
 GVL_MOTION.NextInstruction					:= GVL_MOTION.CurInstruction + 1;
 
@@ -66,7 +65,7 @@ GVL_MOTION.STATUS.zPosOut					:= GVL_MOTION.zOut.PositionOut + GVL_MOTION.CARRIA
 GVL_MOTION.STATUS.zVelOut					:= GVL_MOTION.zOut.VelocityOut;
 GVL_MOTION.STATUS.AxesLocated				:= GVL_MOTION.AxesLocated;
 //GVL_MOTION.STATUS.zSafeSet					:= GVL_MOTION.zSafeSet;			
-GVL_MOTION.STATUS.HaltDone					:= GVL_MOTION.xOut.HaltDone;
+//GVL_MOTION.STATUS.HaltDone					:= GVL_MOTION.xOut.HaltDone;
 GVL_MOTION.STATUS.PowerError				:= GVL_MOTION.xOut.PowerError OR GVL_MOTION.yOut.PowerError	OR
 											   GVL_MOTION.zOut.PowerError OR GVL_MOTION.xCOut.PowerError;	
 
@@ -301,18 +300,24 @@ DeleteLastInstruction();
 
 //require safe z limit, home complete, x axes coupled, hard stops located, basin set
 //check before RunCommands is executed
-IF (NOT GVL_MOTION.AxesLocated)
-OR (NOT GVL_MOTION.xOut.AxisCoupled) //OR (NOT GVL_MOTION.STATUS.HardStopLoc) 
-THEN
-	GVL_MOTION.CurInstruction				:= 0;
-	GVL_MOTION.EXT_CTR.CMDRUN				:= FALSE;	//maybe change this to internal variable
-END_IF
+// IF (NOT GVL_MOTION.AxesLocated)
+// OR (NOT GVL_MOTION.xOut.AxisCoupled) //OR (NOT GVL_MOTION.STATUS.HardStopLoc) 
+// THEN
+// 	GVL_MOTION.CurInstruction				:= 0;
+// 	GVL_MOTION.EXT_CTR.CMDRUN				:= FALSE;	//maybe change this to internal variable
+// END_IF
 
-IF GVL_MOTION.EXT_CTR.CMDRUN THEN
+IF GVL_MOTION.EXT_CTR.CMDRUN AND GVL_MOTION.AxesLocated AND GVL_MOTION.xOut.AxisCoupled
+AND NOT GVL_MOTION.MOVEXYZ THEN
 	RunCommands(); //toggler
 ELSE
 	GVL_MOTION.CurInstruction				:= 0;
 	GVL_MOTION.InstructionState				:= 0;
+END_IF
+
+IF NOT GVL_MOTION.EXT_CTR.CMDRUN AND GVL_MOTION.AxesLocated AND GVL_MOTION.xOut.AxisCoupled
+AND GVL_MOTION.MOVEXYZ THEN
+	DirectMotion();
 END_IF]]></ST>
     </Implementation>
   </POU>

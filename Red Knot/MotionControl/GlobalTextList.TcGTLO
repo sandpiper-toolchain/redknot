@@ -761,6 +761,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"706"</v>
+              <v n="TextDefault">"Send"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"1909"</v>
               <v n="TextDefault">"send list of script names"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -768,6 +773,11 @@
             <o>
               <v n="TextID">"773"</v>
               <v n="TextDefault">"send script"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"427"</v>
+              <v n="TextDefault">"Send To"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -1178,6 +1188,11 @@
             <o>
               <v n="TextID">"343"</v>
               <v n="TextDefault">"z beh"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"432"</v>
+              <v n="TextDefault">"z brake"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

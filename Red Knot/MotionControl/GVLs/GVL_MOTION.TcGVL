@@ -19,11 +19,13 @@ VAR_GLOBAL
 	zJogFW					:BOOL;
 	zJogBW					:BOOL;
 	
-
+	MOVEXYZ					:BOOL;
+	
+	ED2008O AT %Q*			:ED2008_46D0FC69;
 	
 	//external controls
-	PAUSE_EXT				:BOOL;
-	PAUSE_INT				:BOOL;
+	STOP_EXT				:BOOL;
+	STOP_INT				:BOOL;
 	EXT_CTR					:MOTION_CTR; 
 	TEST_CTR				:MOTION_CTR; //test buffer for MQTT
 	{attribute 'TcEncoding':='UTF-8'}
@@ -85,7 +87,7 @@ VAR_GLOBAL
 	
 	//for the drop down lists
 	
-	xyzCMDSelect			:ARRAY[0..3] OF MotionType	:= [0,1,2,3];
+	xyzCMDSelect			:ARRAY[0..4] OF MotionType	:= [0,1,2,3,4];
 	
 	//safety controls
 

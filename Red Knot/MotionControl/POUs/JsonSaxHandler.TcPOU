@@ -68,8 +68,8 @@ END_VAR
 			GVL_MOTION.EXT_CTR.CMDCOUPLE := value;				
 		ELSIF tempkey = 'CMDLOOP' THEN
 			GVL_MOTION.EXT_CTR.CMDLOOP := value;	
-		ELSIF tempkey = 'PAUSE' THEN
-			GVL_MOTION.EXT_CTR.PAUSE := value;	
+		ELSIF tempkey = 'STOP' THEN
+			GVL_MOTION.EXT_CTR.STOP := value;	
 		ELSIF tempkey = 'AXESEN' THEN
 			GVL_MOTION.EXT_CTR.AXESEN := value;		
 		ELSIF tempkey = 'AXESRESET' THEN
@@ -101,7 +101,19 @@ END_VAR
 		ELSIF tempkey = 'SETZPOS' THEN
 			GVL_MOTION.EXT_CTR.SETZPOS := value;	
 		ELSIF tempkey = 'HEARTBEAT' THEN
-			GVL_MOTION.EXT_CTR.HEARTBEAT := value;			
+			GVL_MOTION.EXT_CTR.HEARTBEAT := value;
+		ELSIF tempkey = 'BASINCTR' THEN
+			GVL_MOTION.EXT_CTR.BASINCTR := value;
+		ELSIF tempkey = 'HEARTBEAT' THEN
+			GVL_MOTION.EXT_CTR.HEARTBEAT := value;
+		ELSIF tempkey = 'BRAKEREL' THEN
+			GVL_MOTION.EXT_CTR.BRAKEREL := value;
+		ELSIF tempkey = 'MOVEX' THEN
+			GVL_MOTION.EXT_CTR.MOVEX := value;
+		ELSIF tempkey = 'MOVEY' THEN
+			GVL_MOTION.EXT_CTR.MOVEY := value;
+		ELSIF tempkey = 'MOVEZ' THEN
+			GVL_MOTION.EXT_CTR.MOVEZ := value;							
 		END_IF		
 // 	ELSIF label = 'DAQ/CTR' THEN
 // 		IF tempkey = 'CMDDATACLR' THEN

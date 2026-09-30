@@ -20,6 +20,8 @@ VAR
 	HBtimer 		:TON			:= (PT:=T#1S);
 	scriptTimer		:TON			:= (PT:=T#2MS);
 	found 			:UDINT;	
+	notreset		:BOOL			:= FALSE;
+	HBcase			:INT			:= 0;
 	
    (* received message *)
     SubMCTR		    :BOOL;
@@ -220,21 +222,23 @@ IF fbMqttClient.bConnected THEN
 	//END_IF
 END_IF
 
-// HBtimer(IN:=TRUE); //3 second timer. set heartbeat false. control continuously sets heartbeat true, after 3 cycles disable sensitive motion controls
-// IF GVL_MOTION.EXT_CTR.HEARTBEAT THEN
-// 	GVL_MOTION.EXT_CTR.HEARTBEAT				:= FALSE;
-// 	HBtimer(IN:=FALSE);
-// 	HBtimer(IN:=TRUE);
-// END_IF
-// IF HBtimer.Q THEN
-// 	GVL_MOTION.EXT_CTR.XJOGFW					:= FALSE;	
-// 	GVL_MOTION.EXT_CTR.XJOGBW					:= FALSE;
-// 	GVL_MOTION.EXT_CTR.YJOGFW					:= FALSE;
-// 	GVL_MOTION.EXT_CTR.YJOGBW					:= FALSE;
-// 	GVL_MOTION.EXT_CTR.ZJOGFW					:= FALSE;
-// 	GVL_MOTION.EXT_CTR.ZJOGBW					:= FALSE;
-// 	HBtimer(IN:=FALSE);	
-// END_IF]]></ST>
+IF NOT GVL_MOTION.EXT_CTR.HEARTBEAT THEN
+//3 second timer. set heartbeat false. control continuously sets heartbeat true, 
+//after 3 cycles disable sensitive motion controls
+	HBtimer(IN:=TRUE, PT := T#1S); 
+ELSE
+	HBtimer(IN:=FALSE);
+	GVL_MOTION.EXT_CTR.HEARTBEAT				:= FALSE;
+END_IF	
+
+IF HBtimer.Q THEN	
+	GVL_MOTION.EXT_CTR.XJOGFW					:= FALSE;	
+	GVL_MOTION.EXT_CTR.XJOGBW					:= FALSE;
+	GVL_MOTION.EXT_CTR.YJOGFW					:= FALSE;
+	GVL_MOTION.EXT_CTR.YJOGBW					:= FALSE;
+	GVL_MOTION.EXT_CTR.ZJOGFW					:= FALSE;
+	GVL_MOTION.EXT_CTR.ZJOGBW					:= FALSE;	
+END_IF]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>
