@@ -169,7 +169,7 @@ CASE GVL_MOTION.InstructionState OF
 
 	1:
 	//state 1: non DAQ motion
-	//button debounce needed coming from pause state (2)
+	//button debounce needed coming from pause state 2 or 3
 	t5(IN := TRUE, PT := T#30MS);
 	IF t5.Q THEN
 		

@@ -9,7 +9,7 @@ VAR_GLOBAL
 	
 	xCon					:CTR_SIGNALS_INTERNAL;
 	xcCon					:CTR_SIGNALS_INTERNAL;
-	yCon					:CTR_SIGNALS_INTERNAL;	
+	yCon					:CTR_SIGNALS_INTERNAL;
 	zCon					:CTR_SIGNALS_INTERNAL;
 	
 	xJogFW					:BOOL;
@@ -22,12 +22,14 @@ VAR_GLOBAL
 	MOVEXYZ					:BOOL;
 	
 	ED2008O AT %Q*			:ED2008_46D0FC69;
+	Z_BRAKE_OFF				:BOOL;
 	
 	//external controls
 	STOP_EXT				:BOOL;
-	STOP_INT				:BOOL;
+	STOP_INT				:BOOL; //control signal
 	EXT_CTR					:MOTION_CTR; 
 	TEST_CTR				:MOTION_CTR; //test buffer for MQTT
+	HB						:HB;
 	{attribute 'TcEncoding':='UTF-8'}
 	TopicRcv				:STRING(255); //for MQTT
 	

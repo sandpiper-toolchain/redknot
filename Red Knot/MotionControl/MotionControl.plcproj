@@ -31,6 +31,9 @@
     <Compile Include="DUTs\BasinStateDisp.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\HB.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\MotionType.TcDUT">
       <SubType>Code</SubType>
     </Compile>

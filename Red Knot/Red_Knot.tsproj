@@ -2249,16 +2249,9 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{35F1EE57-8B64-404F-9A2B-38524D23373E}" Name="MotionControl" PrjFilePath="MotionControl\MotionControl.plcproj" TmcFilePath="MotionControl\MotionControl.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{D2F24F92-DD1E-5823-1CB9-2552C09D6D6B}" TmcPath="MotionControl\MotionControl.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{395AE43D-91BA-0B2E-6516-32A55D89E04B}" TmcPath="MotionControl\MotionControl.tmc">
 					<Name>MotionControl Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
-					<Vars VarGrpType="2" ContextId="1" AreaNo="17">
-						<Name>CSVTask Outputs</Name>
-						<Var>
-							<Name>GVL_MOTION.ED2008O</Name>
-							<Type GUID="{105B8132-B790-990F-AE6B-EA6465A16EAB}">ED2008_46D0FC69</Type>
-						</Var>
-					</Vars>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
 						<Var>
@@ -2293,6 +2286,10 @@ External Setpoint Generation:
 							<Name>GVL_MOTION.zCon.AxisToCouple.PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
+						<Var>
+							<Name>GVL_MOTION.ED2008O</Name>
+							<Type GUID="{105B8132-B790-990F-AE6B-EA6465A16EAB}">ED2008_46D0FC69</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
@@ -2306,15 +2303,15 @@ External Setpoint Generation:
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
+							<Name>MAIN.zAxis.NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
 							<Name>MAIN.xAxisCoupled.NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>MAIN.yAxis.NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.zAxis.NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
@@ -3526,9 +3523,6 @@ External Setpoint Generation:
 				<Image Id="2" AddrType="9" ImageType="3">
 					<Name>Image</Name>
 				</Image>
-				<Image Id="6" AddrType="10" ImageType="3">
-					<Name>Image-2</Name>
-				</Image>
 				<Box Id="1" BoxType="9099">
 					<Name>Term 1 (EK1200)</Name>
 					<ImageId>1000</ImageId>
@@ -3649,7 +3643,6 @@ External Setpoint Generation:
 	</Project>
 	<Mappings>
 		<MappingInfo Identifier="{00000000-2003-0850-0020-500820000403}" Id="#x02030020"/>
-		<MappingInfo Identifier="{00000000-2004-0850-0120-500861000403}" Id="#x02030040"/>
 		<MappingInfo Identifier="{00000000-0040-0304-1000-040340000403}" Id="#x02030030"/>
 		<MappingInfo Identifier="{05000010-2003-0850-1000-040300205008}" Id="#x02030010" Watchdog="04000000040000000400000004000000"/>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^xAxis">
@@ -3714,14 +3707,14 @@ External Setpoint Generation:
 		</OwnerA>
 		<OwnerA Name="TIPC^MotionControl^MotionControl Instance">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 6 (ED2008)">
-				<Link VarA="CSVTask Outputs^GVL_MOTION.ED2008O^ED2008_Output^MDP5001_200_DO_Channel_1_Output" VarB="DO Channel 1^Output"/>
-				<Link VarA="CSVTask Outputs^GVL_MOTION.ED2008O^ED2008_Output^MDP5001_200_DO_Channel_2_Output" VarB="DO Channel 2^Output"/>
-				<Link VarA="CSVTask Outputs^GVL_MOTION.ED2008O^ED2008_Output^MDP5001_200_DO_Channel_3_Output" VarB="DO Channel 3^Output"/>
-				<Link VarA="CSVTask Outputs^GVL_MOTION.ED2008O^ED2008_Output^MDP5001_200_DO_Channel_4_Output" VarB="DO Channel 4^Output"/>
-				<Link VarA="CSVTask Outputs^GVL_MOTION.ED2008O^ED2008_Output^MDP5001_200_DO_Channel_5_Output" VarB="DO Channel 5^Output"/>
-				<Link VarA="CSVTask Outputs^GVL_MOTION.ED2008O^ED2008_Output^MDP5001_200_DO_Channel_6_Output" VarB="DO Channel 6^Output"/>
-				<Link VarA="CSVTask Outputs^GVL_MOTION.ED2008O^ED2008_Output^MDP5001_200_DO_Channel_7_Output" VarB="DO Channel 7^Output"/>
-				<Link VarA="CSVTask Outputs^GVL_MOTION.ED2008O^ED2008_Output^MDP5001_200_DO_Channel_8_Output" VarB="DO Channel 8^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_MOTION.ED2008O^ED2008_Output^MDP5001_200_DO_Channel_1_Output" VarB="DO Channel 1^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_MOTION.ED2008O^ED2008_Output^MDP5001_200_DO_Channel_2_Output" VarB="DO Channel 2^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_MOTION.ED2008O^ED2008_Output^MDP5001_200_DO_Channel_3_Output" VarB="DO Channel 3^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_MOTION.ED2008O^ED2008_Output^MDP5001_200_DO_Channel_4_Output" VarB="DO Channel 4^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_MOTION.ED2008O^ED2008_Output^MDP5001_200_DO_Channel_5_Output" VarB="DO Channel 5^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_MOTION.ED2008O^ED2008_Output^MDP5001_200_DO_Channel_6_Output" VarB="DO Channel 6^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_MOTION.ED2008O^ED2008_Output^MDP5001_200_DO_Channel_7_Output" VarB="DO Channel 7^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_MOTION.ED2008O^ED2008_Output^MDP5001_200_DO_Channel_8_Output" VarB="DO Channel 8^Output"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (ED1008)">
 				<Link VarA="PlcTask Inputs^MAIN.ED1008I^ED1008_Input^MDP5001_100_DI_Channel_1_Input" VarB="DI Channel 1^Input"/>

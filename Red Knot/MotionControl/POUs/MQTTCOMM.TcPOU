@@ -12,6 +12,7 @@ VAR
 	MotionStatusPub :STRING(255)	:= 'MOTION/STATUS';
 	MotionCTREcho	:STRING(255)	:= 'MOTION/CTR_ECHO';
 	MotionINSTREcho	:STRING(255)	:= 'MOTION/INSTR_ECHO';
+	HBEcho			:STRING(255)	:= 'MOTION/HB_ECHO';
 
 	ScriptSend		:STRING(255)	:= 'MOTION/SCRIPTSEND';
 	ScriptNames		:STRING(255)	:= 'MOTION/SCRIPTNAMES';
@@ -25,9 +26,8 @@ VAR
 	
    (* received message *)
     SubMCTR		    :BOOL;
-	SubDCTR			:BOOL;
 	SubIBuff		:BOOL;
-    sTopicSub       :STRING(255)	:= 'MOTION/CTR';
+    SubHB			:BOOL;
     {attribute 'TcEncoding':='UTF-8'}
     sTopicRcv       :STRING(255);
     {attribute 'TcEncoding':='UTF-8'}
@@ -57,6 +57,8 @@ END_VAR
 //GVL_MOTION.InstructionBuffer
 //published messages:
 //GVL_MOTION.STATUS
+//receive 
+//GVL_MOTION.HB.HEARTBEAT
 
 IF bSetParameter THEN
     bSetParameter								:= FALSE;
@@ -82,6 +84,9 @@ IF fbMqttClient.bConnected THEN
     END_IF
     IF NOT SubIBuff THEN
         SubIBuff := fbMqttClient.Subscribe(sTopic:='MOTION/INSTR_BUFFER', eQoS:=TcIotMqttQos.AtMostOnceDelivery);
+    END_IF	
+	IF NOT SubHB THEN
+        SubHB := fbMqttClient.Subscribe(sTopic:='MOTION/HB', eQoS:=TcIotMqttQos.AtMostOnceDelivery);
     END_IF	
     fbTimer(IN:=TRUE);
 	//wait for trigger from daqtask - instantaneous data ready to transmit
@@ -222,21 +227,21 @@ IF fbMqttClient.bConnected THEN
 	//END_IF
 END_IF
 
-IF NOT GVL_MOTION.EXT_CTR.HEARTBEAT THEN
+IF NOT GVL_MOTION.HB.HEARTBEAT THEN
 //3 second timer. set heartbeat false. control continuously sets heartbeat true, 
 //after 3 cycles disable sensitive motion controls
 	HBtimer(IN:=TRUE, PT := T#1S); 
 ELSE
 	HBtimer(IN:=FALSE);
-	GVL_MOTION.EXT_CTR.HEARTBEAT				:= FALSE;
+	GVL_MOTION.HB.HEARTBEAT						:= FALSE;
 END_IF	
 
 IF HBtimer.Q THEN	
 	GVL_MOTION.EXT_CTR.XJOGFW					:= FALSE;	
-	GVL_MOTION.EXT_CTR.XJOGBW					:= FALSE;
-	GVL_MOTION.EXT_CTR.YJOGFW					:= FALSE;
-	GVL_MOTION.EXT_CTR.YJOGBW					:= FALSE;
-	GVL_MOTION.EXT_CTR.ZJOGFW					:= FALSE;
+	GVL_MOTION.EXT_CTR.XJOGBW					:= FALSE;	
+	GVL_MOTION.EXT_CTR.YJOGFW					:= FALSE;	
+	GVL_MOTION.EXT_CTR.YJOGBW					:= FALSE;	
+	GVL_MOTION.EXT_CTR.ZJOGFW					:= FALSE;	
 	GVL_MOTION.EXT_CTR.ZJOGBW					:= FALSE;	
 END_IF]]></ST>
     </Implementation>

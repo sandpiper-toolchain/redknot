@@ -46,8 +46,6 @@ STRUCT
 	YJOGBW					:BOOL	:= FALSE;
 	ZJOGFW					:BOOL	:= FALSE;
 	ZJOGBW					:BOOL	:= FALSE;
-	HEARTBEAT				:BOOL	:= FALSE; //check in MQTTCOM to keep jog commands online
-
 END_STRUCT
 END_TYPE
 ]]></Declaration>

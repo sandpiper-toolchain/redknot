@@ -15,7 +15,7 @@ VAR
 	
 	ED1008I AT %I*			:ED1008_AB7978D6; //current or voltage input
 	
-	
+	DM						:BOOL;
 	couplestate				:INT	:= 0;
 	basintoggle				:BOOL;
 	boot_done				:BOOL	:= FALSE;
@@ -38,6 +38,8 @@ GVL_MOTION.xcCon.LimNeg				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel
 GVL_MOTION.zCon.LimNeg				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_6_Input);
 GVL_MOTION.yCon.LimNeg				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_7_Input);
 GVL_MOTION.STOP_EXT							:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_8_Input);
+
+GVL_MOTION.ED2008O.ED2008_Output.MDP5001_200_DO_Channel_7_Output	:= GVL_MOTION.Z_BRAKE_OFF;
 
 GVL_MOTION.NextInstruction					:= GVL_MOTION.CurInstruction + 1;
 
@@ -307,17 +309,23 @@ DeleteLastInstruction();
 // 	GVL_MOTION.EXT_CTR.CMDRUN				:= FALSE;	//maybe change this to internal variable
 // END_IF
 
+IF NOT GVL_MOTION.EXT_CTR.CMDRUN AND GVL_MOTION.AxesLocated AND GVL_MOTION.xOut.AxisCoupled THEN
+	DM										:= TRUE;
+	DirectMotion();
+ELSE
+	DM										:= FALSE;	
+END_IF
+
 IF GVL_MOTION.EXT_CTR.CMDRUN AND GVL_MOTION.AxesLocated AND GVL_MOTION.xOut.AxisCoupled
-AND NOT GVL_MOTION.MOVEXYZ THEN
+AND NOT DM THEN
 	RunCommands(); //toggler
 ELSE
 	GVL_MOTION.CurInstruction				:= 0;
 	GVL_MOTION.InstructionState				:= 0;
 END_IF
 
-IF NOT GVL_MOTION.EXT_CTR.CMDRUN AND GVL_MOTION.AxesLocated AND GVL_MOTION.xOut.AxisCoupled
-AND GVL_MOTION.MOVEXYZ THEN
-	DirectMotion();
+IF GVL_MOTION.EXT_CTR.STOP THEN
+	GVL_MOTION.EXT_CTR.STOP					:= FALSE;
 END_IF]]></ST>
     </Implementation>
   </POU>

@@ -100,12 +100,8 @@ END_VAR
 			GVL_MOTION.EXT_CTR.SETYPOS := value;
 		ELSIF tempkey = 'SETZPOS' THEN
 			GVL_MOTION.EXT_CTR.SETZPOS := value;	
-		ELSIF tempkey = 'HEARTBEAT' THEN
-			GVL_MOTION.EXT_CTR.HEARTBEAT := value;
 		ELSIF tempkey = 'BASINCTR' THEN
 			GVL_MOTION.EXT_CTR.BASINCTR := value;
-		ELSIF tempkey = 'HEARTBEAT' THEN
-			GVL_MOTION.EXT_CTR.HEARTBEAT := value;
 		ELSIF tempkey = 'BRAKEREL' THEN
 			GVL_MOTION.EXT_CTR.BRAKEREL := value;
 		ELSIF tempkey = 'MOVEX' THEN
@@ -115,6 +111,10 @@ END_VAR
 		ELSIF tempkey = 'MOVEZ' THEN
 			GVL_MOTION.EXT_CTR.MOVEZ := value;							
 		END_IF		
+	ELSIF label = 'MOTION/HB' THEN
+		IF tempkey = 'HEARTBEAT' THEN
+			GVL_MOTION.HB.HEARTBEAT := value;
+		END_IF	
 // 	ELSIF label = 'DAQ/CTR' THEN
 // 		IF tempkey = 'CMDDATACLR' THEN
 // 			GVL_DAQ.TEST_CTR.CMDDATACLR := value;	
