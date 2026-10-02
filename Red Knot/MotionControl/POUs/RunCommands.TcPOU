@@ -52,7 +52,7 @@ CASE GVL_MOTION.InstructionState OF
 				GVL_MOTION.CurInstruction 						:= GVL_MOTION.CurInstruction + 1; //queue next instruction
 			ELSE
 				GVL_MOTION.CurInstruction						:= 0;
-				IF NOT GVL_MOTION.EXT_CTR.CMDLOOP THEN
+				IF NOT GVL_MOTION.CMDLOOP_INT THEN
 					IF GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.SCRIPTITERATIONS THEN
 						GVL_MOTION.RUN_INDEX					:= 1;
 						GVL_MOTION.EXT_CTR.CMDRUN 				:= FALSE;	 //command list executed
@@ -212,7 +212,7 @@ CASE GVL_MOTION.InstructionState OF
 					GVL_MOTION.CurInstruction 					:= 0;
 					GVL_MOTION.InstructionState 				:= 0;
 					t5(IN := FALSE);
-					IF NOT GVL_MOTION.EXT_CTR.CMDLOOP THEN
+					IF NOT GVL_MOTION.CMDLOOP_INT THEN
 						IF GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.SCRIPTITERATIONS THEN
 							GVL_MOTION.RUN_INDEX				:= 1;
 							GVL_MOTION.EXT_CTR.CMDRUN 			:= FALSE;	 //command list executed
@@ -290,7 +290,7 @@ CASE GVL_MOTION.InstructionState OF
 			GVL_MOTION.CurInstruction 							:= 0;
 			GVL_MOTION.InstructionState 						:= 0;
 			t5(IN := FALSE);
-			IF NOT GVL_MOTION.EXT_CTR.CMDLOOP THEN
+			IF NOT GVL_MOTION.CMDLOOP_INT THEN
 				IF GVL_MOTION.RUN_INDEX >= GVL_MOTION.EXT_CTR.SCRIPTITERATIONS THEN
 					GVL_MOTION.RUN_INDEX						:= 1;
 					GVL_MOTION.EXT_CTR.CMDRUN 					:= FALSE;	 //command list executed

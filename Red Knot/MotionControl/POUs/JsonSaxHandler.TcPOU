@@ -65,9 +65,7 @@ END_VAR
 		ELSIF tempkey = 'CMDHOMEZ' THEN
 			GVL_MOTION.EXT_CTR.CMDHOMEZ := value;	
 		ELSIF tempkey = 'CMDCOUPLE' THEN
-			GVL_MOTION.EXT_CTR.CMDCOUPLE := value;				
-		ELSIF tempkey = 'CMDLOOP' THEN
-			GVL_MOTION.EXT_CTR.CMDLOOP := value;	
+			GVL_MOTION.EXT_CTR.CMDCOUPLE := value;					
 		ELSIF tempkey = 'STOP' THEN
 			GVL_MOTION.EXT_CTR.STOP := value;	
 		ELSIF tempkey = 'AXESEN' THEN

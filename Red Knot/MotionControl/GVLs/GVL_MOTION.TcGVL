@@ -19,7 +19,7 @@ VAR_GLOBAL
 	zJogFW					:BOOL;
 	zJogBW					:BOOL;
 	
-	MOVEXYZ					:BOOL;
+	
 	
 	ED2008O AT %Q*			:ED2008_46D0FC69;
 	Z_BRAKE_OFF				:BOOL;
@@ -27,6 +27,9 @@ VAR_GLOBAL
 	//external controls
 	STOP_EXT				:BOOL;
 	STOP_INT				:BOOL; //control signal
+	AXESEN_INT				:BOOL;
+	CMDLOOP_INT				:BOOL;
+	CMDRUN_INT				:BOOL;	
 	EXT_CTR					:MOTION_CTR; 
 	TEST_CTR				:MOTION_CTR; //test buffer for MQTT
 	HB						:HB;

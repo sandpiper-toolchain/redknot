@@ -22,6 +22,9 @@ STRUCT
 	//zSafeSet			:BOOL	:= FALSE;
 	//BasinSet			:BOOL	:= FALSE;
 	Stop_Int			:BOOL	:= FALSE; //for display only
+	Run_Int				:BOOL;
+	Loop_Int			:BOOL;
+	En_Int				:BOOL;
 	PowerError			:BOOL	:= FALSE;
 	
 	CurInstr			:INT;

@@ -21,7 +21,7 @@ STRUCT
 	//CMDFINDSTOPS			:BOOL	:= FALSE; //run find stops routine
 	CMDCOUPLE				:BOOL	:= FALSE; //cycle between couple and uncouple x axes
 	STOP					:BOOL	:= FALSE; //pause motion during script run if true. set to false to continue motion
-	AXESEN					:BOOL	:= FALSE; //sends enable signal to all axes
+	AXESEN					:BOOL	:= FALSE; //tapper for internal axes enable variable
 	AXESRESET				:BOOL	:= FALSE; //reset each axis, reset home and hardstop states
 	BRAKEREL				:BOOL	:= FALSE;
 	
@@ -29,8 +29,8 @@ STRUCT
 	CMDCLR					:BOOL	:= FALSE; //clear script
 	CMDSCRIPTDEL			:BOOL	:= FALSE; //delete script file
 	CMDDEL					:BOOL	:= FALSE; //delete instruction at end of script
-	CMDLOOP					:BOOL	:= FALSE; //sets script to run indefinitely and forces separate data files for each script run
-	CMDRUN					:BOOL	:= FALSE; //run script if all safety conditions are met (homed, hard stops located, x axes coupled, safe z set)
+	CMDLOOP					:BOOL	:= FALSE; //sets script to run indefinitely and forces separate data files for each script run. tapper for internal variable
+	CMDRUN					:BOOL	:= FALSE; //run script if safety conditions are met (homed, x axes coupled) tapper for internal variable
 	CMDCSVRESET				:BOOL	:= FALSE; //reset csvwrite logic CHANGED
 	CMDSCRIPTWRITE			:BOOL	:= FALSE; //write script to file based on script name entered
 	CMDSCRIPTREAD			:BOOL	:= FALSE; //read script from file based on script name
