@@ -13,8 +13,8 @@ END_VAR
     <Implementation>
       <ST><![CDATA[CASE state OF
 0:	
-	timer(IN:=TRUE,PT:=T#30MS); //debounce
-	IF timer.Q THEN
+	//timer(IN:=TRUE,PT:=T#15MS); //debounce
+	//IF timer.Q THEN
 		IF GVL_MOTION.EXT_CTR.MOVEX THEN
 			fromX									:= TRUE;
 			state									:= 2;
@@ -28,19 +28,20 @@ END_VAR
 			state									:= 4;
 			
 		END_IF	
-	END_IF	
+	//END_IF	
 	
 1:
+	GVL_MOTION.STATUS.Stop_Int						:= TRUE;
 	GVL_MOTION.xCon.Execute_MABS					:= FALSE;
 	GVL_MOTION.yCon.Execute_MABS					:= FALSE;
 	GVL_MOTION.zCon.Execute_MABS					:= FALSE;
 	GVL_MOTION.xCon.Execute_HALT					:= TRUE;
 	GVL_MOTION.yCon.Execute_HALT					:= TRUE;
 	GVL_MOTION.zCon.Execute_HALT					:= TRUE;
-	timer(IN:=TRUE,PT:=T#30MS);
-	IF timer.Q THEN
+	//timer(IN:=TRUE,PT:=T#15MS);
+	//IF timer.Q THEN
 		IF GVL_MOTION.STOP_INT THEN
-			timer(IN:=FALSE);
+			GVL_MOTION.STATUS.Stop_Int				:= FALSE;
 			GVL_MOTION.xCon.Execute_HALT			:= FALSE;
 			GVL_MOTION.yCon.Execute_HALT			:= FALSE;
 			GVL_MOTION.zCon.Execute_HALT			:= FALSE;
@@ -51,72 +52,87 @@ END_VAR
 			ELSIF fromZ	THEN
 				state								:= 4;	
 			END_IF
+			//timer(IN:=FALSE);
 		END_IF
 		
-	END_IF
+	//END_IF
 	
 2:
-	IF  GVL_MOTION.EXT_CTR.POSX < GVL_MOTION.STATUS.HardStopLocations[0]
-	AND GVL_MOTION.EXT_CTR.POSX > GVL_MOTION.STATUS.CARRIAGE_OFFSETS[0]
-	THEN
-		IF GVL_MOTION.STOP_INT THEN
-			state									:= 1;
-		ELSE
-			GVL_MOTION.xCon.SetPosition				:= GVL_MOTION.EXT_CTR.POSX - GVL_MOTION.CARRIAGE_OFFSETS[0];
-			GVL_MOTION.xCon.SetVelocity				:= 200;
-			GVL_MOTION.xCon.Execute_MABS			:= TRUE;
-			
-			IF GVL_MOTION.xOut.MoveDone THEN
-				GVL_MOTION.xCon.Execute_MABS		:= FALSE;
-				fromX								:= FALSE;
-				state								:= 0;
+	//timer(IN:=TRUE,PT:=T#15MS); //debounce
+	//IF timer.Q THEN
+		IF  GVL_MOTION.EXT_CTR.POSX < GVL_MOTION.STATUS.HardStopLocations[0]
+		AND GVL_MOTION.EXT_CTR.POSX > GVL_MOTION.STATUS.CARRIAGE_OFFSETS[0]
+		THEN
+			IF GVL_MOTION.STOP_INT THEN
+				state									:= 1;
+			ELSE
+				GVL_MOTION.xCon.SetPosition				:= GVL_MOTION.EXT_CTR.POSX - GVL_MOTION.CARRIAGE_OFFSETS[0];
+				GVL_MOTION.xCon.SetVelocity				:= 200;
+				GVL_MOTION.xCon.Execute_MABS			:= TRUE;
+				
+				IF GVL_MOTION.xOut.MoveDone THEN
+					GVL_MOTION.xCon.Execute_MABS		:= FALSE;
+					fromX								:= FALSE;
+					state								:= 0;
+				END_IF
 			END_IF
-		END_IF
-	ELSE
-		state										:= 0;	
-	END_IF	
+		ELSE
+			state										:= 0;	
+		END_IF	
+		//timer(IN:=FALSE);
+	//END_IF
 	
 3:
-	IF  GVL_MOTION.EXT_CTR.POSY < GVL_MOTION.STATUS.HardStopLocations[1]
-	AND GVL_MOTION.EXT_CTR.POSY > GVL_MOTION.STATUS.CARRIAGE_OFFSETS[1]
-	THEN
-		IF GVL_MOTION.STOP_INT THEN
-			state									:= 1;
-		ELSE	
-			GVL_MOTION.yCon.SetPosition				:= GVL_MOTION.EXT_CTR.POSY - GVL_MOTION.CARRIAGE_OFFSETS[1];
-			GVL_MOTION.yCon.SetVelocity				:= 200;
-			GVL_MOTION.yCon.Execute_MABS			:= TRUE;
-			IF GVL_MOTION.yOut.MoveDone THEN
-				GVL_MOTION.yCon.Execute_MABS		:= FALSE;
-				fromY								:= FALSE;
-				GVL_MOTION.EXT_CTR.MOVEY			:= FALSE;
+	//timer(IN:=TRUE,PT:=T#15MS); //debounce
+	//IF timer.Q THEN
+		IF  GVL_MOTION.EXT_CTR.POSY < GVL_MOTION.STATUS.HardStopLocations[1]
+		AND GVL_MOTION.EXT_CTR.POSY > GVL_MOTION.STATUS.CARRIAGE_OFFSETS[1]
+		THEN
+			IF GVL_MOTION.STOP_INT THEN
+				state									:= 1;
+			ELSE	
+				GVL_MOTION.yCon.SetPosition				:= GVL_MOTION.EXT_CTR.POSY - GVL_MOTION.CARRIAGE_OFFSETS[1];
+				GVL_MOTION.yCon.SetVelocity				:= 200;
+				GVL_MOTION.yCon.Execute_MABS			:= TRUE;
+				IF GVL_MOTION.yOut.MoveDone THEN
+					GVL_MOTION.yCon.Execute_MABS		:= FALSE;
+					fromY								:= FALSE;
+					GVL_MOTION.EXT_CTR.MOVEY			:= FALSE;
+					state								:= 0;
+				END_IF
 			END_IF
-		END_IF
-	ELSE
-		state										:= 0;	
-	END_IF	
+		ELSE
+			state										:= 0;	
+		END_IF	
+		//timer(IN:=FALSE);
+	//END_IF
 
 4:
-	IF  GVL_MOTION.EXT_CTR.POSZ < GVL_MOTION.STATUS.HardStopLocations[2]
-	AND GVL_MOTION.EXT_CTR.POSZ > GVL_MOTION.STATUS.CARRIAGE_OFFSETS[2]
-	THEN
-		IF GVL_MOTION.STOP_INT THEN
-			GVL_MOTION.Z_BRAKE_OFF					:= FALSE;
-			state									:= 1;
-		ELSE
-			GVL_MOTION.Z_BRAKE_OFF					:= TRUE;
-			GVL_MOTION.zCon.SetPosition				:= GVL_MOTION.EXT_CTR.POSZ - GVL_MOTION.CARRIAGE_OFFSETS[2];
-			GVL_MOTION.zCon.SetVelocity				:= 80;
-			GVL_MOTION.zCon.Execute_MABS			:= TRUE;
-			IF GVL_MOTION.zOut.MoveDone THEN
-				GVL_MOTION.Z_BRAKE_OFF				:= FALSE;
-				GVL_MOTION.zCon.Execute_MABS		:= FALSE;
-				GVL_MOTION.EXT_CTR.MOVEZ			:= FALSE;
+	//timer(IN:=TRUE,PT:=T#15MS); //debounce
+	//IF timer.Q THEN
+		IF  GVL_MOTION.EXT_CTR.POSZ < GVL_MOTION.STATUS.HardStopLocations[2]
+		AND GVL_MOTION.EXT_CTR.POSZ > GVL_MOTION.STATUS.CARRIAGE_OFFSETS[2]
+		THEN
+			IF GVL_MOTION.STOP_INT THEN
+				GVL_MOTION.Z_BRAKE_OFF					:= FALSE;
+				state									:= 1;
+			ELSE
+				GVL_MOTION.Z_BRAKE_OFF					:= TRUE;
+				GVL_MOTION.zCon.SetPosition				:= GVL_MOTION.EXT_CTR.POSZ - GVL_MOTION.CARRIAGE_OFFSETS[2];
+				GVL_MOTION.zCon.SetVelocity				:= 80;
+				GVL_MOTION.zCon.Execute_MABS			:= TRUE;
+				IF GVL_MOTION.zOut.MoveDone THEN
+					GVL_MOTION.Z_BRAKE_OFF				:= FALSE;
+					GVL_MOTION.zCon.Execute_MABS		:= FALSE;
+					GVL_MOTION.EXT_CTR.MOVEZ			:= FALSE;
+					state								:= 0;
+				END_IF
 			END_IF
-		END_IF
-	ELSE
-		state										:= 0;	
-	END_IF	
+		ELSE
+			state										:= 0;	
+		END_IF	
+		//timer(IN:=FALSE);
+	//END_IF
 	
 END_CASE]]></ST>
     </Implementation>

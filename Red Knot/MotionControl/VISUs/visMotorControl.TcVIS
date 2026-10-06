@@ -5,7 +5,7 @@
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"1401"</v>
+          <v n="UniqueIdGenerator">"1407"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -571,7 +571,7 @@
                       <v n="InputBoxVariable">""</v>
                       <v n="InputType">"InputWithLimits"</v>
                       <v n="InputBoxMin">"1"</v>
-                      <v n="InputBoxMax">"300"</v>
+                      <v n="InputBoxMax">"500"</v>
                       <v n="InputBoxDialogTitle">"'Enter Speed'"</v>
                       <v n="Password">false</v>
                       <v n="UseTextOutputVariable">true</v>
@@ -756,7 +756,7 @@
                       <v n="InputBoxVariable">""</v>
                       <v n="InputType">"Default"</v>
                       <v n="InputBoxMin">"-200"</v>
-                      <v n="InputBoxMax">"1500"</v>
+                      <v n="InputBoxMax">"15000"</v>
                       <v n="InputBoxDialogTitle">""</v>
                       <v n="Password">false</v>
                       <v n="UseTextOutputVariable">true</v>
@@ -4652,7 +4652,7 @@
                       <v n="InputBoxVariable">""</v>
                       <v n="InputType">"Default"</v>
                       <v n="InputBoxMin">"-200"</v>
-                      <v n="InputBoxMax">"1500"</v>
+                      <v n="InputBoxMax">"15000"</v>
                       <v n="InputBoxDialogTitle">""</v>
                       <v n="Password">false</v>
                       <v n="UseTextOutputVariable">true</v>
@@ -4971,7 +4971,7 @@
                       <v n="InputBoxVariable">""</v>
                       <v n="InputType">"InputWithLimits"</v>
                       <v n="InputBoxMin">"1"</v>
-                      <v n="InputBoxMax">"300"</v>
+                      <v n="InputBoxMax">"500"</v>
                       <v n="InputBoxDialogTitle">"'Enter Speed'"</v>
                       <v n="Password">false</v>
                       <v n="UseTextOutputVariable">true</v>
@@ -12745,7 +12745,7 @@
                       <v n="InputBoxVariable">""</v>
                       <v n="InputType">"Default"</v>
                       <v n="InputBoxMin">"-200"</v>
-                      <v n="InputBoxMax">"1500"</v>
+                      <v n="InputBoxMax">"15000"</v>
                       <v n="InputBoxDialogTitle">""</v>
                       <v n="Password">false</v>
                       <v n="UseTextOutputVariable">true</v>
@@ -13064,7 +13064,7 @@
                       <v n="InputBoxVariable">""</v>
                       <v n="InputType">"InputWithLimits"</v>
                       <v n="InputBoxMin">"1"</v>
-                      <v n="InputBoxMax">"20"</v>
+                      <v n="InputBoxMax">"500"</v>
                       <v n="InputBoxDialogTitle">"'Enter Speed'"</v>
                       <v n="Password">false</v>
                       <v n="UseTextOutputVariable">true</v>
@@ -16792,7 +16792,7 @@
                       <v n="InputBoxVariable">""</v>
                       <v n="InputType">"Default"</v>
                       <v n="InputBoxMin">"-200"</v>
-                      <v n="InputBoxMax">"1500"</v>
+                      <v n="InputBoxMax">"15000"</v>
                       <v n="InputBoxDialogTitle">""</v>
                       <v n="Password">false</v>
                       <v n="UseTextOutputVariable">true</v>
@@ -16977,7 +16977,7 @@
                       <v n="InputBoxVariable">""</v>
                       <v n="InputType">"Default"</v>
                       <v n="InputBoxMin">"-200"</v>
-                      <v n="InputBoxMax">"1500"</v>
+                      <v n="InputBoxMax">"15000"</v>
                       <v n="InputBoxDialogTitle">""</v>
                       <v n="Password">false</v>
                       <v n="UseTextOutputVariable">true</v>
@@ -17162,7 +17162,7 @@
                       <v n="InputBoxVariable">""</v>
                       <v n="InputType">"Default"</v>
                       <v n="InputBoxMin">"-200"</v>
-                      <v n="InputBoxMax">"1500"</v>
+                      <v n="InputBoxMax">"15000"</v>
                       <v n="InputBoxDialogTitle">""</v>
                       <v n="Password">false</v>
                       <v n="UseTextOutputVariable">true</v>
