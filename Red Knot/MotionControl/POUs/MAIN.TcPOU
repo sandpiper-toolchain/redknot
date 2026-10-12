@@ -17,7 +17,7 @@ VAR
 	
 	DM						:BOOL;
 	couplestate				:INT	:= 0;
-	stopstate				:BOOL	:= FALSE;
+	stoptoggle				:BOOL	:= FALSE;
 	basintoggle				:BOOL;
 	boot_done				:BOOL	:= FALSE;
 	
@@ -42,17 +42,19 @@ GVL_MOTION.zCon.LimNeg				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_
 GVL_MOTION.yCon.LimNeg				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_7_Input);
 GVL_MOTION.STOP_EXT							:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_8_Input);
 
-IF stopstate THEN
+//only allow one cycle of STOP_EXT set to true
+IF stoptoggle THEN
 	timer(IN:=TRUE,PT:=T#250MS);
 	GVL_MOTION.STOP_EXT						:= FALSE;
+	GVL_MOTION.EXT_CTR.STOP					:= FALSE;
 	IF timer.Q THEN
-		stopstate							:= FALSE;
+		stoptoggle							:= FALSE;
 		timer(IN:=FALSE);
 	END_IF
 END_IF
 
-IF GVL_MOTION.STOP_EXT THEN
-	stopstate								:= TRUE;
+IF GVL_MOTION.STOP_EXT OR GVL_MOTION.EXT_CTR.STOP THEN
+	stoptoggle								:= TRUE;
 END_IF
 
 
@@ -123,7 +125,7 @@ END_IF
 
 IF GVL_MOTION.EXT_CTR.CMDRUN THEN
 	GVL_MOTION.EXT_CTR.CMDRUN 				:= FALSE;
-	GVL_MOTION.AXESEN_INT					:= NOT(GVL_MOTION.CMDRUN_INT);
+	GVL_MOTION.CMDRUN_INT					:= NOT(GVL_MOTION.CMDRUN_INT);
 END_IF
 									   
 GVL_MOTION.STATUS.basinxMin					:= GVL_MOTION.ActiveBasin.xMin;
@@ -344,14 +346,14 @@ DeleteLastInstruction();
 // 	GVL_MOTION.EXT_CTR.CMDRUN				:= FALSE;	//maybe change this to internal variable
 // END_IF
 
-IF NOT GVL_MOTION.EXT_CTR.CMDRUN AND GVL_MOTION.AxesLocated AND GVL_MOTION.xOut.AxisCoupled THEN
+IF NOT GVL_MOTION.CMDRUN_INT AND GVL_MOTION.AxesLocated AND GVL_MOTION.xOut.AxisCoupled THEN
 	DM										:= TRUE;
 	DirectMotion();
 ELSE
 	DM										:= FALSE;	
 END_IF
 
-IF GVL_MOTION.EXT_CTR.CMDRUN AND GVL_MOTION.AxesLocated AND GVL_MOTION.xOut.AxisCoupled
+IF GVL_MOTION.CMDRUN_INT AND GVL_MOTION.AxesLocated AND GVL_MOTION.xOut.AxisCoupled
 AND NOT DM THEN
 	RunCommands(); //toggler
 ELSE

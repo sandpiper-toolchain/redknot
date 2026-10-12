@@ -8,7 +8,7 @@ END_VAR
     <Implementation>
       <ST><![CDATA[IF GVL_MOTION.EXT_CTR.CMDCLR THEN
 	GVL_MOTION.EXT_CTR.CMDCLR	:= FALSE;
-	GVL_MOTION.EXT_CTR.CMDRUN 	:= FALSE;
+	GVL_MOTION.CMDRUN_INT	 	:= FALSE;
 	GVL_MOTION.ScriptEnd 		:= 0;
 	GVL_MOTION.CurInstruction 	:= 0;
 	GVL_MOTION.InstructionState := 0;

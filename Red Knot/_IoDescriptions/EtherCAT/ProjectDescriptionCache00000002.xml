@@ -8,17 +8,17 @@
 	<Descriptions>
 		<Images/>
 		<Groups>
-			<Group SortOrder="310">
-				<Type>DigIn</Type>
-				<Name LcId="1031">Digitale Eingangsklemmen (ED1xxx, EL1xxx)</Name>
-				<Name LcId="1033">Digital Input Terminals (ED1xxx, EL1xxx)</Name>
-				<ImageData16x14>424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData16x14>
-			</Group>
 			<Group SortOrder="320">
 				<Type>DigOut</Type>
 				<Name LcId="1031">Digitale Ausgangsklemmen (ED2xxx, EL2xxx)</Name>
 				<Name LcId="1033">Digital Output Terminals (ED2xxx, EL2xxx)</Name>
 				<ImageData16x14>424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000120b0000120b00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData16x14>
+			</Group>
+			<Group SortOrder="310">
+				<Type>DigIn</Type>
+				<Name LcId="1031">Digitale Eingangsklemmen (ED1xxx, EL1xxx)</Name>
+				<Name LcId="1033">Digital Input Terminals (ED1xxx, EL1xxx)</Name>
+				<ImageData16x14>424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData16x14>
 			</Group>
 			<Group SortOrder="391">
 				<Type>SystemBk</Type>
@@ -34,114 +34,6 @@
 			</Group>
 		</Groups>
 		<Devices>
-			<Device Physics="KK">
-				<Type ProductCode="#x3f01052" RevisionNo="#x100000" CheckRevisionNo="LW_EQ">ED1008</Type>
-				<Name LcId="1031">ED1008 | 8-K.-Dig.-Eingang, 24 V DC, 3 ms, Push-in</Name>
-				<Name LcId="1033">ED1008 | 8-ch. dig. input, 24 V DC, 3 ms, push-in</Name>
-				<URL LcId="1031"><![CDATA[http://www.beckhoff.de/ED1008]]></URL>
-				<URL LcId="1033"><![CDATA[http://www.beckhoff.com/ED1008]]></URL>
-				<Info>
-					<Electrical>
-						<EBusCurrent>65</EBusCurrent>
-					</Electrical>
-				</Info>
-				<GroupType>DigIn</GroupType>
-				<Fmmu>Inputs</Fmmu>
-				<Sm DefaultSize="1" StartAddress="#x1000" ControlByte="#x0" Enable="1">Inputs</Sm>
-				<Su FrameRepeatSupport="true"></Su>
-				<TxPdo Fixed="true" Mandatory="true" Sm="0">
-					<Index>#x1a00</Index>
-					<Name>DI Channel 1</Name>
-					<Entry>
-						<Index>#x6000</Index>
-						<SubIndex>1</SubIndex>
-						<BitLen>1</BitLen>
-						<Name>Input</Name>
-						<DataType>BIT</DataType>
-					</Entry>
-				</TxPdo>
-				<TxPdo Fixed="true" Mandatory="true" Sm="0">
-					<Index>#x1a01</Index>
-					<Name>DI Channel 2</Name>
-					<Entry>
-						<Index>#x6010</Index>
-						<SubIndex>1</SubIndex>
-						<BitLen>1</BitLen>
-						<Name>Input</Name>
-						<DataType>BIT</DataType>
-					</Entry>
-				</TxPdo>
-				<TxPdo Fixed="true" Mandatory="true" Sm="0">
-					<Index>#x1a02</Index>
-					<Name>DI Channel 3</Name>
-					<Entry>
-						<Index>#x6020</Index>
-						<SubIndex>1</SubIndex>
-						<BitLen>1</BitLen>
-						<Name>Input</Name>
-						<DataType>BIT</DataType>
-					</Entry>
-				</TxPdo>
-				<TxPdo Fixed="true" Mandatory="true" Sm="0">
-					<Index>#x1a03</Index>
-					<Name>DI Channel 4</Name>
-					<Entry>
-						<Index>#x6030</Index>
-						<SubIndex>1</SubIndex>
-						<BitLen>1</BitLen>
-						<Name>Input</Name>
-						<DataType>BIT</DataType>
-					</Entry>
-				</TxPdo>
-				<TxPdo Fixed="true" Mandatory="true" Sm="0">
-					<Index>#x1a04</Index>
-					<Name>DI Channel 5</Name>
-					<Entry>
-						<Index>#x6040</Index>
-						<SubIndex>1</SubIndex>
-						<BitLen>1</BitLen>
-						<Name>Input</Name>
-						<DataType>BIT</DataType>
-					</Entry>
-				</TxPdo>
-				<TxPdo Fixed="true" Mandatory="true" Sm="0">
-					<Index>#x1a05</Index>
-					<Name>DI Channel 6</Name>
-					<Entry>
-						<Index>#x6050</Index>
-						<SubIndex>1</SubIndex>
-						<BitLen>1</BitLen>
-						<Name>Input</Name>
-						<DataType>BIT</DataType>
-					</Entry>
-				</TxPdo>
-				<TxPdo Fixed="true" Mandatory="true" Sm="0">
-					<Index>#x1a06</Index>
-					<Name>DI Channel 7</Name>
-					<Entry>
-						<Index>#x6060</Index>
-						<SubIndex>1</SubIndex>
-						<BitLen>1</BitLen>
-						<Name>Input</Name>
-						<DataType>BIT</DataType>
-					</Entry>
-				</TxPdo>
-				<TxPdo Fixed="true" Mandatory="true" Sm="0">
-					<Index>#x1a07</Index>
-					<Name>DI Channel 8</Name>
-					<Entry>
-						<Index>#x6070</Index>
-						<SubIndex>1</SubIndex>
-						<BitLen>1</BitLen>
-						<Name>Input</Name>
-						<DataType>BIT</DataType>
-					</Entry>
-				</TxPdo>
-				<Eeprom>
-					<ByteSize>2048</ByteSize>
-					<ConfigData>040100000000f000000000000000</ConfigData>
-				</Eeprom>
-			</Device>
 			<Device Physics="KK">
 				<Type ProductCode="#x7d81052" RevisionNo="#x100000" CheckRevisionNo="LW_EQ">ED2008</Type>
 				<Name LcId="1031">ED2008 | 8-K.-Dig.-Ausgang, 24 V DC, 0,5 A, Push-in</Name>
@@ -248,6 +140,114 @@
 				<Eeprom>
 					<ByteSize>2048</ByteSize>
 					<ConfigData>040100000000ff00000000000000</ConfigData>
+				</Eeprom>
+			</Device>
+			<Device Physics="KK">
+				<Type ProductCode="#x3f01052" RevisionNo="#x100000" CheckRevisionNo="LW_EQ">ED1008</Type>
+				<Name LcId="1031">ED1008 | 8-K.-Dig.-Eingang, 24 V DC, 3 ms, Push-in</Name>
+				<Name LcId="1033">ED1008 | 8-ch. dig. input, 24 V DC, 3 ms, push-in</Name>
+				<URL LcId="1031"><![CDATA[http://www.beckhoff.de/ED1008]]></URL>
+				<URL LcId="1033"><![CDATA[http://www.beckhoff.com/ED1008]]></URL>
+				<Info>
+					<Electrical>
+						<EBusCurrent>65</EBusCurrent>
+					</Electrical>
+				</Info>
+				<GroupType>DigIn</GroupType>
+				<Fmmu>Inputs</Fmmu>
+				<Sm DefaultSize="1" StartAddress="#x1000" ControlByte="#x0" Enable="1">Inputs</Sm>
+				<Su FrameRepeatSupport="true"></Su>
+				<TxPdo Fixed="true" Mandatory="true" Sm="0">
+					<Index>#x1a00</Index>
+					<Name>DI Channel 1</Name>
+					<Entry>
+						<Index>#x6000</Index>
+						<SubIndex>1</SubIndex>
+						<BitLen>1</BitLen>
+						<Name>Input</Name>
+						<DataType>BIT</DataType>
+					</Entry>
+				</TxPdo>
+				<TxPdo Fixed="true" Mandatory="true" Sm="0">
+					<Index>#x1a01</Index>
+					<Name>DI Channel 2</Name>
+					<Entry>
+						<Index>#x6010</Index>
+						<SubIndex>1</SubIndex>
+						<BitLen>1</BitLen>
+						<Name>Input</Name>
+						<DataType>BIT</DataType>
+					</Entry>
+				</TxPdo>
+				<TxPdo Fixed="true" Mandatory="true" Sm="0">
+					<Index>#x1a02</Index>
+					<Name>DI Channel 3</Name>
+					<Entry>
+						<Index>#x6020</Index>
+						<SubIndex>1</SubIndex>
+						<BitLen>1</BitLen>
+						<Name>Input</Name>
+						<DataType>BIT</DataType>
+					</Entry>
+				</TxPdo>
+				<TxPdo Fixed="true" Mandatory="true" Sm="0">
+					<Index>#x1a03</Index>
+					<Name>DI Channel 4</Name>
+					<Entry>
+						<Index>#x6030</Index>
+						<SubIndex>1</SubIndex>
+						<BitLen>1</BitLen>
+						<Name>Input</Name>
+						<DataType>BIT</DataType>
+					</Entry>
+				</TxPdo>
+				<TxPdo Fixed="true" Mandatory="true" Sm="0">
+					<Index>#x1a04</Index>
+					<Name>DI Channel 5</Name>
+					<Entry>
+						<Index>#x6040</Index>
+						<SubIndex>1</SubIndex>
+						<BitLen>1</BitLen>
+						<Name>Input</Name>
+						<DataType>BIT</DataType>
+					</Entry>
+				</TxPdo>
+				<TxPdo Fixed="true" Mandatory="true" Sm="0">
+					<Index>#x1a05</Index>
+					<Name>DI Channel 6</Name>
+					<Entry>
+						<Index>#x6050</Index>
+						<SubIndex>1</SubIndex>
+						<BitLen>1</BitLen>
+						<Name>Input</Name>
+						<DataType>BIT</DataType>
+					</Entry>
+				</TxPdo>
+				<TxPdo Fixed="true" Mandatory="true" Sm="0">
+					<Index>#x1a06</Index>
+					<Name>DI Channel 7</Name>
+					<Entry>
+						<Index>#x6060</Index>
+						<SubIndex>1</SubIndex>
+						<BitLen>1</BitLen>
+						<Name>Input</Name>
+						<DataType>BIT</DataType>
+					</Entry>
+				</TxPdo>
+				<TxPdo Fixed="true" Mandatory="true" Sm="0">
+					<Index>#x1a07</Index>
+					<Name>DI Channel 8</Name>
+					<Entry>
+						<Index>#x6070</Index>
+						<SubIndex>1</SubIndex>
+						<BitLen>1</BitLen>
+						<Name>Input</Name>
+						<DataType>BIT</DataType>
+					</Entry>
+				</TxPdo>
+				<Eeprom>
+					<ByteSize>2048</ByteSize>
+					<ConfigData>040100000000f000000000000000</ConfigData>
 				</Eeprom>
 			</Device>
 			<Device Physics="YK" Invisible="true">
