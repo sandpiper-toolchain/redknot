@@ -21,6 +21,7 @@ STRUCT
 	//CMDFINDSTOPS			:BOOL	:= FALSE; //run find stops routine
 	CMDCOUPLE				:BOOL	:= FALSE; //cycle between couple and uncouple x axes
 	STOP					:BOOL	:= FALSE; //pause motion during script run if true. set to false to continue motion
+	CANCEL					:BOOL	:= FALSE; //cancel any motion as well as runcommands/directmotion
 	AXESEN					:BOOL	:= FALSE; //tapper for internal axes enable variable
 	AXESRESET				:BOOL	:= FALSE; //reset each axis, reset home and hardstop states
 	BRAKEREL				:BOOL	:= FALSE;
@@ -35,7 +36,7 @@ STRUCT
 	CMDSCRIPTWRITE			:BOOL	:= FALSE; //write script to file based on script name entered
 	CMDSCRIPTREAD			:BOOL	:= FALSE; //read script from file based on script name
 	CMDREQLIST				:BOOL	:= FALSE;
-	CMDREQSCRIPT			:BOOL	:= FALSE;
+	CMDREQSCRIPT			:BOOL	:= FALSE; //manually ask for script 
 	SCRIPTITERATIONS		:INT	:= 1; //number of times a script will be executed in a run
 	SCRIPTNAME				:T_MaxString; //name of script for data and script files.
 	BASINCTR				:BOOL	:= FALSE; //true = basin A, false = basin B CHANGED

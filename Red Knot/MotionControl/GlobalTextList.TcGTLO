@@ -171,6 +171,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"2009"</v>
+              <v n="TextDefault">"Cancel Motion"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"1205"</v>
               <v n="TextDefault">"Capture Data Every X MM"</v>
               <l n="LanguageTexts" t="ArrayList" />

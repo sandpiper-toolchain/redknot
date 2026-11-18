@@ -19,6 +19,7 @@ VAR
 	couplestate				:INT	:= 0;
 	stoptoggle				:BOOL	:= FALSE;
 	basintoggle				:BOOL;
+	canceltoggle			:BOOL;
 	boot_done				:BOOL	:= FALSE;
 	
 	xNearStop				:BOOL	:= FALSE;
@@ -26,6 +27,7 @@ VAR
 	
 	timer					:TON;
 
+	cancel: INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -36,8 +38,8 @@ END_VAR
 GVL_MOTION.xCon.LimNeg				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_1_Input);
 GVL_MOTION.yCon.LimPos				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_2_Input);
 GVL_MOTION.xCon.LimPos				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_3_Input);
-GVL_MOTION.zCon.LimPos				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_4_Input);
 GVL_MOTION.xcCon.LimNeg				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_5_Input);
+GVL_MOTION.zCon.LimPos				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_4_Input);
 GVL_MOTION.zCon.LimNeg				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_6_Input);
 GVL_MOTION.yCon.LimNeg				 		:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_7_Input);
 GVL_MOTION.STOP_EXT							:= NOT(ED1008I.ED1008_Input.MDP5001_100_DI_Channel_8_Input);
@@ -93,6 +95,13 @@ GVL_MOTION.STATUS.AxesLocated				:= GVL_MOTION.AxesLocated;
 GVL_MOTION.STATUS.PowerError				:= GVL_MOTION.xOut.PowerError OR GVL_MOTION.yOut.PowerError	OR
 											   GVL_MOTION.zOut.PowerError OR GVL_MOTION.xCOut.PowerError;	
 
+IF NOT boot_done THEN
+	IF NOT GVL_MOTION.STATUS.xCoupled THEN
+		GVL_MOTION.EXT_CTR.CMDCOUPLE		:= TRUE;
+	END_IF
+	boot_done								:= TRUE;
+END_IF											   
+											   
 CASE GVL_MOTION.STATUS.basinstate OF
 0:
 	GVL_MOTION.ActiveBasin					:= GVL_MOTION.BasinA;
@@ -217,23 +226,29 @@ ELSE
 		GVL_MOTION.EXT_CTR.YJOGFW			:= FALSE;
 	END_IF	
 END_IF
-
-// IF GVL_MOTION.STATUS.HardStopLocations[2] - GVL_MOTION.STATUS.zPosOut < 150
-// OR GVL_MOTION.STATUS.zPosOut - GVL_MOTION.CARRIAGE_OFFSETS[2] < 150 
-// THEN
-// 	IF GVL_MOTION.zCon.JogMode = MC_JOGMODE_STANDARD_FAST THEN
-// 		GVL_MOTION.zJogBW					:= FALSE;
-// 		GVL_MOTION.zJogFW					:= FALSE;
-// 	END_IF
-// 	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
-// ELSE
-// 	IF GVL_MOTION.zCon.JogMode = MC_JOGMODE_STANDARD_SLOW THEN
-// 		GVL_MOTION.zJogBW					:= FALSE;
-// 		GVL_MOTION.zJogFW					:= FALSE;
-// 	END_IF
-// 	GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
-// END_IF
-GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;			
+IF NOT GVL_MOTION.zCon.IsHoming THEN
+	IF GVL_MOTION.STATUS.HardStopLocations[2] - GVL_MOTION.STATUS.zPosOut < 150
+	OR GVL_MOTION.STATUS.zPosOut - GVL_MOTION.CARRIAGE_OFFSETS[2] < 150 
+	THEN
+		IF GVL_MOTION.zCon.JogMode = MC_JOGMODE_STANDARD_FAST THEN
+			GVL_MOTION.zJogBW					:= FALSE;
+			GVL_MOTION.zJogFW					:= FALSE;
+			GVL_MOTION.EXT_CTR.ZJOGBW			:= FALSE;
+			GVL_MOTION.EXT_CTR.ZJOGFW			:= FALSE;
+		END_IF
+		GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_SLOW;
+	ELSE
+		IF GVL_MOTION.zCon.JogMode = MC_JOGMODE_STANDARD_SLOW THEN
+			GVL_MOTION.zJogBW					:= FALSE;
+			GVL_MOTION.zJogFW					:= FALSE;
+			GVL_MOTION.EXT_CTR.ZJOGBW			:= FALSE;
+			GVL_MOTION.EXT_CTR.ZJOGFW			:= FALSE;
+		END_IF
+		GVL_MOTION.zCon.JogMode					:= MC_JOGMODE_STANDARD_FAST;
+	END_IF
+ELSE
+	GVL_MOTION.zCon.JogMode						:= MC_JOGMODE_STANDARD_SLOW;
+END_IF		
 
 //coupled axis assignments, modify as needed for additional coupled axes
 //xAxis
@@ -295,6 +310,10 @@ HomeY();
 
 HomeZ();
 
+IF GVL_MOTION.EXT_CTR.CANCEL THEN
+	GVL_MOTION.EXT_CTR.CANCEL				:= FALSE;
+END_IF
+
 IF GVL_MOTION.EXT_CTR.SETXPOS THEN
 	GVL_MOTION.EXT_CTR.SETXPOS				:= FALSE;
 	GVL_MOTION.xCon.SetLocation				:= GVL_MOTION.EXT_CTR.POSX - GVL_MOTION.CARRIAGE_OFFSETS[0];
@@ -346,6 +365,11 @@ DeleteLastInstruction();
 // 	GVL_MOTION.EXT_CTR.CMDRUN				:= FALSE;	//maybe change this to internal variable
 // END_IF
 
+IF NOT DM AND NOT GVL_MOTION.CMDRUN_INT AND 
+NOT (GVL_MOTION.xCon.IsHoming OR GVL_MOTION.yCon.IsHoming OR GVL_MOTION.zCon.IsHoming)THEN
+	GVL_MOTION.EXT_CTR.CANCEL				:= FALSE;
+END_IF
+
 IF NOT GVL_MOTION.CMDRUN_INT AND GVL_MOTION.AxesLocated AND GVL_MOTION.xOut.AxisCoupled THEN
 	DM										:= TRUE;
 	DirectMotion();
@@ -356,14 +380,13 @@ END_IF
 IF GVL_MOTION.CMDRUN_INT AND GVL_MOTION.AxesLocated AND GVL_MOTION.xOut.AxisCoupled
 AND NOT DM THEN
 	RunCommands(); //toggler
+ELSIF NOT DM THEN
+	GVL_MOTION.STATUS.Stop_Int				:= FALSE;	
 ELSE
 	GVL_MOTION.CurInstruction				:= 0;
 	GVL_MOTION.InstructionState				:= 0;
 END_IF
-
-IF GVL_MOTION.EXT_CTR.STOP THEN
-	GVL_MOTION.EXT_CTR.STOP					:= FALSE;
-END_IF]]></ST>
+]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>

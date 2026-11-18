@@ -4,13 +4,38 @@
     <Declaration><![CDATA[PROGRAM HomeX
 VAR
 	state		:INT	:= 99;
+	pause		:BOOL	:= FALSE;
+	cancelstate	:BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF GVL_MOTION.EXT_CTR.CMDHOMEX THEN
+      <ST><![CDATA[IF cancelstate THEN
+	GVL_MOTION.xCon.Execute_STOP			:= FALSE;
+	cancelstate								:= FALSE;
+END_IF
+
+IF GVL_MOTION.EXT_CTR.CMDHOMEX THEN
 	GVL_MOTION.EXT_CTR.CMDHOMEX				:= FALSE;
 	GVL_MOTION.xCon.IsHoming				:= TRUE;
 	state									:= 0;
+END_IF
+
+IF pause THEN
+	pause									:= FALSE;
+	GVL_MOTION.xCon.ExecuteCouple			:= TRUE;
+END_IF
+
+IF GVL_MOTION.EXT_CTR.CANCEL THEN
+	state									:= 99;
+	GVL_MOTION.xCon.IsHoming				:= FALSE;
+	GVL_MOTION.xCon.Execute_MREL			:= FALSE;
+	GVL_MOTION.xCon.Execute_HOME			:= FALSE;
+	GVL_MOTION.xcCon.Execute_HOME			:= FALSE;
+	GVL_MOTION.xJogBW						:= FALSE;
+	GVL_MOTION.xCon.Execute_HALT			:= TRUE;
+	GVL_MOTION.xCon.ExecuteUncouple			:= FALSE;
+	pause									:= TRUE;
+	cancelstate								:= TRUE;
 END_IF
 
 CASE state OF

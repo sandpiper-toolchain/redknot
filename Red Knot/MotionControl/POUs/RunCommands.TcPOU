@@ -18,7 +18,15 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
+      <ST><![CDATA[IF GVL_MOTION.EXT_CTR.CANCEL THEN
+	GVL_MOTION.EXT_CTR.CANCEL									:= FALSE;
+	GVL_MOTION.xCon.Execute_HALT								:= TRUE;
+	GVL_MOTION.yCon.Execute_HALT								:= TRUE;
+	GVL_MOTION.zCon.Execute_HALT								:= TRUE;
+	GVL_MOTION.CMDRUN_INT										:= FALSE;
+	GVL_MOTION.CurInstruction									:= 0;			
+		
+ELSE
 
 //script exits: state 0,1,3
 CASE GVL_MOTION.InstructionState OF
@@ -94,6 +102,9 @@ CASE GVL_MOTION.InstructionState OF
 					GVL_MOTION.zCon.SetPosition					:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition - GVL_MOTION.CARRIAGE_OFFSETS[2];
 					GVL_MOTION.zCon.SetVelocity					:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZVelocity;
 					
+					GVL_MOTION.xCon.Execute_HALT 				:= FALSE;
+					GVL_MOTION.yCon.Execute_HALT 				:= FALSE;
+					GVL_MOTION.zCon.Execute_HALT 				:= FALSE;
 					GVL_MOTION.xCon.Execute_MABS				:= TRUE;
 					GVL_MOTION.yCon.Execute_MABS				:= TRUE;
 					GVL_MOTION.zCon.Execute_MABS				:= TRUE;
@@ -137,7 +148,13 @@ CASE GVL_MOTION.InstructionState OF
 					GVL_MOTION.yCon.SetVelocity					:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetYVelocity;
 					GVL_MOTION.zCon.SetPosition					:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition;
 					GVL_MOTION.zCon.SetVelocity					:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZVelocity;
-				
+					
+					GVL_MOTION.xCon.Execute_HALT 				:= FALSE;
+					GVL_MOTION.yCon.Execute_HALT 				:= FALSE;
+					GVL_MOTION.zCon.Execute_HALT 				:= FALSE;
+					GVL_MOTION.xCon.Execute_MREL				:= TRUE;
+					GVL_MOTION.yCon.Execute_MREL				:= TRUE;
+					GVL_MOTION.zCon.Execute_MREL				:= TRUE;
 					
 					GVL_MOTION.InstructionState 				:= 1;	
 					
@@ -308,7 +325,9 @@ CASE GVL_MOTION.InstructionState OF
 		error													:= TRUE;	
 	END_IF
 		
-END_CASE]]></ST>
+END_CASE
+
+END_IF]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>

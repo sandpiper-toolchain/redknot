@@ -3,14 +3,28 @@
   <POU Name="HomeY" Id="{7c5c1c76-32bb-41cd-a301-41d8089fc2c6}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM HomeY
 VAR
-	state	:INT	:= 99;
+	state			:INT	:= 99;
+	cancelstate		:BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF GVL_MOTION.EXT_CTR.CMDHOMEY THEN
+      <ST><![CDATA[IF cancelstate THEN
+	GVL_MOTION.yCon.Execute_STOP			:= FALSE;
+	cancelstate								:= FALSE;
+END_IF
+
+IF GVL_MOTION.EXT_CTR.CMDHOMEY THEN
 	GVL_MOTION.EXT_CTR.CMDHOMEY				:= FALSE;
 	GVL_MOTION.yCon.IsHoming				:= TRUE;
 	state									:= 0;
+END_IF
+
+IF GVL_MOTION.EXT_CTR.CANCEL THEN
+	state									:= 99;
+	GVL_MOTION.yCon.Execute_HOME			:= FALSE;
+	GVL_MOTION.yCon.Execute_STOP			:= TRUE;
+	GVL_MOTION.yCon.IsHoming				:= FALSE;
+	cancelstate								:= TRUE;
 END_IF
 
 CASE state OF

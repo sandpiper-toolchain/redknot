@@ -42,7 +42,7 @@ CASE step OF
 			hFile		:= 0;
 			FilePath	:= 'C:\MOTION_SCRIPTS\'; 
 			FilePath	:= concat(FilePath, GVL_MOTION.EXT_CTR.SCRIPTNAME);
-			FilePath	:= concat(FilePath, '.csv');
+			FilePath	:= concat(FilePath, '_Script.csv');
 			lastline	:= 100;
 			nRow		:= 0;
 			nColumn		:= 0;
@@ -129,11 +129,11 @@ CASE step OF
 		GVL_MOTION.ActiveBasin.xMax	:= STRING_TO_LREAL(temp[1,2]);
 		GVL_MOTION.ActiveBasin.yMin	:= STRING_TO_LREAL(temp[1,3]);
 		GVL_MOTION.ActiveBasin.yMax	:= STRING_TO_LREAL(temp[1,4]);
-		IF GVL_MOTION.ActiveBasin.Name = 'BasinA' THEN
+		IF (GVL_MOTION.ActiveBasin.Name = 'BasinA' AND NOT GVL_MOTION.BASINLAMPA)
+		OR (GVL_MOTION.ActiveBasin.Name = 'BasinB' AND NOT GVL_MOTION.BASINLAMPB) THEN
 			GVL_MOTION.EXT_CTR.BASINCTR		:= TRUE;
-		ELSE
-			GVL_MOTION.EXT_CTR.BASINCTR		:= FALSE;	
 		END_IF
+		
 		step	:= 7;
 			
 	
@@ -207,7 +207,7 @@ CASE step OF
 			nRow	:= nRow + 1;
 		ELSE //no errors found
 			ClearScript();
-			GVL_MOTION.ScriptEnd				:= UDINT_TO_INT(nRow - 1);
+			GVL_MOTION.ScriptEnd				:= UDINT_TO_INT(nRow - 3);
 			GVL_MOTION.Script					:= GVL_MOTION.ScriptReadBuffer;
 			
 			step	:= 10;	

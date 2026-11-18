@@ -3,29 +3,61 @@
   <POU Name="HomeZ" Id="{fdcbce25-5af2-4d38-9075-ee5b0a33af17}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM HomeZ
 VAR
-	state	:INT	:= 99;
+	cancelstate		:BOOL;
+	state			:INT	:= 99;
+	temp			:LREAL;
+	timer			:TON;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF GVL_MOTION.EXT_CTR.CMDHOMEZ THEN
-	GVL_MOTION.EXT_CTR.CMDHOMEZ				:= FALSE;
-	GVL_MOTION.zCon.IsHoming				:= TRUE;
-	state									:= 0;
+      <ST><![CDATA[IF cancelstate THEN
+	GVL_MOTION.zCon.Execute_STOP		:= FALSE;
+	cancelstate							:= FALSE;
+END_IF
+
+IF GVL_MOTION.EXT_CTR.CMDHOMEZ THEN
+	GVL_MOTION.EXT_CTR.CMDHOMEZ			:= FALSE;
+	GVL_MOTION.zCon.IsHoming			:= TRUE;
+	GVL_MOTION.zCon.JogMode				:= MC_JOGMODE_STANDARD_SLOW;
+	state								:= 0;
+END_IF
+
+IF GVL_MOTION.EXT_CTR.CANCEL THEN
+	state								:= 99;
+	GVL_MOTION.zJogFW					:= FALSE;
+	GVL_MOTION.zCon.Execute_STOP		:= TRUE;
+	GVL_MOTION.zCon.IsHoming			:= FALSE;
+	cancelstate							:= TRUE;
 END_IF
 
 CASE state OF
 	0:
-	GVL_MOTION.zCon.Execute_HOME		:= TRUE;
+	GVL_MOTION.zJogFW					:= TRUE;
 	state								:= 1;
 	
 	1:
-	IF GVL_MOTION.zHomeStatus.Done THEN
-		GVL_MOTION.zCon.Execute_HOME	:= FALSE;
-		GVL_MOTION.zLocated				:= TRUE;
-		state							:= 99;
-		GVL_MOTION.zCon.IsHoming		:= FALSE;
+	IF GVL_MOTION.zCon.LimPos THEN
+		GVL_MOTION.zJogFW				:= FALSE;
+		timer(IN := TRUE, PT := T#200MS);
+		IF timer.Q THEN
+			timer(IN := FALSE);
+			state						:= 2;
+		END_IF
 	END_IF	
 	
+	2:
+		temp							:= GVL_MOTION.zCon.SetLocation;
+		GVL_MOTION.zCon.SetLocation		:= GVL_MOTION.STATUS.HardStopLocations[2] - GVL_MOTION.CARRIAGE_OFFSETS[2];
+		GVL_MOTION.zCon.Execute_SPOS	:= TRUE;
+		state							:= 3;
+		
+	3:
+	GVL_MOTION.zCon.Execute_SPOS		:= FALSE;
+	GVL_MOTION.zCon.SetLocation			:= temp;
+	GVL_MOTION.zLocated					:= TRUE;
+	GVL_MOTION.zCon.IsHoming			:= FALSE;
+	state								:= 99;
+		
 	99:; //idle
 
 END_CASE]]></ST>

@@ -68,6 +68,8 @@ END_VAR
 			GVL_MOTION.EXT_CTR.CMDCOUPLE := value;					
 		ELSIF tempkey = 'STOP' THEN
 			GVL_MOTION.EXT_CTR.STOP := value;	
+		ELSIF tempkey = 'CANCEL' THEN
+			GVL_MOTION.EXT_CTR.CANCEL := value;		
 		ELSIF tempkey = 'AXESEN' THEN
 			GVL_MOTION.EXT_CTR.AXESEN := value;		
 		ELSIF tempkey = 'AXESRESET' THEN

@@ -7,7 +7,7 @@ STRUCT
 	eStop				:BOOL;
 	
 	Rack_Err			:BOOL	:= FALSE;
-	Script_Open_Err		:BOOL	:= FALSE;	
+	Script_Open_Err		:BOOL	:= FALSE;
 	Script_Read_Err		:BOOL	:= FALSE;
 	List_Overflow_Err	:BOOL	:= FALSE;
 	Move_Rel_Err		:BOOL 	:= FALSE;
@@ -47,7 +47,7 @@ STRUCT
 	basinstate			:INT	:= 0;
 
 	
-	HardStopLocations	:ARRAY[0..2] OF LREAL	:= [100000,8991,1000]; //includes carriage offsets 
+	HardStopLocations	:ARRAY[0..2] OF LREAL	:= [100000,8991,1600]; //includes carriage offsets 
 	CARRIAGE_OFFSETS	:ARRAY[0..2] OF LREAL	:= [500,250,100]; //for display. also in GVL_MOTION
 	
 	
