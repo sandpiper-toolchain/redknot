@@ -139,12 +139,16 @@ CASE step OF
 	
 	7: (*check format and write script*)
  		IF nRow <= lastline THEN
+			GVL_MOTION.ScriptReadBuffer[nRow - 3].scriptname		:= GVL_MOTION.EXT_CTR.SCRIPTNAME;
+			
 			IF temp[nRow, 0] = 'Absolute' THEN
 				GVL_MOTION.ScriptReadBuffer[nRow - 3].MotionCommand	:= MotionType.Absolute;
 			ELSIF temp[nRow, 0] = 'Relative' THEN
 				GVL_MOTION.ScriptReadBuffer[nRow - 3].MotionCommand	:= MotionType.Relative;
 			ELSIF temp[nRow, 0] = 'WaitOk' THEN
 				GVL_MOTION.ScriptReadBuffer[nRow - 3].MotionCommand	:= MotionType.WaitOK;
+			ELSIF temp[nRow, 0] = 'Time_Wait' THEN
+				GVL_MOTION.ScriptReadBuffer[nRow - 3].MotionCommand	:= MotionType.Time_Wait;	
 			ELSE
 				GVL_MOTION.STATUS.Script_Read_Err	:= TRUE;
 				step							:= 10;

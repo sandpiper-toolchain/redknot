@@ -19,10 +19,9 @@ VAR_GLOBAL
 	zJogFW					:BOOL;
 	zJogBW					:BOOL;
 	
-	
-	
 	ED2008O AT %Q*			:ED2008_46D0FC69;
 	Z_BRAKE_OFF				:BOOL;
+	MOVE_PREP				:BOOL;
 	
 	//external controls
 	STOP_EXT				:BOOL;

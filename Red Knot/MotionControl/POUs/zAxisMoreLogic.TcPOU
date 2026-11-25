@@ -7,9 +7,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-
-//stop z from slamming into frame
+      <ST><![CDATA[//stop z from slamming into frame
 IF GVL_MOTION.zCon.LimNeg AND NOT GVL_MOTION.zCon.Execute_HOME AND NOT zHaltMem AND NOT GVL_MOTION.zSafeDisable THEN
 	zHaltMem								:= TRUE;
 	GVL_MOTION.zCon.Execute_HALT			:= TRUE;

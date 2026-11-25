@@ -5,6 +5,7 @@
 VAR
 	state	:INT	:= 0;
 	timer	:TON;
+	t2		:TON;
 	fromX	:BOOL;
 	fromY	:BOOL;
 	fromZ	:BOOL;
@@ -17,12 +18,16 @@ END_VAR
 	GVL_MOTION.EXT_CTR.MOVEX						:= FALSE;
 	GVL_MOTION.EXT_CTR.MOVEY						:= FALSE;
 	GVL_MOTION.EXT_CTR.MOVEZ						:= FALSE;
+	fromX											:= FALSE;
+	fromY											:= FALSE;
+	fromZ											:= FALSE;
 	GVL_MOTION.xCon.Execute_MABS					:= FALSE;
 	GVL_MOTION.yCon.Execute_MABS					:= FALSE;
 	GVL_MOTION.zCon.Execute_MABS					:= FALSE;
 	GVL_MOTION.xCon.Execute_HALT					:= TRUE;
 	GVL_MOTION.yCon.Execute_HALT					:= TRUE;
 	GVL_MOTION.zCon.Execute_HALT					:= TRUE;
+	GVL_MOTION.MOVE_PREP							:= FALSE;
 END_IF
 
 CASE state OF
@@ -131,19 +136,25 @@ CASE state OF
 		IF  GVL_MOTION.EXT_CTR.POSZ < GVL_MOTION.STATUS.HardStopLocations[2]
 		AND GVL_MOTION.EXT_CTR.POSZ > GVL_MOTION.STATUS.CARRIAGE_OFFSETS[2]
 		THEN
-			IF GVL_MOTION.STOP_INT THEN
-				GVL_MOTION.Z_BRAKE_OFF					:= FALSE;
-				state									:= 1;
-			ELSE
-				GVL_MOTION.Z_BRAKE_OFF					:= TRUE;
-				GVL_MOTION.zCon.SetPosition				:= GVL_MOTION.EXT_CTR.POSZ - GVL_MOTION.CARRIAGE_OFFSETS[2];
-				GVL_MOTION.zCon.SetVelocity				:= 80;
-				GVL_MOTION.zCon.Execute_MABS			:= TRUE;
-				IF GVL_MOTION.zOut.MoveDone THEN
-					GVL_MOTION.Z_BRAKE_OFF				:= FALSE;
-					GVL_MOTION.zCon.Execute_MABS		:= FALSE;
-					GVL_MOTION.EXT_CTR.MOVEZ			:= FALSE;
-					state								:= 0;
+			GVL_MOTION.MOVE_PREP						:= TRUE;
+			GVL_MOTION.Z_BRAKE_OFF						:= TRUE;
+			GVL_MOTION.zCon.DM							:= TRUE; //finish
+			t2(IN:=TRUE,PT:=T#30MS);
+			
+			IF t2.Q THEN
+				IF GVL_MOTION.STOP_INT THEN
+					state									:= 1;
+				ELSE
+					GVL_MOTION.zCon.SetPosition				:= GVL_MOTION.EXT_CTR.POSZ - GVL_MOTION.CARRIAGE_OFFSETS[2];
+					GVL_MOTION.zCon.SetVelocity				:= 80;
+					GVL_MOTION.zCon.Execute_MABS			:= TRUE;
+					IF GVL_MOTION.zOut.MoveDone THEN
+						GVL_MOTION.MOVE_PREP				:= FALSE;
+						GVL_MOTION.zCon.Execute_MABS		:= FALSE;
+						fromZ								:= FALSE;
+						GVL_MOTION.EXT_CTR.MOVEZ			:= FALSE;
+						state								:= 0;
+					END_IF
 				END_IF
 			END_IF
 		ELSE

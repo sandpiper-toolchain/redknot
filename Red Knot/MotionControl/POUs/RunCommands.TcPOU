@@ -8,6 +8,9 @@ VAR
 	t3			:TON;
 	t4			:TON;
 	t5			:TON;
+	t6			:TON;
+	t7			:TON;
+	t8			:TON;
 	hold		:TIME;
 	index		:INT;
 	(*set to true during daq instruction when future daq instructions are detected. delay daq execution until last daq instruction in script*)
@@ -25,7 +28,6 @@ END_VAR
 	GVL_MOTION.zCon.Execute_HALT								:= TRUE;
 	GVL_MOTION.CMDRUN_INT										:= FALSE;
 	GVL_MOTION.CurInstruction									:= 0;			
-		
 ELSE
 
 //script exits: state 0,1,3
@@ -102,15 +104,22 @@ CASE GVL_MOTION.InstructionState OF
 					GVL_MOTION.zCon.SetPosition					:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition - GVL_MOTION.CARRIAGE_OFFSETS[2];
 					GVL_MOTION.zCon.SetVelocity					:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZVelocity;
 					
-					GVL_MOTION.xCon.Execute_HALT 				:= FALSE;
-					GVL_MOTION.yCon.Execute_HALT 				:= FALSE;
-					GVL_MOTION.zCon.Execute_HALT 				:= FALSE;
-					GVL_MOTION.xCon.Execute_MABS				:= TRUE;
-					GVL_MOTION.yCon.Execute_MABS				:= TRUE;
-					GVL_MOTION.zCon.Execute_MABS				:= TRUE;
-				
-					GVL_MOTION.InstructionState 				:= 1;	
+					GVL_MOTION.MOVE_PREP						:= TRUE;
+					GVL_MOTION.Z_BRAKE_OFF						:= TRUE;
 					
+					t3(IN:=TRUE, PT:=T#30MS);
+					
+					IF t3.Q THEN
+						t3(IN:=FALSE);
+						GVL_MOTION.xCon.Execute_HALT 			:= FALSE;
+						GVL_MOTION.yCon.Execute_HALT 			:= FALSE;
+						GVL_MOTION.zCon.Execute_HALT 			:= FALSE;
+						GVL_MOTION.xCon.Execute_MABS			:= TRUE;
+						GVL_MOTION.yCon.Execute_MABS			:= TRUE;
+						GVL_MOTION.zCon.Execute_MABS			:= TRUE;
+					
+						GVL_MOTION.InstructionState 			:= 1;	
+					END_IF
 				//outside of basin error	
 				ELSE
 					GVL_MOTION.STATUS.Basin_Exceed_Err			:= TRUE;
@@ -149,15 +158,21 @@ CASE GVL_MOTION.InstructionState OF
 					GVL_MOTION.zCon.SetPosition					:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZPosition;
 					GVL_MOTION.zCon.SetVelocity					:= GVL_MOTION.Script[GVL_MOTION.CurInstruction].SetZVelocity;
 					
-					GVL_MOTION.xCon.Execute_HALT 				:= FALSE;
-					GVL_MOTION.yCon.Execute_HALT 				:= FALSE;
-					GVL_MOTION.zCon.Execute_HALT 				:= FALSE;
-					GVL_MOTION.xCon.Execute_MREL				:= TRUE;
-					GVL_MOTION.yCon.Execute_MREL				:= TRUE;
-					GVL_MOTION.zCon.Execute_MREL				:= TRUE;
+					GVL_MOTION.MOVE_PREP						:= TRUE;
+					GVL_MOTION.Z_BRAKE_OFF						:= TRUE;
 					
-					GVL_MOTION.InstructionState 				:= 1;	
+					t3(IN:=TRUE, PT:=T#30MS);
 					
+					IF t3.Q THEN
+						GVL_MOTION.xCon.Execute_HALT 			:= FALSE;
+						GVL_MOTION.yCon.Execute_HALT 			:= FALSE;
+						GVL_MOTION.zCon.Execute_HALT 			:= FALSE;
+						GVL_MOTION.xCon.Execute_MREL			:= TRUE;
+						GVL_MOTION.yCon.Execute_MREL			:= TRUE;
+						GVL_MOTION.zCon.Execute_MREL			:= TRUE;
+						
+						GVL_MOTION.InstructionState 			:= 1;	
+					END_IF
 				//outside of basin error	
 				ELSE
 					GVL_MOTION.STATUS.Basin_Exceed_Err			:= TRUE;
@@ -218,7 +233,10 @@ CASE GVL_MOTION.InstructionState OF
 				GVL_MOTION.yCon.Execute_MABS 					:= FALSE;
 				GVL_MOTION.yCon.Execute_MREL 					:= FALSE;	
 				GVL_MOTION.zCon.Execute_MABS 					:= FALSE;
-				GVL_MOTION.zCon.Execute_MREL 					:= FALSE;		
+				GVL_MOTION.zCon.Execute_MREL 					:= FALSE;	
+				
+				//release brake in MAIN
+				GVL_MOTION.MOVE_PREP							:= FALSE;	
 				timer(IN := FALSE);
 				
 				IF GVL_MOTION.CurInstruction < (GVL_MOTION.ScriptEnd - 1) THEN
@@ -244,6 +262,7 @@ CASE GVL_MOTION.InstructionState OF
 					
 				END_IF
 				
+				
 			END_IF	
 			
 		END_IF
@@ -252,40 +271,14 @@ CASE GVL_MOTION.InstructionState OF
 	
 	2:
 	//state 2: pause motion
-	//debounce timer
+	//debounce
+	GVL_MOTION.MOVE_PREP										:= FALSE;
 	t4(IN := TRUE, PT := T#30MS);
 	
-	
 	IF t4.Q THEN
-		IF GVL_MOTION.STOP_INT THEN
-			GVL_MOTION.STATUS.Stop_Int							:= FALSE; //lamp off
-			GVL_MOTION.xCon.Execute_HALT 						:= FALSE;
-			GVL_MOTION.yCon.Execute_HALT 						:= FALSE;
-			GVL_MOTION.zCon.Execute_HALT 						:= FALSE;
-			
-			IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Absolute THEN	
-				GVL_MOTION.xCon.Execute_MABS 					:= TRUE;
-				GVL_MOTION.yCon.Execute_MABS 					:= TRUE;		
-				GVL_MOTION.zCon.Execute_MABS 					:= TRUE;
-			
-				GVL_MOTION.InstructionState 					:= 1;	
-				t4(IN := FALSE);
-				
-			ELSIF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Relative THEN
-				GVL_MOTION.xCon.Execute_MREL 					:= TRUE;
-				GVL_MOTION.yCon.Execute_MREL 					:= TRUE;
-				GVL_MOTION.zCon.Execute_MREL 					:= TRUE;
-			
-				GVL_MOTION.InstructionState 			  		:= 1;	
-				t4(IN := FALSE);
-				
-			ELSIF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Time_Wait THEN	
-				t2(IN := TRUE, PT := hold);
-				GVL_MOTION.InstructionState						:= 3;
-			ELSE
-				error											:= TRUE;
-			END_IF
 		
+		IF GVL_MOTION.STOP_INT THEN
+			GVL_MOTION.InstructionState							:= 4;
 		END_IF
 	
 	END_IF
@@ -324,7 +317,44 @@ CASE GVL_MOTION.InstructionState OF
 	ELSE
 		error													:= TRUE;	
 	END_IF
+	
+	4:
+	//finish pause motion logic
+	GVL_MOTION.MOVE_PREP										:= TRUE;
+	GVL_MOTION.Z_BRAKE_OFF										:= TRUE;
+	
+	t8(IN:=TRUE,PT:=T#30MS);
+	
+	IF t8.Q THEN
+		t8(IN:=FALSE);
+		GVL_MOTION.STATUS.Stop_Int								:= FALSE; //lamp off
+		GVL_MOTION.xCon.Execute_HALT 							:= FALSE;
+		GVL_MOTION.yCon.Execute_HALT 							:= FALSE;
+		GVL_MOTION.zCon.Execute_HALT 							:= FALSE;
 		
+		IF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Absolute THEN	
+			GVL_MOTION.xCon.Execute_MABS 						:= TRUE;
+			GVL_MOTION.yCon.Execute_MABS 						:= TRUE;		
+			GVL_MOTION.zCon.Execute_MABS 						:= TRUE;
+		
+			GVL_MOTION.InstructionState 						:= 1;	
+			t4(IN := FALSE);
+			
+		ELSIF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Relative THEN
+			GVL_MOTION.xCon.Execute_MREL 						:= TRUE;
+			GVL_MOTION.yCon.Execute_MREL 						:= TRUE;
+			GVL_MOTION.zCon.Execute_MREL 						:= TRUE;
+		
+			GVL_MOTION.InstructionState 			  			:= 1;	
+			t4(IN := FALSE);
+			
+		ELSIF GVL_MOTION.Script[GVL_MOTION.CurInstruction].MotionCommand = MotionType.Time_Wait THEN	
+			t2(IN := TRUE, PT := hold);
+			GVL_MOTION.InstructionState							:= 3;
+		ELSE
+			error												:= TRUE;
+		END_IF
+	END_IF
 END_CASE
 
 END_IF]]></ST>
